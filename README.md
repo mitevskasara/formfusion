@@ -1,5 +1,5 @@
 # React Form Manager by CoreLab UI
-[![npm version](https://badge.fury.io/js/@corelabui%2Fforms.svg)](https://badge.fury.io/js/@corelabui%2Fforms)
+[![npm version](https://badge.fury.io/js/@corelabui%2Frfm.svg)](https://badge.fury.io/js/@corelabui%2Frfm)
 
 Effortlessly manage forms in your React applications with the React Form Manager powered by CoreLab UI.
 This library provides an efficient and adaptable solution for handling forms with **built-in validation**, **full accessibility** and completely **customizable** look simplifying the development process and improving user experience.
