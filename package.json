@@ -18,7 +18,7 @@
     "main": "index.js",
     "module": "index.js",
     "author": "Corelab UI",
-    "license": "MIT",
+    "license": "BSD-2-Clause license",
     "bugs": {
         "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
     },
