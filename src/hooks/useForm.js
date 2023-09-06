@@ -14,7 +14,7 @@ const useForm = (config) => {
         if (validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
         } else {
-          e.target.setCustomValidity('');
+          e.target.setCustomValidity("");
         }
       });
     }
@@ -67,7 +67,7 @@ const useForm = (config) => {
     onFocus,
     onValidate,
     handleSubmit,
-    resetForm
+    resetForm,
   };
 };
 

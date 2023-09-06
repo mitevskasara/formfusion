@@ -10,7 +10,7 @@ describe("Testing validity with AD postal codes", () => {
 
   beforeAll(() => {
     render(
-      <Form onSubmit={() => { }}>
+      <Form onSubmit={() => {}}>
         <Input id="tel" name="tel" type="postal-code-ad" required={true} />
       </Form>,
     );

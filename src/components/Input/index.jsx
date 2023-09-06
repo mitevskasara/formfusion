@@ -1,18 +1,40 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import FormContext from "../../context";
 import inputTypes from "../../constants/patterns";
 import nativeTypes from "../../constants/nativeTypes";
 
-const Input = ({ type, validation = undefined, label, classes, className, ...rest }) => {
+const Input = ({
+  type,
+  validation = undefined,
+  label,
+  classes,
+  className,
+  ...rest
+}) => {
   const ref = useRef(null);
   const {
     errors,
+    values,
     onValidate,
+    onChange,
+    setValues,
     validateOnChange,
-    validateOnBlur
+    validateOnBlur,
+    onFocus,
+    controlled,
   } = useContext(FormContext);
   let inputClasses = className ? `${className}` : "";
-  if (classes?.input) inputClasses += `${classes.input}`;
+  if (classes?.input) inputClasses += `${classes.field}`;
+
+  useEffect(() => {
+    if (controlled && !values[rest.name]) {
+      setValues((prevData) => ({
+        ...prevData,
+        [rest.name]: "",
+      }));
+    }
+  }, []);
+
   return (
     <>
       <label htmlFor={rest.name} className={classes?.label}>
@@ -20,6 +42,7 @@ const Input = ({ type, validation = undefined, label, classes, className, ...res
       </label>
       <input
         {...rest}
+        value={controlled ? values[rest.name] || "" : undefined}
         data-testid="input"
         className={inputClasses}
         ref={ref}
@@ -28,11 +51,17 @@ const Input = ({ type, validation = undefined, label, classes, className, ...res
         onInput={
           validateOnChange ? (e) => onValidate(e, validation) : undefined
         }
+        onChange={controlled ? onChange : undefined}
+        onFocus={controlled ? onFocus : undefined}
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
         data-type={inputTypes[type] && type}
-        aria-invalid={!Boolean(ref?.current?.validity.valid) ? 'true' : 'false'}
-        aria-errormessage={!Boolean(ref?.current?.validity.valid) ? ref?.current?.validationMessage : undefined}
+        aria-invalid={!Boolean(ref?.current?.validity.valid) ? "true" : "false"}
+        aria-errormessage={
+          !Boolean(ref?.current?.validity.valid)
+            ? ref?.current?.validationMessage
+            : undefined
+        }
       />
       <span className={classes?.error}>{errors[rest.name]}</span>
     </>

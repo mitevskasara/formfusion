@@ -1,35 +1,35 @@
 {
-    "name": "@corelabui/rfm",
-    "version": "0.0.2",
-    "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
-    "private": false,
-    "scripts": {
-        "build": "find . -mindepth 1 -maxdepth 1 -type d ! -name 'node_modules' ! -name 'src' ! -name 'plugins' -exec sh -c 'find \"{}\" -type f -name \"*.js\" | read' \\; -exec rm -rf {} \\; && node esbuild.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/mitevskasara/corelabui-rfm.git"
-    },
-    "keywords": [
-        "react",
-        "javascript",
-        "typescript",
-        "forms",
-        "validation",
-        "form-validation"
-    ],
-    "main": "index.js",
-    "module": "index.js",
-    "author": "Corelab UI",
-    "license": "BSD-2-Clause license",
-    "bugs": {
-        "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
-    },
-    "homepage": "https://github.com/mitevskasara/corelabui-rfm/#readme",
-    "peerDependencies": {},
-    "devDependencies": {
-        "esbuild": "^0.18.10",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
-    }
+  "name": "@corelabui/rfm",
+  "version": "0.0.2",
+  "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
+  "private": false,
+  "scripts": {
+    "build": "find . -mindepth 1 -maxdepth 1 -type d ! -name 'node_modules' ! -name 'src' ! -name 'plugins' -exec sh -c 'find \"{}\" -type f -name \"*.js\" | read' \\; -exec rm -rf {} \\; && node esbuild.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitevskasara/corelabui-rfm.git"
+  },
+  "keywords": [
+    "react",
+    "javascript",
+    "typescript",
+    "forms",
+    "validation",
+    "form-validation"
+  ],
+  "main": "index.js",
+  "module": "index.js",
+  "author": "Corelab UI",
+  "license": "BSD-2-Clause license",
+  "bugs": {
+    "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
+  },
+  "homepage": "https://github.com/mitevskasara/corelabui-rfm/#readme",
+  "peerDependencies": {},
+  "devDependencies": {
+    "esbuild": "^0.18.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
 }

@@ -15,12 +15,13 @@ export default {
   creditCardNumberSpace: inputTypes["credit-card-number-space"],
   ccvAmex: inputTypes["ccv-amex"],
   postalCode: {
-    ...postalCodeTypes
+    ...postalCodeTypes,
   },
   minCharacters: (length) => `^.{${length},}$`,
   maxCharacters: (length) => `^.{0,${length}}$`,
   charactersRange: (from, to) => `^.{${from},${to}}$`,
   minLetters: (length) => `^(.*[a-zA-Z].*){${length},}$`,
   maxLetters: (length) => `^(?!(.*[a-zA-Z].*){${length + 1},}).*$`,
-  lettersRange: (from, to) => `^(?=(?:[^\\d]*\\d*[a-zA-Z]){${from},})(?!.*[a-zA-Z]{${to + 1},}).*$`
+  lettersRange: (from, to) =>
+    `^(?=(?:[^\\d]*\\d*[a-zA-Z]){${from},})(?!.*[a-zA-Z]{${to + 1},}).*$`,
 };

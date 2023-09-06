@@ -3,6 +3,7 @@ import useForm from "../../hooks/useForm";
 import FormContext from "../../context";
 
 const Form = ({
+  config,
   children,
   onSubmit,
   initialValues,
@@ -10,21 +11,24 @@ const Form = ({
   validateOnBlur = true,
   ...rest
 }) => {
-  const config = useForm({
-    onSubmit,
-    initialValues,
-    validateOnChange,
-    validateOnBlur
-  });
-  const { formRef, handleSubmit } = config;
+  const configuration = config
+    ? config
+    : useForm({
+        onSubmit,
+        initialValues,
+        validateOnChange,
+        validateOnBlur,
+      });
+  const { formRef, handleSubmit } = configuration;
 
   return (
     <FormContext.Provider
       value={{
-        ...config,
+        ...configuration,
         initialValues,
         validateOnChange,
-        validateOnBlur
+        validateOnBlur,
+        controlled: config ? true : false,
       }}
     >
       <form {...rest} onSubmit={handleSubmit} ref={formRef}>

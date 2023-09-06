@@ -5,6 +5,6 @@ const isRegexPatternValid = (pattern) => {
   } catch (e) {
     return false;
   }
-}
+};
 
 export default isRegexPatternValid;
