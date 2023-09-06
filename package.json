@@ -1,14 +1,14 @@
 {
-    "name": "@corelabui/forms",
+    "name": "@corelabui/rfm",
     "version": "0.0.0",
-    "description": "Javasvript form handler",
+    "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
     "private": false,
     "scripts": {
         "build": "find . -mindepth 1 -maxdepth 1 -type d ! -name 'node_modules' ! -name 'src' ! -name 'plugins' -exec sh -c 'find \"{}\" -type f -name \"*.js\" | read' \\; -exec rm -rf {} \\; && node esbuild.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mitevskasara/corelabui-forms.git"
+        "url": "git+https://github.com/mitevskasara/corelabui-rfm.git"
     },
     "keywords": [
         "javascript",
@@ -20,9 +20,9 @@
     "author": "Corelab UI",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/mitevskasara/corelabui-forms/issues"
+        "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
     },
-    "homepage": "https://github.com/mitevskasara/corelabui-forms/#readme",
+    "homepage": "https://github.com/mitevskasara/corelabui-rfm/#readme",
     "peerDependencies": {},
     "devDependencies": {
         "esbuild": "^0.18.10",
