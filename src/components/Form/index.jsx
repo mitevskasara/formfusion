@@ -14,11 +14,11 @@ const Form = ({
   const configuration = config
     ? config
     : useForm({
-        onSubmit,
-        initialValues,
-        validateOnChange,
-        validateOnBlur,
-      });
+      onSubmit,
+      initialValues,
+      validateOnChange,
+      validateOnBlur,
+    });
   const { formRef, handleSubmit } = configuration;
 
   return (

@@ -1,36 +1,21 @@
 import postalCodes from "./postalCodes";
-
-export const patterns = {
-  NUMERIC: "\\d+$",
-  ALPHABETIC: "^[a-zA-Z\\s]+",
-  ALPHANUMERIC: "^[a-zA-Z0-9\\s]+",
-  EMAIL:
-    "^[-!#$%&'*+/0-9=?A-Z^_a-z{|}~](\\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\\.?[a-zA-Z0-9])*\\.[a-zA-Z](-?[a-zA-Z0-9])+$",
-  URL: "^(https?|ftp)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(/\\S*)?$",
-  USERNAME: "^[a-zA-Z0-9@\\-_]+$",
-  SEARCH: "^[a-zA-Z0-9\\s]+$",
-  TEL: "\\+\\d{1,4}\\s[0-9]{10}",
-  PASSWORD: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-  CREDIT_CARD_NUMBER_BASIC: "\\d{16}$",
-  CREDIT_CARD_NUMBER_HYPHEN: "\\d{4}-\\d{4}-\\d{4}-\\d{4}",
-  CREDIT_CARD_NUMBER_SPACE: "\\d{4}\\s\\d{4}\\s\\d{4}\\s\\d{4}",
-  CCV: "^\\d{3}$",
-  CCV_AMEX: "^\\d{4}$",
-  IPV4: `^(?!.*(?:^|\\.)0\\d+)(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?!.*(?:^|\\.)0\\d+)(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?!.*(?:^|\\.)0\\d+)(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?!.*(?:^|\\.)0\\d+)(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$`,
-  IPV6: `^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$`,
-  UUID: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  GUID: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  SSN: "^(?!000|666|9\\d\\d)\\d{3}-(?!00)\\d{2}-(?!0000)\\d{4}$",
-};
+import patterns from './regex';
 
 const postalCodeTypes = {};
 Object.keys(postalCodes).map((key) =>
   Object.assign(postalCodeTypes, {
-    [`postal-code-${key.toLowerCase()}`]: postalCodes[key],
+    [key.toLowerCase()]: postalCodes[key],
   }),
 );
 
 export default {
+  minCharacters: (length) => `^.{${length},}$`,
+  maxCharacters: (length) => `^.{0,${length}}$`,
+  charactersRange: (from, to) => `^.{${from},${to}}$`,
+  minLetters: (length) => `^(.*[a-zA-Z].*){${length},}$`,
+  maxLetters: (length) => `^(?!(.*[a-zA-Z].*){${length + 1},}).*$`,
+  lettersRange: (from, to) =>
+    `^(?=(?:[^\\d]*\\d*[a-zA-Z]){${from},})(?!.*[a-zA-Z]{${to + 1},}).*$`,
   email: patterns.EMAIL,
   password: patterns.PASSWORD,
   search: patterns.SEARCH,
@@ -40,15 +25,17 @@ export default {
   alphabetic: patterns.ALPHABETIC,
   numeric: patterns.NUMERIC,
   username: patterns.USERNAME,
-  "credit-card-number": patterns.CREDIT_CARD_NUMBER_BASIC,
-  "credit-card-number-hyphen": patterns.CREDIT_CARD_NUMBER_HYPHEN,
-  "credit-card-number-space": patterns.CREDIT_CARD_NUMBER_SPACE,
   ccv: patterns.CCV,
-  "ccv-amex": patterns.CCV_AMEX,
   ipv4: patterns.IPV4,
   ipv6: patterns.IPV6,
   uuid: patterns.UUID,
   guid: patterns.GUID,
   ssn: patterns.SSN,
-  ...postalCodeTypes,
+  creditCardNumber: patterns.CREDIT_CARD_NUMBER_BASIC,
+  creditCardNumberHyphen: patterns.CREDIT_CARD_NUMBER_HYPHEN,
+  creditCardNumberSpace: patterns.CREDIT_CARD_NUMBER_SPACE,
+  ccvAmex: patterns.CCV_AMEX,
+  postalCode: {
+    ...postalCodeTypes,
+  }
 };

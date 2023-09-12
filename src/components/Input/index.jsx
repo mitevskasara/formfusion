@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useEffect } from "react";
 import FormContext from "../../context";
-import inputTypes from "../../constants/patterns";
+import inputTypes from "../../constants/types";
 import nativeTypes from "../../constants/nativeTypes";
 
 const Input = ({
@@ -24,7 +24,7 @@ const Input = ({
     controlled,
   } = useContext(FormContext);
   let inputClasses = className ? `${className}` : "";
-  if (classes?.input) inputClasses += `${classes.field}`;
+  if (classes?.field) inputClasses += `${classes.field}`;
 
   useEffect(() => {
     if (controlled && !values[rest.name]) {

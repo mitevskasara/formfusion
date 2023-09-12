@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect } from "react";
 import FormContext from "../../context";
 
-const Textarea = ({ type, validation, label, classes, className, ...rest }) => {
+const Textarea = ({ validation, label, classes, className, ...rest }) => {
   const ref = useRef(null);
   const {
     values,
