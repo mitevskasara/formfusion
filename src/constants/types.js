@@ -1,5 +1,5 @@
 import postalCodes from "./postalCodes";
-import patterns from './regex';
+import patterns from "./regex";
 
 const postalCodeTypes = {};
 Object.keys(postalCodes).map((key) =>

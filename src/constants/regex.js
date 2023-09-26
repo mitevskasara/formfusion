@@ -7,7 +7,7 @@ export default {
   URL: "^(https?|ftp)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(/\\S*)?$",
   USERNAME: "^[a-zA-Z0-9@\\-_]+$",
   SEARCH: "^[a-zA-Z0-9\\s]+$",
-  TEL: "\\+\\d{1,4}\\s[0-9]{10}",
+  TEL: "\\+\\d{1,4}\\s[0-9]{1,10}",
   PASSWORD: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
   CREDIT_CARD_NUMBER_BASIC: "\\d{16}$",
   CREDIT_CARD_NUMBER_HYPHEN: "\\d{4}-\\d{4}-\\d{4}-\\d{4}",

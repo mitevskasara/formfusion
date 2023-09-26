@@ -2,10 +2,13 @@ import React, { useContext, useRef, useEffect } from "react";
 import FormContext from "../../context";
 import inputTypes from "../../constants/types";
 import nativeTypes from "../../constants/nativeTypes";
+import validity from "../../constants/validity";
 
 const Input = ({
   type,
-  validation = undefined,
+  validation = type.startsWith("postal-code")
+    ? validity["postal-code"]
+    : validity[type],
   label,
   classes,
   className,
