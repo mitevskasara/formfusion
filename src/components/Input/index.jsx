@@ -6,7 +6,7 @@ import validity from "../../constants/validity";
 
 const Input = ({
   type,
-  validation = type.startsWith("postal-code")
+  validation = type?.startsWith("postal-code")
     ? validity["postal-code"]
     : validity[type],
   label,

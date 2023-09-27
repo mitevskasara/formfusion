@@ -7,7 +7,7 @@ const connect = (
   config,
   ref,
   type,
-  validation = type.startsWith("postal-code")
+  validation = type?.startsWith("postal-code")
     ? validity["postal-code"]
     : validity[type],
   ...rest
