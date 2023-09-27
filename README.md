@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/@corelabui%2Frfm.svg)](https://badge.fury.io/js/@corelabui%2Frfm)
 
-Effortlessly manage forms in your React applications with the React Form Manager powered by CoreLab UI.
+Effortlessly manage forms in your React applications with the React Form Manager developed by CoreLab UI.
 This library provides an efficient and adaptable solution for handling forms with **built-in validation**, **full accessibility** and completely **customizable** look simplifying the development process and improving user experience.
 
 RFM Leverages the native HTML validation and extends the native [input types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types) to include:
@@ -16,7 +16,7 @@ RFM Leverages the native HTML validation and extends the native [input types](ht
 - **postal-code**
 - **uuid**
 - **ssn**
-- **...and many more** - See full list of types [here](https://corelabui.com/forms/patterns)
+- **...and many more** - See full list of types [here](https://www.corelabui.com/forms/api/types)
 
 ## Features
 
