@@ -9,6 +9,7 @@ const useForm = (config) => {
   const onValidate = (e, customValidity) => {
     e.preventDefault();
     const { name, validity } = e.target;
+
     if (customValidity) {
       Object.keys(customValidity).map((key) => {
         if (validity[key]) {
@@ -68,6 +69,8 @@ const useForm = (config) => {
     onValidate,
     handleSubmit,
     resetForm,
+    validateOnChange: config?.validateOnChange,
+    validateOnBlur: config?.validateOnBlur,
   };
 };
 

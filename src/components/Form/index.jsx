@@ -26,8 +26,8 @@ const Form = ({
       value={{
         ...configuration,
         initialValues,
-        validateOnChange,
-        validateOnBlur,
+        validateOnChange: config?.validateOnChange || validateOnChange,
+        validateOnBlur: config?.validateOnBlur || validateOnBlur,
         controlled: config ? true : false,
       }}
     >
