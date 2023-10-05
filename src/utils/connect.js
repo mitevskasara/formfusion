@@ -1,7 +1,6 @@
 import inputTypes from "../constants/types";
 import nativeTypes from "../constants/nativeTypes";
 import validity from "../constants/validity";
-import { useEffect } from "react";
 
 const connect = (
   config,
@@ -12,27 +11,10 @@ const connect = (
     : validity[type],
   ...rest
 ) => {
-  const {
-    values,
-    onValidate,
-    onChange,
-    setValues,
-    validateOnChange,
-    validateOnBlur,
-    onFocus,
-  } = config;
-
-  useEffect(() => {
-    if (!values[ref?.current?.name]) {
-      setValues((prevData) => ({
-        ...prevData,
-        [ref?.current?.name]: "",
-      }));
-    }
-  }, []);
+  const { onValidate, onChange, validateOnChange, validateOnBlur, onFocus } =
+    config;
 
   return {
-    value: values[ref?.current?.name] || "",
     ref,
     type: nativeTypes.includes(type) ? type : "text",
     pattern: rest.pattern || inputTypes[type] || type,
