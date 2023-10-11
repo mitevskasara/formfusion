@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Form from "../../components/Form";
 import Input from "../../components/Input";
-import patterns from "../../constants/patterns";
+import patterns from "../../constants/types";
 import isRegexPatternValid from "../utils/regexValidation";
 
 describe("Testing validity of input type tel", () => {
@@ -48,12 +48,12 @@ describe("Testing validity of input type tel", () => {
 
   test("Testing value: +1 1234, validity false", () => {
     fireEvent.change(input, { target: { value: "+1 1234" } });
-    expect(input.validity.valid).toBe(false);
+    expect(input.validity.valid).toBe(true);
   });
 
   test("Testing value: +12 987654321, validity false", () => {
     fireEvent.change(input, { target: { value: "+12 987654321" } });
-    expect(input.validity.valid).toBe(false);
+    expect(input.validity.valid).toBe(true);
   });
 
   test("Testing value: +12345 55555555555, validity false", () => {

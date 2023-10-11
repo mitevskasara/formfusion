@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Form from "../../components/Form";
 import Input from "../../components/Input";
-import patterns from "../../constants/patterns";
+import patterns from "../../constants/types";
 import isRegexPatternValid from "../utils/regexValidation";
 
 describe("Testing validity of input type ccv", () => {
