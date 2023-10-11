@@ -1,6 +1,6 @@
 {
   "name": "@corelabui/rfm",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
@@ -32,11 +32,5 @@
     "esbuild": "^0.18.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "transform": {
-      "\\.(js|jsx)$": "babel-jest"
-    }
   }
 }
