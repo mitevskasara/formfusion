@@ -16,7 +16,7 @@ RFM Leverages the native HTML validation and extends the native [input types](ht
 - **postal-code**
 - **uuid**
 - **ssn**
-- **...and many more** - See full list of types [here](https://www.corelabui.com/forms/api/types)
+- **...and many more** - See full list of types [here](https://www.corelabui.com/react-form-manager/api/types)
 
 ## Features
 
@@ -65,7 +65,7 @@ export default MyForm;
 
 Start managing your forms efficiently!
 
-For detailed documentation and examples, please visit our [Documentation Page](https://corelabui.com/forms).
+For detailed documentation and examples, please visit our [Documentation Page](https://www.corelabui.com/react-form-manager).
 
 ---
 
