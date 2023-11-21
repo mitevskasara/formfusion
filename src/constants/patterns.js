@@ -37,9 +37,9 @@ Object.keys(tins).map((key) =>
     [key.toLowerCase()]: tins[key],
   }),
 );
-const vatsTypes = {};
+const vatTypes = {};
 Object.keys(vats).map((key) =>
-  Object.assign(vatsTypes, {
+  Object.assign(vatTypes, {
     [key.toLowerCase()]: vats[key],
   }),
 );
@@ -93,6 +93,9 @@ export default {
   },
   tin: {
     ...tinTypes,
+  },
+  vat: {
+    ...vatTypes,
   },
   phone: {
     ...phoneTypes,
