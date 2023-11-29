@@ -65,6 +65,13 @@ const Input = ({
             ? ref?.current?.validationMessage
             : undefined
         }
+        title={
+          !nativeTypes.includes(type)
+            ? type?.startsWith("postal-code")
+              ? validity["postal-code"].patternMismatch
+              : validity[type]?.patternMismatch
+            : undefined
+        }
       />
       <span className={classes?.error}>{errors[rest.name]}</span>
     </>

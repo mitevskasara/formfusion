@@ -30,10 +30,10 @@ const useForm = (config) => {
   };
 
   const onChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
     setValues((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: checked ? Boolean(checked) : value,
     }));
   };
 
