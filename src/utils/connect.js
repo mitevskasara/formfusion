@@ -1,32 +1,41 @@
+import { useRef } from "react";
 import inputTypes from "../constants/types";
 import nativeTypes from "../constants/nativeTypes";
 import validity from "../constants/validity";
 
 const connect = (
   config,
-  ref,
   type,
   validation = type?.startsWith("postal-code")
     ? validity["postal-code"]
     : validity[type],
   ...rest
 ) => {
-  const { onValidate, onChange, validateOnChange, validateOnBlur, onFocus } =
-    config;
+  const {
+    controlled,
+    onValidate,
+    onChange,
+    validateOnChange,
+    validateOnBlur,
+    onFocus,
+  } = config;
+  const inputRef = useRef(null);
 
   return {
-    ref,
+    ref: inputRef,
     type: nativeTypes.includes(type) ? type : "text",
     pattern: rest.pattern || inputTypes[type] || type,
     onInput: validateOnChange ? (e) => onValidate(e, validation) : undefined,
-    onChange: onChange,
+    onChange: controlled ? onChange : undefined,
     onFocus: onFocus,
     onBlur: validateOnBlur ? (e) => onValidate(e, validation) : undefined,
     onInvalid: (e) => onValidate(e, validation),
     "data-type": inputTypes[type] && type,
-    "aria-invalid": !Boolean(ref?.current?.validity?.valid) ? "true" : "false",
-    "aria-errormessage": !Boolean(ref?.current?.validity?.valid)
-      ? ref?.current?.validationMessage
+    "aria-invalid": !Boolean(inputRef?.current?.validity?.valid)
+      ? "true"
+      : "false",
+    "aria-errormessage": !Boolean(inputRef?.current?.validity?.valid)
+      ? inputRef?.current?.validationMessage
       : undefined,
   };
 };
