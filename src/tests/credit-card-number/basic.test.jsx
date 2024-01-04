@@ -6,16 +6,16 @@ import Input from "../../components/Input";
 import patterns from "../../constants/types";
 import isRegexPatternValid from "../utils/regexValidation";
 
-describe("Testing validity of input type credit-card-number", () => {
+describe("Testing validity of input type credit-card-number-basic", () => {
   let input;
 
   beforeAll(() => {
     render(
       <Form onSubmit={() => {}}>
         <Input
-          id="credit-card-number"
-          name="credit-card-number"
-          type="credit-card-number"
+          id="credit-card-number-basic"
+          name="credit-card-number-basic"
+          type="credit-card-number-basic"
           required={true}
         />
       </Form>,
@@ -24,11 +24,15 @@ describe("Testing validity of input type credit-card-number", () => {
   });
 
   test("Validating regex pattern", () => {
-    expect(isRegexPatternValid(patterns["credit-card-number"])).toBe(true);
+    expect(isRegexPatternValid(patterns["credit-card-number-basic"])).toBe(
+      true,
+    );
   });
 
   test("Testing correct pattern", () => {
-    expect(input.getAttribute("pattern")).toBe(patterns["credit-card-number"]);
+    expect(input.getAttribute("pattern")).toBe(
+      patterns["credit-card-number-basic"],
+    );
   });
 
   test("Testing value: 1234567890123456, validity true", () => {

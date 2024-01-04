@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Form from "../../components/Form";
 import Input from "../../components/Input";
-import postalCodes from "../../constants/postalCodes";
+import postalCodes from "../../constants/data/postalCodes";
 
 describe("Testing validity with PM postal codes", () => {
   let input;

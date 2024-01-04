@@ -65,7 +65,7 @@ export default {
   charactersRange: (from, to) => `^.{${from},${to}}$`,
   numberOfLetters: (length) => `^[a-zA-Z]{${length}}$`,
   minLetters: (length) => `^(.*[a-zA-Z].*){${length},}$`,
-  maxLetters: (length) => `^(?!(.*[a-zA-Z].*){${length + 1},}).*$`,
+  maxLetters: (length) => `^(?!(.*[a-zA-Z].*){0,${length + 1}}).*$`,
   lettersRange: (from, to) =>
     `^(?=(?:[^\\d]*\\d*[a-zA-Z]){${from},})(?!.*[a-zA-Z]{${to + 1},}).*$`,
   contains: (str) => `.*${str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*`,

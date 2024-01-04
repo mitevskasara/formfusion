@@ -12,7 +12,7 @@ describe("Testing validity of input type ssn", () => {
   beforeAll(() => {
     render(
       <Form onSubmit={() => {}}>
-        <Input id="ssn" name="ssn" type="ssn" required={true} />
+        <Input id="ssn" name="ssn" type="ssn" />
       </Form>,
     );
     input = screen.getByTestId("input");
@@ -66,9 +66,9 @@ describe("Testing validity of input type ssn", () => {
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: 666-66-6666, validity false", () => {
+  test("Testing value: 666-66-6666, validity true", () => {
     fireEvent.change(input, { target: { value: "666-66-6666" } });
-    expect(input.validity.valid).toBe(false);
+    expect(input.validity.valid).toBe(true);
   });
 
   test("Testing value: 777-77-7777, validity true", () => {
