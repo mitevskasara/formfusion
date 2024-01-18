@@ -7,8 +7,7 @@ export default {
   BOOLEAN: "^(true|false|yes|no|1|0)$",
   HEXADECIMAL: "^(0x|0h)?[0-9A-F]+$",
 
-  EMAIL:
-    "^[-!#$%&'*+/0-9=?A-Z^_a-z{|}~](\\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\\.?[a-zA-Z0-9])*\\.[a-zA-Z](-?[a-zA-Z0-9])+$",
+  EMAIL: "^[\\w-.]+@([\\w-]+.)+[\\w-]{2,4}$",
   URL: "^(https?|ftp)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(/\\S*)?$",
   USERNAME: "^[a-zA-Z0-9@\\-_]+$",
   SEARCH: "^[a-zA-Z0-9\\s]+$",

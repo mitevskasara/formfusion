@@ -70,6 +70,8 @@ export default {
     `^(?=(?:[^\\d]*\\d*[a-zA-Z]){${from},})(?!.*[a-zA-Z]{${to + 1},}).*$`,
   contains: (str) => `.*${str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*`,
   equals: (str) => `^${str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+  startsWith: (str) => `^${str}.*`,
+  endsWith: (str) => `.*${str}$`,
   existIn: (array) =>
     `(${array
       .map((str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
