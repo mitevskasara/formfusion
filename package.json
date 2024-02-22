@@ -1,6 +1,6 @@
 {
   "name": "@corelabui/rfm",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
