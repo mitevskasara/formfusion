@@ -6,7 +6,17 @@ const useForm = (config) => {
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
 
-  const onValidate = (e, customValidity) => {
+  function handleSetValues(key, value) {
+    const formData = new FormData(formRef.current);
+    formData.append(key, value);
+
+    setValues((prevData) => ({
+      ...prevData,
+      [key]: value
+    }));
+  };
+
+  function onValidate(e, customValidity) {
     e.preventDefault();
     const { name, validity } = e.target;
 
@@ -29,7 +39,7 @@ const useForm = (config) => {
     }
   };
 
-  const onChange = (e) => {
+  function onChange(e) {
     const { name, value, checked } = e.target;
     setValues((prevData) => ({
       ...prevData,
@@ -37,25 +47,53 @@ const useForm = (config) => {
     }));
   };
 
-  const onFocus = (e) => {
+  function onFocus(e) {
     setTouched((prevData) => ({
       ...prevData,
       [e.target.name]: true,
     }));
   };
 
-  const resetForm = () => {
+  function resetForm() {
     formRef?.current?.reset();
+    if (Object.keys(values).length > 0) setValues({});
   };
 
-  const handleSubmit = (e) => {
+  function parseEntries(obj) {
+    for (const [key, value] of Object.entries(obj)) {
+      try {
+        const parsed = JSON.parse(value);
+        obj[key] = parsed;
+      } catch (_error) { }
+    }
+    return obj;
+  }
+
+  function handleSubmit(e) {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
     if (Object.keys(errors).filter((key) => errors[key]).length) {
       e.preventDefault();
     }
-    config.onSubmit(Object.fromEntries(formData.entries()));
+    const form = e.target;
+    const formData = new FormData(form);
+    if (Object.keys(values).length > 0) {
+      Object.keys(values).forEach(key => {
+        switch (typeof values[key]) {
+          case "string": {
+            formData.append(key, values[key]);
+            break;
+          }
+          case "object": {
+            formData.append(key, JSON.stringify(values[key]));
+            break;
+          }
+          default:
+            formData.append(key, values[key]);
+        }
+      }
+      )
+    }
+    config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
   };
 
   return {
@@ -63,7 +101,7 @@ const useForm = (config) => {
     values,
     errors,
     touched,
-    setValues,
+    setFieldValue: handleSetValues,
     onChange,
     onFocus,
     onValidate,

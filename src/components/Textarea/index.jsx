@@ -9,7 +9,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
     onValidate,
     validateOnChange,
     validateOnBlur,
-    setValues,
+    setFieldValue,
     onChange,
     onFocus,
     controlled,
@@ -19,10 +19,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
 
   useEffect(() => {
     if (controlled && !values[rest.name]) {
-      setValues((prevData) => ({
-        ...prevData,
-        [rest.name]: "",
-      }));
+      setFieldValue(rest.name, "");
     }
   }, []);
 

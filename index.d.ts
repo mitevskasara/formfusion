@@ -44,7 +44,7 @@ declare module '@corelabui/rfm' {
     values: FormValues;
     errors: FormErrors;
     touched: Record<string, boolean>;
-    setValues: React.Dispatch<React.SetStateAction<FormValues>>;
+    setFieldValue: (key: string, value: any) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
     onValidate: (

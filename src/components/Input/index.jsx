@@ -20,7 +20,7 @@ const Input = ({
     values,
     onValidate,
     onChange,
-    setValues,
+    setFieldValue,
     validateOnChange,
     validateOnBlur,
     onFocus,
@@ -31,10 +31,7 @@ const Input = ({
 
   useEffect(() => {
     if (controlled && !values[rest.name]) {
-      setValues((prevData) => ({
-        ...prevData,
-        [rest.name]: "",
-      }));
+      setFieldValue(rest.name, "");
     }
   }, []);
 
