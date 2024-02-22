@@ -1,6 +1,6 @@
 {
   "name": "@corelabui/rfm",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
@@ -26,9 +26,9 @@
   "author": "Corelab UI",
   "license": "BSD-2-Clause license",
   "bugs": {
-    "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
+    "url": "https://github.com/corelabui/rfm/issues"
   },
-  "homepage": "https://github.com/corelabui",
+  "homepage": "https://www.corelabui.com/react-form-manager",
   "peerDependencies": {},
   "devDependencies": {
     "esbuild": "^0.18.10",
