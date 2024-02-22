@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/mitevskasara/corelabui-rfm/issues"
   },
-  "homepage": "https://github.com/mitevskasara/corelabui-rfm/#readme",
+  "homepage": "https://github.com/corelabui",
   "peerDependencies": {},
   "devDependencies": {
     "esbuild": "^0.18.10",
