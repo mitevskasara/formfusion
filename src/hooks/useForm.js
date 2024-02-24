@@ -29,6 +29,9 @@ const useForm = (config) => {
         }
       });
     }
+
+    e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+
     if (!e.target.validity.valid || (e.target.validity.valid && errors[name])) {
       setErrors((prevData) => {
         return {
@@ -36,7 +39,6 @@ const useForm = (config) => {
           [name]: e.target.validity.valid ? "" : e.target.validationMessage,
         };
       });
-      e.target.setAttribute("data-valid", false);
     }
   };
 
