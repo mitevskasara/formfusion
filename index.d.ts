@@ -879,7 +879,7 @@ declare module '@corelabui/rfm' {
   export type InputPropsBase = {
     name: string;
     validation?: CustomValidityValue;
-    label: string;
+    label?: string;
     classes?: { field?: string; label?: string; error?: string };
     className?: string;
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
@@ -898,7 +898,7 @@ declare module '@corelabui/rfm' {
 
   export type TextareaProps = {
     validation?: CustomValidityValue;
-    label: string;
+    label?: string;
     classes?: { field?: string; label?: string; error?: string };
     className?: string;
   } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
