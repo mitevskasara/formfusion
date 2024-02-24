@@ -56,6 +56,7 @@ const Input = ({
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
         data-type={inputTypes[type] && type}
+        data-valid={true}
         aria-invalid={!Boolean(ref?.current?.validity.valid) ? "true" : "false"}
         aria-errormessage={
           !Boolean(ref?.current?.validity.valid)

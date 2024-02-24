@@ -36,6 +36,7 @@ const useForm = (config) => {
           [name]: e.target.validity.valid ? "" : e.target.validationMessage,
         };
       });
+      e.target.setAttribute("data-valid", false);
     }
   };
 
