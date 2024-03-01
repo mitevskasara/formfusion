@@ -1,6 +1,6 @@
 {
   "name": "formfusion",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mitevskasara/corelabui-rfm.git"
+    "url": "git+https://github.com/mitevskasara/formfusion.git"
   },
   "keywords": [
     "react",
