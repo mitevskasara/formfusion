@@ -1,4 +1,4 @@
-declare module '@corelabui/rfm' {
+declare module 'formfusion' {
   import * as React from 'react';
 
   export interface CustomValidityValue {
@@ -47,6 +47,7 @@ declare module '@corelabui/rfm' {
     setFieldValue: (key: string, value: any) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
     onValidate: (
       e: React.ChangeEvent<HTMLInputElement>,
       customValidity?: CustomValidityValue,

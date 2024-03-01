@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import maskInput from "../utils/mask";
 
 const useForm = (config) => {
   const formRef = useRef(null);
@@ -18,7 +19,7 @@ const useForm = (config) => {
 
   function onValidate(e, customValidity) {
     e.preventDefault();
-    const { name, validity } = e.target;
+    const { name, value, validity } = e.target;
 
     if (customValidity) {
       Object.keys(customValidity).map((key) => {
@@ -44,21 +45,7 @@ const useForm = (config) => {
     const mask = e.target.dataset.mask;
 
     if (mask) {
-      const charArray = value.replace(new RegExp(`[${mask.match(/[^#]/g).join('')}]`, 'g'), '').split('');
-
-      let masked = '';
-      let charIndex = 0;
-
-      for (let i = 0; i < mask.length; i++) {
-        if (mask[i] === '#') {
-          if (charIndex < charArray.length) {
-            masked += charArray[charIndex++];
-          }
-        } else if (value[i]) {
-          masked += mask[i];
-        }
-      }
-      e.target.value = masked;
+      e.target.value = maskInput(mask, value);
     }
   };
 
@@ -76,6 +63,15 @@ const useForm = (config) => {
       [e.target.name]: true,
     }));
   };
+
+  function onPaste(e) {
+    const { dataset } = e.target;
+    let paste = (e.clipboardData || window.clipboardData).getData("text");
+    const mask = dataset.mask;
+    if (mask) {
+      e.target.value = maskInput(mask, paste);
+    }
+  }
 
   function resetForm() {
     formRef?.current?.reset();
@@ -127,6 +123,7 @@ const useForm = (config) => {
     setFieldValue: handleSetValues,
     onChange,
     onFocus,
+    onPaste,
     onValidate,
     handleSubmit,
     resetForm,

@@ -21,6 +21,7 @@ const Input = ({
     values,
     onValidate,
     onChange,
+    onPaste,
     setFieldValue,
     validateOnChange,
     validateOnBlur,
@@ -55,6 +56,7 @@ const Input = ({
         }
         onChange={controlled ? onChange : undefined}
         onFocus={controlled ? onFocus : undefined}
+        onPaste={mask ? onPaste : undefined}
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
         data-type={inputTypes[type] && type}
