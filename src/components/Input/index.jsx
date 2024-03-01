@@ -12,6 +12,7 @@ const Input = ({
   label,
   classes,
   className,
+  mask,
   ...rest
 }) => {
   const ref = useRef(null);
@@ -42,14 +43,15 @@ const Input = ({
       </label>
       <input
         {...rest}
+        ref={ref}
         value={controlled ? values[rest.name] || "" : undefined}
         data-testid="input"
+        data-mask={mask}
         className={inputClasses}
-        ref={ref}
         type={nativeTypes.includes(type) ? type : "text"}
         pattern={rest.pattern || inputTypes[type] || type}
         onInput={
-          validateOnChange ? (e) => onValidate(e, validation) : undefined
+          mask || validateOnChange ? (e) => onValidate(e, validation) : undefined
         }
         onChange={controlled ? onChange : undefined}
         onFocus={controlled ? onFocus : undefined}

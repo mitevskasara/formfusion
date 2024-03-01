@@ -40,6 +40,26 @@ const useForm = (config) => {
         };
       });
     }
+
+    const mask = e.target.dataset.mask;
+
+    if (mask) {
+      const charArray = value.replace(new RegExp(`[${mask.match(/[^#]/g).join('')}]`, 'g'), '').split('');
+
+      let masked = '';
+      let charIndex = 0;
+
+      for (let i = 0; i < mask.length; i++) {
+        if (mask[i] === '#') {
+          if (charIndex < charArray.length) {
+            masked += charArray[charIndex++];
+          }
+        } else if (value[i]) {
+          masked += mask[i];
+        }
+      }
+      e.target.value = masked;
+    }
   };
 
   function onChange(e) {

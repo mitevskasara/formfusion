@@ -882,6 +882,7 @@ declare module '@corelabui/rfm' {
     label?: string;
     classes?: { field?: string; label?: string; error?: string };
     className?: string;
+    mask?: string;
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
   export type InputPropsWithType = InputPropsBase & {

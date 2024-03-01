@@ -11,7 +11,7 @@ describe("Testing validity of input type credit-card-number-discover", () => {
 
   beforeAll(() => {
     render(
-      <Form onSubmit={() => {}}>
+      <Form onSubmit={() => { }}>
         <Input
           id="credit-card-number-discover"
           name="credit-card-number-discover"
@@ -35,23 +35,18 @@ describe("Testing validity of input type credit-card-number-discover", () => {
     );
   });
 
-  test("Testing value: 36227206271667, validity true", () => {
-    fireEvent.change(input, { target: { value: "36227206271667" } });
+  test("Testing value: 6011981111111113, validity true", () => {
+    fireEvent.change(input, { target: { value: "6011981111111113" } });
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: 3056930009020004, validity true", () => {
-    fireEvent.change(input, { target: { value: "3056930009020004" } });
+  test("Testing value: 6011111111111117, validity true", () => {
+    fireEvent.change(input, { target: { value: "6011111111111117" } });
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: 30521234567823, validity true", () => {
-    fireEvent.change(input, { target: { value: "30521234567823" } });
-    expect(input.validity.valid).toBe(true);
-  });
-
-  test("Testing value: 36111234567823, validity true", () => {
-    fireEvent.change(input, { target: { value: "36111234567823" } });
+  test("Testing value: 6011000990139424, validity true", () => {
+    fireEvent.change(input, { target: { value: "6011000990139424" } });
     expect(input.validity.valid).toBe(true);
   });
 
