@@ -1,11 +1,11 @@
-# React Form Manager by CoreLab UI
+# FormFusion by CoreLab UI
 
-[![npm version](https://badge.fury.io/js/@corelabui%2Frfm.svg)](https://badge.fury.io/js/@corelabui%2Frfm)
+[![npm version](https://badge.fury.io/js/formfusion.svg)](https://badge.fury.io/js/formfusion)
 
-Effortlessly manage forms in your React applications with the React Form Manager developed by CoreLab UI.
+Effortlessly manage forms in your React applications with the FormFusion developed by CoreLab UI.
 This library provides an efficient and adaptable solution for handling forms with **built-in validation**, **full accessibility** and completely **customizable** look simplifying the development process and improving user experience.
 
-RFM Leverages the native HTML validation and extends the native [input types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types) to include:
+FormFusion Leverages the native HTML validation and extends the native [input types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types) to include:
 
 - **alphanumeric**
 - **alphabetic**
@@ -16,37 +16,37 @@ RFM Leverages the native HTML validation and extends the native [input types](ht
 - **postal-code**
 - **uuid**
 - **ssn**
-- **...and many more** - See full list of types [here](https://www.corelabui.com/react-form-manager/api/types)
+- **...and many more** - See full list of types [here](https://www.corelabui.com/formfusion/api/types)
 
 ## Features
 
 - **Efficiency:** Optimize your form-handling process this powerful, lightweight library.
-- **Adaptability:** Easily integrate React Form Manager into new or existing projects.
+- **Adaptability:** Easily integrate FormFusion into new or existing projects.
 - **Out-of-the-Box Validation:** Use the built-in validation rules without hassle.
 - **Customizable:** Tailor the UI to your specific needs and preferences.
-- **No dependencies:** RFM is self-contained and it does not rely on any external dependencies
+- **No dependencies:** FormFusion is self-contained and it does not rely on any external dependencies
 
 ## Installation
 
-You can install React Form Manager via npm or yarn:
+You can install FormFusion via npm or yarn:
 
 ```bash
-npm install @corelabui/rfm
+npm install formfusion
 ```
 
 or
 
 ```bash
-yarn add @corelabui/rfm
+yarn add formfusion
 ```
 
 ## Usage
 
-Example of using React Form Manager for a simple uncontrolled form with username field with validation
+Example of using FormFusion for a simple uncontrolled form with username field with validation
 
 ```jsx
 import React from "react";
-import { Form, Input } from "@corelabui/rfm";
+import { Form, Input } from "formfusion";
 
 const MyForm = () => {
   const onSubmit = (data) => {
@@ -65,7 +65,7 @@ export default MyForm;
 
 Start managing your forms efficiently!
 
-For detailed documentation and examples, please visit our [Documentation Page](https://www.corelabui.com/react-form-manager).
+For detailed documentation and examples, please visit our [Documentation Page](https://www.corelabui.com/formfusion).
 
 ---
 

@@ -1,6 +1,6 @@
 {
-  "name": "@corelabui/rfm",
-  "version": "0.0.28",
+  "name": "formfusion",
+  "version": "0.0.1",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
@@ -24,12 +24,12 @@
   "main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
-  "author": "Corelab UI",
+  "author": "Sara Mitevska",
   "license": "BSD-2-Clause license",
   "bugs": {
-    "url": "https://github.com/corelabui/rfm/issues"
+    "url": "https://github.com/corelabui/formfusion/issues"
   },
-  "homepage": "https://www.corelabui.com/react-form-manager",
+  "homepage": "https://www.corelabui.com/formfusion",
   "peerDependencies": {},
   "devDependencies": {
     "@babel/preset-react": "^7.23.3",
