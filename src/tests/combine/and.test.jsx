@@ -11,7 +11,7 @@ describe("Testing validity of combined patterns", () => {
   beforeAll(() => {
     console.log(patterns.minLetters);
     render(
-      <Form onSubmit={() => { }}>
+      <Form onSubmit={() => {}}>
         <Input
           id="combined"
           name="combined"

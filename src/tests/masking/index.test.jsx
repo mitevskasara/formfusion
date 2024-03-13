@@ -12,7 +12,7 @@ describe("Testing input masking", () => {
 
   beforeAll(() => {
     render(
-      <Form onSubmit={() => { }}>
+      <Form onSubmit={() => {}}>
         <Input
           id="masking-test"
           name="masking-test"

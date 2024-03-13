@@ -31,7 +31,11 @@ const Form = ({
         controlled: config ? true : false,
       }}
     >
-      <form {...rest} onSubmit={handleSubmit} ref={formRef}>
+      <form
+        {...rest}
+        onSubmit={rest.action ? undefined : handleSubmit}
+        ref={formRef}
+      >
         {children}
       </form>
     </FormContext.Provider>

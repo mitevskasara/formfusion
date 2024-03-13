@@ -13,9 +13,9 @@ const useForm = (config) => {
 
     setValues((prevData) => ({
       ...prevData,
-      [key]: value
+      [key]: value,
     }));
-  };
+  }
 
   function onValidate(e, customValidity) {
     e.preventDefault();
@@ -47,7 +47,7 @@ const useForm = (config) => {
     if (mask) {
       e.target.value = maskInput(mask, value);
     }
-  };
+  }
 
   function onChange(e) {
     const { name, value, checked } = e.target;
@@ -55,14 +55,14 @@ const useForm = (config) => {
       ...prevData,
       [name]: checked ? Boolean(checked) : value,
     }));
-  };
+  }
 
   function onFocus(e) {
     setTouched((prevData) => ({
       ...prevData,
       [e.target.name]: true,
     }));
-  };
+  }
 
   function onPaste(e) {
     const { dataset } = e.target;
@@ -76,14 +76,14 @@ const useForm = (config) => {
   function resetForm() {
     formRef?.current?.reset();
     if (Object.keys(values).length > 0) setValues({});
-  };
+  }
 
   function parseEntries(obj) {
     for (const [key, value] of Object.entries(obj)) {
       try {
         const parsed = JSON.parse(value);
         obj[key] = parsed;
-      } catch (_error) { }
+      } catch (_error) {}
     }
     return obj;
   }
@@ -96,7 +96,7 @@ const useForm = (config) => {
     const form = e.target;
     const formData = new FormData(form);
     if (Object.keys(values).length > 0) {
-      Object.keys(values).forEach(key => {
+      Object.keys(values).forEach((key) => {
         switch (typeof values[key]) {
           case "string": {
             formData.append(key, values[key]);
@@ -109,11 +109,10 @@ const useForm = (config) => {
           default:
             formData.append(key, values[key]);
         }
-      }
-      )
+      });
     }
     config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
-  };
+  }
 
   return {
     formRef,

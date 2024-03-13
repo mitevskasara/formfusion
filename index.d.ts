@@ -1,5 +1,5 @@
-declare module 'formfusion' {
-  import * as React from 'react';
+declare module "formfusion" {
+  import * as React from "react";
 
   export interface CustomValidityValue {
     badInput?: string | "";
@@ -66,7 +66,9 @@ declare module 'formfusion' {
     validateOnBlur?: boolean;
   }
 
-  interface FormProps extends FormConfigParams, Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> { }
+  interface FormProps
+    extends FormConfigParams,
+      Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {}
 
   export type PostalCodes = {
     AF: string;
@@ -751,15 +753,20 @@ declare module 'formfusion' {
   };
 
   type ReplaceUnderscoreWithHyphen<S extends string> =
-    S extends `${infer Prefix}_${infer Suffix}` ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}` : S;
+    S extends `${infer Prefix}_${infer Suffix}`
+      ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
+      : S;
 
   type LowercaseKeys<T> = {
-    [K in keyof T as K extends string ? ReplaceUnderscoreWithHyphen<Lowercase<K>> : never]: T[K];
+    [K in keyof T as K extends string
+      ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
+      : never]: T[K];
   };
 
-  type CamelCase<T extends string> = T extends `${infer Before}_${infer Char}${infer After}`
-    ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
-    : Lowercase<T>;
+  type CamelCase<T extends string> =
+    T extends `${infer Before}_${infer Char}${infer After}`
+      ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
+      : Lowercase<T>;
 
   type CamelCaseKeys<T> = {
     [K in keyof T as CamelCase<string & K>]: T[K];
@@ -811,7 +818,8 @@ declare module 'formfusion' {
     [K in keyof T as K extends string ? Lowercase<K> : never]: T[K];
   };
 
-  export type Types = LowercaseKeys<RegexPatterns>
+  export type Types =
+    | LowercaseKeys<RegexPatterns>
     | PostalCodeTypes
     | IbansTypes
     | LicencePlatesTypes
@@ -820,7 +828,8 @@ declare module 'formfusion' {
     | VatsTypes
     | PhoneNumbersTypes;
 
-  export type NativeTypes = "button"
+  export type NativeTypes =
+    | "button"
     | "checkbox"
     | "color"
     | "date"
@@ -843,7 +852,8 @@ declare module 'formfusion' {
     | "url"
     | "week";
 
-  export type Type = NativeTypes
+  export type Type =
+    | NativeTypes
     | keyof LowercaseKeys<RegexPatterns>
     | keyof PostalCodeTypes
     | keyof IbansTypes
@@ -884,7 +894,7 @@ declare module 'formfusion' {
     classes?: { field?: string; label?: string; error?: string };
     className?: string;
     mask?: string;
-  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
+  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
 
   export type InputPropsWithType = InputPropsBase & {
     type: Type;

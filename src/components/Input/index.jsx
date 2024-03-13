@@ -50,9 +50,17 @@ const Input = ({
         data-mask={mask}
         className={inputClasses}
         type={nativeTypes.includes(type) ? type : "text"}
-        pattern={rest.pattern || inputTypes[type] || type}
+        pattern={
+          rest.pattern
+            ? rest.pattern
+            : nativeTypes.includes(type)
+            ? undefined
+            : inputTypes[type] || type
+        }
         onInput={
-          mask || validateOnChange ? (e) => onValidate(e, validation) : undefined
+          mask || validateOnChange
+            ? (e) => onValidate(e, validation)
+            : undefined
         }
         onChange={controlled ? onChange : undefined}
         onFocus={controlled ? onFocus : undefined}

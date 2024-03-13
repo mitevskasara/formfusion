@@ -11,7 +11,7 @@ describe("Testing validity of input type credit-card-number-discover", () => {
 
   beforeAll(() => {
     render(
-      <Form onSubmit={() => { }}>
+      <Form onSubmit={() => {}}>
         <Input
           id="credit-card-number-discover"
           name="credit-card-number-discover"
