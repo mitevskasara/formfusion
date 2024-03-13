@@ -1,4 +1,10 @@
-## 0.0.22 (2024-02-22)
+## 1.0.2 (2024-03-13)
+
+Bug fixes
+
+- Invalid pattern applied when using native input types is fixed
+
+## 1.0.1 (2024-02-22)
 
 **⚠ BREAKING CHANGES**
 
