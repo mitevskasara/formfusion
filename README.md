@@ -2,8 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/formfusion.svg)](https://badge.fury.io/js/formfusion)
 
-Effortlessly manage forms in your React applications with the FormFusion developed by CoreLab UI.
-This library provides an efficient and adaptable solution for handling forms with **built-in validation**, **full accessibility** and completely **customizable** look simplifying the development process and improving user experience.
+The FormFusion library is an efficient and adaptable solution for handling forms with **built-in validation**, **full accessibility** and completely **customizable** look simplifying the development process and improving user experience.
 
 FormFusion Leverages the native HTML validation and extends the native [input types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types) to include:
 
@@ -13,10 +12,21 @@ FormFusion Leverages the native HTML validation and extends the native [input ty
 - **username**
 - **credit-card-number**
 - **ccv**
-- **postal-code**
 - **uuid**
 - **ssn**
 - **...and many more** - See full list of types [here](https://www.corelabui.com/formfusion/api/types)
+
+Additionally, FormFusion provides other more specific sets of validation rules such as rules for postcodes validaion, IBAN numbers validation, Licence plates validation etc.
+These sets are not included in the formfusion package to ensure optimal size and performance but they can be installed separately.
+
+List of available sets:
+- [@formfusion/postcodes](https://www.npmjs.com/package/@formfusion/postcodes)
+- [@formfusion/licence-plates](https://www.npmjs.com/package/@formfusion/licence-plates)
+- [@formfusion/iban](https://www.npmjs.com/package/@formfusion/iban)
+- [@formfusion/passports](https://www.npmjs.com/package/@formfusion/passports)
+- [@formfusion/phones](https://www.npmjs.com/package/@formfusion/phones)
+- [@formfusion/tin](https://www.npmjs.com/package/@formfusion/tin)
+- [@formfusion/vat](https://www.npmjs.com/package/@formfusion/vat)
 
 ## Features
 
