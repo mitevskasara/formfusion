@@ -8,5 +8,5 @@ Object.keys(patterns).map((key) =>
 );
 
 export default {
-  ...restTypes
+  ...restTypes,
 };

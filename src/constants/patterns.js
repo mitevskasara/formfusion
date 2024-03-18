@@ -30,5 +30,5 @@ export default {
     `^(?!.*(${array
       .map((str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
       .join("|")})).*$`,
-  ...restTypes
+  ...restTypes,
 };
