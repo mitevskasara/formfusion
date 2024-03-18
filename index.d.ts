@@ -217,7 +217,7 @@ declare module "formfusion" {
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
 
   export type InputPropsWithType = InputPropsBase & {
-    type: Type;
+    type: Type | string;
     pattern?: never;
   };
 
