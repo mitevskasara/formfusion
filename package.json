@@ -7,7 +7,7 @@
     "build": "find . -mindepth 1 -maxdepth 1 -type d ! -name 'node_modules' ! -name 'src' ! -name 'plugins' -exec sh -c 'find \"{}\" -type f -name \"*.js\" | read' \\; -exec rm -rf {} \\; && node esbuild.js",
     "test": "jest src/tests/masking/*.test.jsx",
     "version": "conventional-changelog -p -i CHANGELOG.md -s -r 0",
-    "publish": "npm publish --access public"
+    "publish-package": "npm publish --access public"
   },
   "repository": {
     "type": "git",
