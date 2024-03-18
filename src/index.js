@@ -4,6 +4,6 @@ export { default as Textarea } from "./components/Textarea";
 
 export { default as useForm } from "./hooks/useForm";
 
-export { default as patterns } from "./constants/patterns";
+export { default as rules } from "./constants/patterns";
 
 export { default as connect } from "./utils/connect";

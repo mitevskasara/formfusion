@@ -68,7 +68,7 @@ declare module "formfusion" {
 
   interface FormProps
     extends FormConfigParams,
-      Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {}
+    Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> { }
 
   export type RegexPatterns = {
     NUMERIC: string;
@@ -140,19 +140,19 @@ declare module "formfusion" {
 
   type ReplaceUnderscoreWithHyphen<S extends string> =
     S extends `${infer Prefix}_${infer Suffix}`
-      ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
-      : S;
+    ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
+    : S;
 
   type LowercaseKeys<T> = {
     [K in keyof T as K extends string
-      ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
-      : never]: T[K];
+    ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
+    : never]: T[K];
   };
 
   type CamelCase<T extends string> =
     T extends `${infer Before}_${infer Char}${infer After}`
-      ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
-      : Lowercase<T>;
+    ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
+    : Lowercase<T>;
 
   type CamelCaseKeys<T> = {
     [K in keyof T as CamelCase<string & K>]: T[K];
@@ -190,7 +190,7 @@ declare module "formfusion" {
 
   export type Type = NativeTypes | keyof LowercaseKeys<RegexPatterns>;
 
-  export type Patterns = {
+  export type Rules = {
     length: (length: number) => string;
     minCharacters: (length: number) => string;
     maxCharacters: (length: number) => string;
@@ -245,5 +245,5 @@ declare module "formfusion" {
 
   export const connect: (config: FormConfigParams, type: Type) => object;
 
-  export const patterns: Patterns;
+  export const rules: Rules;
 }
