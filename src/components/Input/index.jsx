@@ -38,7 +38,7 @@ const Input = ({
   }, []);
 
   return (
-    <div className={classes.root ?? ""}>
+    <div className={classes?.root ?? ""}>
       <label htmlFor={rest.name} className={classes?.label}>
         {label}
       </label>
