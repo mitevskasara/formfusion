@@ -24,7 +24,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
   }, []);
 
   return (
-    <div className={classes.root ?? ''}>
+    <div className={classes.root ?? ""}>
       <label htmlFor={rest.name} className={classes?.label}>
         {label}
       </label>
