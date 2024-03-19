@@ -54,8 +54,8 @@ const Input = ({
           rest.pattern
             ? rest.pattern
             : nativeTypes.includes(type)
-              ? undefined
-              : inputTypes[type] || type
+            ? undefined
+            : inputTypes[type] || type
         }
         onInput={
           mask || validateOnChange

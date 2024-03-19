@@ -27,8 +27,8 @@ const connect = (
     pattern: rest.pattern
       ? rest.pattern
       : nativeTypes.includes(type)
-        ? undefined
-        : inputTypes[type] || type,
+      ? undefined
+      : inputTypes[type] || type,
     onInput: validateOnChange ? (e) => onValidate(e, validation) : undefined,
     onChange: controlled ? onChange : undefined,
     onFocus: onFocus,
