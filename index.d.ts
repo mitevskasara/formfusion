@@ -211,7 +211,7 @@ declare module "formfusion" {
     name: string;
     validation?: CustomValidityValue;
     label?: string;
-    classes?: { field?: string; label?: string; error?: string };
+    classes?: { root?: string; field?: string; label?: string; error?: string };
     className?: string;
     mask?: string;
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
@@ -231,7 +231,7 @@ declare module "formfusion" {
   export type TextareaProps = {
     validation?: CustomValidityValue;
     label?: string;
-    classes?: { field?: string; label?: string; error?: string };
+    classes?: { root?: string; field?: string; label?: string; error?: string };
     className?: string;
   } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 

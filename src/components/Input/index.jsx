@@ -38,7 +38,7 @@ const Input = ({
   }, []);
 
   return (
-    <>
+    <div className={classes.root ?? ''}>
       <label htmlFor={rest.name} className={classes?.label}>
         {label}
       </label>
@@ -54,8 +54,8 @@ const Input = ({
           rest.pattern
             ? rest.pattern
             : nativeTypes.includes(type)
-            ? undefined
-            : inputTypes[type] || type
+              ? undefined
+              : inputTypes[type] || type
         }
         onInput={
           mask || validateOnChange
@@ -83,7 +83,7 @@ const Input = ({
         }
       />
       <span className={classes?.error}>{errors[rest.name]}</span>
-    </>
+    </div>
   );
 };
 

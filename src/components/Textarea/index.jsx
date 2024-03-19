@@ -24,7 +24,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
   }, []);
 
   return (
-    <>
+    <div className={classes.root ?? ''}>
       <label htmlFor={rest.name} className={classes?.label}>
         {label}
       </label>
@@ -45,7 +45,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
         aria-errormessage={errors[rest.name] || undefined}
       />
       <span className={classes?.error}>{errors[rest.name]}</span>
-    </>
+    </div>
   );
 };
 
