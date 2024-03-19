@@ -1,8 +1,16 @@
 import { useRef } from "react";
 import inputTypes from "../constants/types";
 import nativeTypes from "../constants/nativeTypes";
+import validity from "../constants/validity";
 
-const connect = (config, type, validation = "") => {
+const connect = (
+  config,
+  type,
+  validation = type?.startsWith("postal-code")
+    ? validity["postal-code"]
+    : validity[type],
+  ...rest
+) => {
   const {
     controlled,
     onValidate,
@@ -11,35 +19,28 @@ const connect = (config, type, validation = "") => {
     validateOnBlur,
     onFocus,
   } = config;
-
   const inputRef = useRef(null);
-
-  const pattern = nativeTypes.includes(type)
-    ? undefined
-    : inputTypes[type] || type;
-  const onInput = validateOnChange
-    ? (e) => onValidate(e, validation)
-    : undefined;
-  const onBlur = validateOnBlur ? onInput : undefined;
-
-  const isValid = inputRef?.current?.validity?.valid;
-  const ariaInvalid = isValid ? "false" : "true";
-  const ariaErrormessage = isValid
-    ? undefined
-    : inputRef?.current?.validationMessage;
 
   return {
     ref: inputRef,
     type: nativeTypes.includes(type) ? type : "text",
-    pattern,
-    onInput,
+    pattern: rest.pattern
+      ? rest.pattern
+      : nativeTypes.includes(type)
+        ? undefined
+        : inputTypes[type] || type,
+    onInput: validateOnChange ? (e) => onValidate(e, validation) : undefined,
     onChange: controlled ? onChange : undefined,
-    onFocus,
-    onBlur,
-    onInvalid: onInput,
+    onFocus: onFocus,
+    onBlur: validateOnBlur ? (e) => onValidate(e, validation) : undefined,
+    onInvalid: (e) => onValidate(e, validation),
     "data-type": inputTypes[type] && type,
-    "aria-invalid": ariaInvalid,
-    "aria-errormessage": ariaErrormessage,
+    "aria-invalid": !Boolean(inputRef?.current?.validity?.valid)
+      ? "true"
+      : "false",
+    "aria-errormessage": !Boolean(inputRef?.current?.validity?.valid)
+      ? inputRef?.current?.validationMessage
+      : undefined,
   };
 };
 
