@@ -78,7 +78,7 @@ const useForm = (config) => {
       try {
         const parsed = JSON.parse(value);
         obj[key] = parsed;
-      } catch (_error) { }
+      } catch (_error) {}
     }
     return obj;
   };

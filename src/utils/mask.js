@@ -1,6 +1,6 @@
 function maskInput(mask, value) {
   const placeholder = /#/;
-  const charArray = value.split("").filter(char => placeholder.test(char));
+  const charArray = value.split("").filter((char) => placeholder.test(char));
 
   let masked = "";
   let charIndex = 0;

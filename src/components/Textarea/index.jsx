@@ -57,7 +57,7 @@ const Textarea = React.memo(
         <span className={classes?.error}>{errors[rest.name]}</span>
       </div>
     );
-  }
+  },
 );
 
 export default Textarea;

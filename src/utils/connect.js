@@ -2,7 +2,7 @@ import { useRef } from "react";
 import inputTypes from "../constants/types";
 import nativeTypes from "../constants/nativeTypes";
 
-const connect = (config, type, validation = '') => {
+const connect = (config, type, validation = "") => {
   const {
     controlled,
     onValidate,
@@ -14,13 +14,19 @@ const connect = (config, type, validation = '') => {
 
   const inputRef = useRef(null);
 
-  const pattern = nativeTypes.includes(type) ? undefined : inputTypes[type] || type;
-  const onInput = validateOnChange ? (e) => onValidate(e, validation) : undefined;
+  const pattern = nativeTypes.includes(type)
+    ? undefined
+    : inputTypes[type] || type;
+  const onInput = validateOnChange
+    ? (e) => onValidate(e, validation)
+    : undefined;
   const onBlur = validateOnBlur ? onInput : undefined;
 
   const isValid = inputRef?.current?.validity?.valid;
   const ariaInvalid = isValid ? "false" : "true";
-  const ariaErrormessage = isValid ? undefined : inputRef?.current?.validationMessage;
+  const ariaErrormessage = isValid
+    ? undefined
+    : inputRef?.current?.validationMessage;
 
   return {
     ref: inputRef,

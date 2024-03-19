@@ -12,24 +12,27 @@ const Form = React.memo(
     validateOnBlur = true,
     ...rest
   }) => {
-    const configuration = useMemo(() => {
-      return config || useForm({
+    const configuration =
+      config ||
+      useForm({
         onSubmit,
         initialValues,
         validateOnChange,
         validateOnBlur,
       });
-    }, [config, onSubmit, initialValues, validateOnChange, validateOnBlur]);
 
     const { formRef, handleSubmit } = configuration;
 
-    const contextValue = useMemo(() => ({
-      ...configuration,
-      initialValues,
-      validateOnChange: config?.validateOnChange || validateOnChange,
-      validateOnBlur: config?.validateOnBlur || validateOnBlur,
-      controlled: Boolean(config),
-    }), [configuration, initialValues, validateOnChange, validateOnBlur]);
+    const contextValue = useMemo(
+      () => ({
+        ...configuration,
+        initialValues,
+        validateOnChange: config?.validateOnChange || validateOnChange,
+        validateOnBlur: config?.validateOnBlur || validateOnBlur,
+        controlled: Boolean(config),
+      }),
+      [configuration, initialValues, validateOnChange, validateOnBlur],
+    );
 
     return (
       <FormContext.Provider value={contextValue}>
@@ -42,7 +45,7 @@ const Form = React.memo(
         </form>
       </FormContext.Provider>
     );
-  }
+  },
 );
 
 export default Form;

@@ -43,7 +43,9 @@ const Input = React.memo(
     }, [controlled, rest.name, setFieldValue, values]);
 
     const handleInput = useMemo(() => {
-      return (validateOnChange || mask) ? (e) => onValidate(e, validation) : undefined;
+      return validateOnChange || mask
+        ? (e) => onValidate(e, validation)
+        : undefined;
     }, [mask, onValidate, validation, validateOnChange]);
 
     const handleError = useMemo(() => {
@@ -70,8 +72,8 @@ const Input = React.memo(
             rest.pattern
               ? rest.pattern
               : nativeTypes.includes(type)
-                ? undefined
-                : inputTypes[type] || type
+              ? undefined
+              : inputTypes[type] || type
           }
           onInput={handleInput}
           onChange={controlled ? onChange : undefined}
@@ -86,7 +88,7 @@ const Input = React.memo(
         <span className={classes?.error}>{errors[rest.name]}</span>
       </div>
     );
-  }
+  },
 );
 
 export default Input;
