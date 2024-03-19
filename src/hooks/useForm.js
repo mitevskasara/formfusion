@@ -7,22 +7,19 @@ const useForm = (config) => {
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
 
-  function handleSetValues(key, value) {
-    const formData = new FormData(formRef.current);
-    formData.append(key, value);
-
+  const handleSetValues = (key, value) => {
     setValues((prevData) => ({
       ...prevData,
       [key]: value,
     }));
-  }
+  };
 
-  function onValidate(e, customValidity) {
+  const onValidate = (e, customValidity) => {
     e.preventDefault();
     const { name, value, validity } = e.target;
 
     if (customValidity) {
-      Object.keys(customValidity).map((key) => {
+      Object.keys(customValidity).forEach((key) => {
         if (validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
         } else {
@@ -33,13 +30,11 @@ const useForm = (config) => {
 
     e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
 
-    if (!e.target.validity.valid || (e.target.validity.valid && errors[name])) {
-      setErrors((prevData) => {
-        return {
-          ...prevData,
-          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
-        };
-      });
+    if (!validity.valid || (validity.valid && errors[name])) {
+      setErrors((prevData) => ({
+        ...prevData,
+        [name]: validity.valid ? "" : e.target.validationMessage,
+      }));
     }
 
     const mask = e.target.dataset.mask;
@@ -47,72 +42,56 @@ const useForm = (config) => {
     if (mask) {
       e.target.value = maskInput(mask, value);
     }
-  }
+  };
 
-  function onChange(e) {
+  const onChange = (e) => {
     const { name, value, checked } = e.target;
     setValues((prevData) => ({
       ...prevData,
       [name]: checked ? Boolean(checked) : value,
     }));
-  }
+  };
 
-  function onFocus(e) {
+  const onFocus = (e) => {
     setTouched((prevData) => ({
       ...prevData,
       [e.target.name]: true,
     }));
-  }
+  };
 
-  function onPaste(e) {
+  const onPaste = (e) => {
     const { dataset } = e.target;
     let paste = (e.clipboardData || window.clipboardData).getData("text");
     const mask = dataset.mask;
     if (mask) {
       e.target.value = maskInput(mask, paste);
     }
-  }
+  };
 
-  function resetForm() {
-    formRef?.current?.reset();
-    if (Object.keys(values).length > 0) setValues({});
-  }
+  const resetForm = () => {
+    formRef.current?.reset();
+    setValues({});
+  };
 
-  function parseEntries(obj) {
+  const parseEntries = (obj) => {
     for (const [key, value] of Object.entries(obj)) {
       try {
         const parsed = JSON.parse(value);
         obj[key] = parsed;
-      } catch (_error) {}
+      } catch (_error) { }
     }
     return obj;
-  }
+  };
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (Object.keys(errors).filter((key) => errors[key]).length) {
-      e.preventDefault();
+    if (Object.values(errors).some((error) => error)) {
+      return;
     }
-    const form = e.target;
-    const formData = new FormData(form);
-    if (Object.keys(values).length > 0) {
-      Object.keys(values).forEach((key) => {
-        switch (typeof values[key]) {
-          case "string": {
-            formData.append(key, values[key]);
-            break;
-          }
-          case "object": {
-            formData.append(key, JSON.stringify(values[key]));
-            break;
-          }
-          default:
-            formData.append(key, values[key]);
-        }
-      });
-    }
-    config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
-  }
+    const formData = new FormData(e.target);
+    const parsedFormData = parseEntries(Object.fromEntries(formData.entries()));
+    config.onSubmit(parsedFormData);
+  };
 
   return {
     formRef,

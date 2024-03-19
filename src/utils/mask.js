@@ -1,7 +1,6 @@
 function maskInput(mask, value) {
-  const charArray = value
-    .replace(new RegExp(`[${mask.match(/[^#]/g).join("")}]`, "g"), "")
-    .split("");
+  const placeholder = /#/;
+  const charArray = value.split("").filter(char => placeholder.test(char));
 
   let masked = "";
   let charIndex = 0;
@@ -11,7 +10,7 @@ function maskInput(mask, value) {
       if (charIndex < charArray.length) {
         masked += charArray[charIndex++];
       }
-    } else if (value[i]) {
+    } else {
       masked += mask[i];
     }
   }
