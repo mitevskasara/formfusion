@@ -3,7 +3,10 @@ import reducer, { initialState } from "../state/reducer";
 import ACTIONS from "../state/actions";
 
 const useForm = (config) => {
-  const [state, dispatch] = useReducer(reducer, { ...initialState, values: config?.initialValues });
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    values: config?.initialValues,
+  });
 
   function setFieldValue(key, value) {
     const formData = new FormData(config.formRef?.current);
@@ -27,7 +30,7 @@ const useForm = (config) => {
     setFieldValue,
     resetForm,
     state,
-    dispatch
+    dispatch,
   };
 };
 

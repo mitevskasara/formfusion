@@ -6,8 +6,12 @@ import ACTIONS from "../state/actions";
 const useFormHelpers = () => {
   const config = useContext(FormContext);
 
-  const [state, dispatch] = config?.dispatch ? [config?.state, config?.dispatch] :
-    useReducer(reducer, { ...initialState, values: config?.initialValues ?? {} });
+  const [state, dispatch] = config?.dispatch
+    ? [config?.state, config?.dispatch]
+    : useReducer(reducer, {
+        ...initialState,
+        values: config?.initialValues ?? {},
+      });
 
   function initValue(key) {
     dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: "" } });
@@ -29,8 +33,16 @@ const useFormHelpers = () => {
 
     e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
 
-    if (!e.target.validity.valid || (e.target.validity.valid && state.errors[name])) {
-      dispatch({ type: ACTIONS.SET_ERRORS, payload: { [name]: e.target.validity.valid ? "" : e.target.validationMessage } });
+    if (
+      !e.target.validity.valid ||
+      (e.target.validity.valid && state.errors[name])
+    ) {
+      dispatch({
+        type: ACTIONS.SET_ERRORS,
+        payload: {
+          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
+        },
+      });
     }
 
     const mask = e.target.dataset.mask;
@@ -42,7 +54,10 @@ const useFormHelpers = () => {
 
   function onChange(e) {
     const { name, value, checked } = e.target;
-    dispatch({ type: ACTIONS.SET_VALUES, payload: { [name]: checked ? Boolean(checked) : value } });
+    dispatch({
+      type: ACTIONS.SET_VALUES,
+      payload: { [name]: checked ? Boolean(checked) : value },
+    });
   }
 
   function onFocus(e) {
@@ -64,8 +79,8 @@ const useFormHelpers = () => {
     onChange,
     onFocus,
     onValidate,
-    resetForm
-  }
-}
+    resetForm,
+  };
+};
 
 export default useFormHelpers;

@@ -11,7 +11,7 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
     controlled,
     onChange,
     onFocus,
-    onValidate
+    onValidate,
   } = useFormHelpers();
 
   let textareaClasses = className ? `${className}` : "";
