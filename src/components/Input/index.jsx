@@ -1,8 +1,9 @@
-import React, { useContext, useRef, useEffect } from "react";
-import FormContext from "../../context";
+import React, { useRef } from "react";
 import inputTypes from "../../constants/types";
 import nativeTypes from "../../constants/nativeTypes";
 import validity from "../../constants/validity";
+import { onPaste } from "../../utils/helpers";
+import useFormHelpers from "../../hooks/useFormHelpers";
 
 const Input = ({
   type,
@@ -17,25 +18,18 @@ const Input = ({
 }) => {
   const ref = useRef(null);
   const {
-    errors,
     values,
-    onValidate,
-    onChange,
-    onPaste,
-    setFieldValue,
+    errors,
     validateOnChange,
     validateOnBlur,
-    onFocus,
     controlled,
-  } = useContext(FormContext);
+    onChange,
+    onFocus,
+    onValidate,
+  } = useFormHelpers();
+
   let inputClasses = className ? `${className}` : "";
   if (classes?.field) inputClasses += `${classes.field}`;
-
-  useEffect(() => {
-    if (controlled && !values[rest.name]) {
-      setFieldValue(rest.name, "");
-    }
-  }, []);
 
   return (
     <div className={classes?.root ?? ""}>
@@ -45,6 +39,7 @@ const Input = ({
       <input
         {...rest}
         ref={ref}
+        defaultValue={controlled ? undefined : values && values[rest.name]}
         value={controlled ? values[rest.name] || "" : undefined}
         data-testid="input"
         data-mask={mask}

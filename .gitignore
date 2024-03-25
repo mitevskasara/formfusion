@@ -1,3 +1,4 @@
 node_modules
 .history
 index.js
+!src/state/*/index.js
