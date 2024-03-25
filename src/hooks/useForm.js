@@ -1,133 +1,33 @@
-import { useState, useRef } from "react";
-import maskInput from "../utils/mask";
+import { useReducer } from "react";
+import reducer, { initialState } from "../state/reducer";
+import ACTIONS from "../state/actions";
 
 const useForm = (config) => {
-  const formRef = useRef(null);
-  const [values, setValues] = useState(config.initialValues || {});
-  const [touched, setTouched] = useState({});
-  const [errors, setErrors] = useState({});
+  const [state, dispatch] = useReducer(reducer, { ...initialState, values: config?.initialValues });
 
-  function handleSetValues(key, value) {
-    const formData = new FormData(formRef.current);
+  function setFieldValue(key, value) {
+    const formData = new FormData(config.formRef?.current);
     formData.append(key, value);
-
-    setValues((prevData) => ({
-      ...prevData,
-      [key]: value,
-    }));
-  }
-
-  function onValidate(e, customValidity) {
-    e.preventDefault();
-    const { name, value, validity } = e.target;
-
-    if (customValidity) {
-      Object.keys(customValidity).map((key) => {
-        if (validity[key]) {
-          e.target.setCustomValidity(customValidity[key]);
-        } else {
-          e.target.setCustomValidity("");
-        }
-      });
-    }
-
-    e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
-
-    if (!e.target.validity.valid || (e.target.validity.valid && errors[name])) {
-      setErrors((prevData) => {
-        return {
-          ...prevData,
-          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
-        };
-      });
-    }
-
-    const mask = e.target.dataset.mask;
-
-    if (mask) {
-      e.target.value = maskInput(mask, value);
-    }
-  }
-
-  function onChange(e) {
-    const { name, value, checked } = e.target;
-    setValues((prevData) => ({
-      ...prevData,
-      [name]: checked ? Boolean(checked) : value,
-    }));
-  }
-
-  function onFocus(e) {
-    setTouched((prevData) => ({
-      ...prevData,
-      [e.target.name]: true,
-    }));
-  }
-
-  function onPaste(e) {
-    const { dataset } = e.target;
-    let paste = (e.clipboardData || window.clipboardData).getData("text");
-    const mask = dataset.mask;
-    if (mask) {
-      e.target.value = maskInput(mask, paste);
-    }
+    dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: value } });
   }
 
   function resetForm() {
-    formRef?.current?.reset();
-    if (Object.keys(values).length > 0) setValues({});
-  }
-
-  function parseEntries(obj) {
-    for (const [key, value] of Object.entries(obj)) {
-      try {
-        const parsed = JSON.parse(value);
-        obj[key] = parsed;
-      } catch (_error) {}
+    config.formRef?.current?.reset();
+    if (Object.keys(state.values).length > 0) {
+      dispatch({ type: ACTIONS.SET_VALUES, payload: {} });
+      dispatch({ type: ACTIONS.SET_ERRORS, payload: {} });
+      dispatch({ type: ACTIONS.SET_TOUCHED, payload: {} });
     }
-    return obj;
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (Object.keys(errors).filter((key) => errors[key]).length) {
-      e.preventDefault();
-    }
-    const form = e.target;
-    const formData = new FormData(form);
-    if (Object.keys(values).length > 0) {
-      Object.keys(values).forEach((key) => {
-        switch (typeof values[key]) {
-          case "string": {
-            formData.append(key, values[key]);
-            break;
-          }
-          case "object": {
-            formData.append(key, JSON.stringify(values[key]));
-            break;
-          }
-          default:
-            formData.append(key, values[key]);
-        }
-      });
-    }
-    config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
   }
 
   return {
-    formRef,
-    values,
-    errors,
-    touched,
-    setFieldValue: handleSetValues,
-    onChange,
-    onFocus,
-    onPaste,
-    onValidate,
-    handleSubmit,
+    ...state,
+    ...config,
+    formRef: config.formRef,
+    setFieldValue,
     resetForm,
-    validateOnChange: config?.validateOnChange,
-    validateOnBlur: config?.validateOnBlur,
+    state,
+    dispatch
   };
 };
 

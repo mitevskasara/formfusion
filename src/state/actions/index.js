@@ -1,0 +1,7 @@
+const ACTIONS = {
+  SET_VALUES: 'SET_VALUES',
+  SET_ERRORS: 'SET_ERRORS',
+  SET_TOUCHED: 'SET_TOUCHED'
+};
+
+export default ACTIONS;

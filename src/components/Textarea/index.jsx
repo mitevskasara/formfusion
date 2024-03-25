@@ -1,27 +1,21 @@
-import React, { useContext, useRef, useEffect } from "react";
-import FormContext from "../../context";
+import React, { useRef } from "react";
+import useFormHelpers from "../../hooks/useFormHelpers";
 
 const Textarea = ({ validation, label, classes, className, ...rest }) => {
   const ref = useRef(null);
   const {
     values,
     errors,
-    onValidate,
     validateOnChange,
     validateOnBlur,
-    setFieldValue,
+    controlled,
     onChange,
     onFocus,
-    controlled,
-  } = useContext(FormContext);
+    onValidate
+  } = useFormHelpers();
+
   let textareaClasses = className ? `${className}` : "";
   if (classes?.field) textareaClasses += `${classes.field}`;
-
-  useEffect(() => {
-    if (controlled && !values[rest.name]) {
-      setFieldValue(rest.name, "");
-    }
-  }, []);
 
   return (
     <div className={classes?.root ?? ""}>
