@@ -2,6 +2,7 @@ import { useContext, useReducer } from "react";
 import reducer, { initialState } from "../state/reducer";
 import FormContext from "../context";
 import ACTIONS from "../state/actions";
+import maskInput from "../utils/mask";
 
 const useFormHelpers = () => {
   const config = useContext(FormContext);
@@ -9,9 +10,9 @@ const useFormHelpers = () => {
   const [state, dispatch] = config?.dispatch
     ? [config?.state, config?.dispatch]
     : useReducer(reducer, {
-        ...initialState,
-        values: config?.initialValues ?? {},
-      });
+      ...initialState,
+      values: config?.initialValues ?? {},
+    });
 
   function initValue(key) {
     dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: "" } });

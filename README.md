@@ -53,6 +53,12 @@ yarn add formfusion
 
 ## Usage
 
+In your main file, import the styles for the formfusion styled version.
+
+```jsx
+import 'formfusion/style.css';
+```
+
 Example of using FormFusion for a simple uncontrolled form with username field with validation
 
 ```jsx
@@ -79,5 +85,3 @@ Start managing your forms efficiently!
 For detailed documentation and examples, please visit our [Documentation Page](https://www.corelabui.com/formfusion).
 
 ---
-
-Made with ❤️ by CoreLab UI
