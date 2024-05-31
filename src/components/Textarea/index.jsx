@@ -1,7 +1,13 @@
 import React, { useRef } from "react";
 import useFormHelpers from "../../hooks/useFormHelpers";
 
-const Textarea = ({ validation, label, classes, className, ...rest }) => {
+const Textarea = ({
+  validation,
+  label,
+  classes,
+  className,
+  helperText,
+  ...rest }) => {
   const ref = useRef(null);
   const {
     values,
@@ -14,12 +20,17 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
     onValidate,
   } = useFormHelpers();
 
-  let textareaClasses = className ? `${className}` : "";
+  let rootClasses = className ? `FormFusion-Textarea__root ${className}` : "FormFusion-Textarea__root";
+  let textareaClasses = className ? `FormFusion-Textarea__root__field ${className}` : "FormFusion-Textarea__root__field";
+  let labelClasses = classes?.label ? `FormFusion-Textarea__root__label ${classes?.label}` : "FormFusion-Textarea__root__label";
+  let errorClasses = classes?.error ? `FormFusion-Textarea__root__error ${classes?.error}` : "FormFusion-Textarea__root__error";
+  let helperTextClasses = classes?.helperText ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}` : 'FormFusion-Input__root__field__helper-text';
+
   if (classes?.field) textareaClasses += `${classes.field}`;
 
   return (
-    <div className={classes?.root ?? ""}>
-      <label htmlFor={rest.name} className={classes?.label}>
+    <div className={rootClasses}>
+      <label htmlFor={rest.name} className={labelClasses}>
         {label}
       </label>
       <textarea
@@ -38,7 +49,8 @@ const Textarea = ({ validation, label, classes, className, ...rest }) => {
         aria-invalid={errors[rest.name] ? "true" : "false"}
         aria-errormessage={errors[rest.name] || undefined}
       />
-      <span className={classes?.error}>{errors[rest.name]}</span>
+      {helperText && <span className={helperTextClasses}>{helperText}</span>}
+      <span className={errorClasses}>{errors[rest.name]}</span>
     </div>
   );
 };

@@ -68,7 +68,7 @@ declare module "formfusion" {
 
   interface FormProps
     extends FormConfigParams,
-      Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {}
+    Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> { }
 
   export type RegexPatterns = {
     NUMERIC: string;
@@ -140,19 +140,19 @@ declare module "formfusion" {
 
   type ReplaceUnderscoreWithHyphen<S extends string> =
     S extends `${infer Prefix}_${infer Suffix}`
-      ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
-      : S;
+    ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
+    : S;
 
   type LowercaseKeys<T> = {
     [K in keyof T as K extends string
-      ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
-      : never]: T[K];
+    ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
+    : never]: T[K];
   };
 
   type CamelCase<T extends string> =
     T extends `${infer Before}_${infer Char}${infer After}`
-      ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
-      : Lowercase<T>;
+    ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
+    : Lowercase<T>;
 
   type CamelCaseKeys<T> = {
     [K in keyof T as CamelCase<string & K>]: T[K];
@@ -211,9 +211,11 @@ declare module "formfusion" {
     name: string;
     validation?: CustomValidityValue;
     label?: string;
-    classes?: { root?: string; field?: string; label?: string; error?: string };
+    classes?: { root?: string; field?: string; label?: string; error?: string; helperText?: string; };
     className?: string;
     mask?: string;
+    hideArrows?: boolean;
+    helperText?: string;
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
 
   export type InputPropsWithType = InputPropsBase & {
