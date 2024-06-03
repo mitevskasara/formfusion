@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import reducer, { initialState } from "../state/reducer";
 import ACTIONS from "../state/actions";
+import maskInput from "../utils/mask";
 
 const useForm = (config) => {
   const [state, dispatch] = useReducer(reducer, {
@@ -23,6 +24,41 @@ const useForm = (config) => {
     }
   }
 
+  function onValidate(e, customValidity) {
+    e.preventDefault();
+    const { name, value, validity } = e.target;
+
+    if (customValidity) {
+      Object.keys(customValidity).map((key) => {
+        if (validity[key]) {
+          e.target.setCustomValidity(customValidity[key]);
+        } else {
+          e.target.setCustomValidity("");
+        }
+      });
+    }
+
+    e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+
+    if (
+      !e.target.validity.valid ||
+      (e.target.validity.valid && state.errors[name])
+    ) {
+      dispatch({
+        type: ACTIONS.SET_ERRORS,
+        payload: {
+          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
+        },
+      });
+    }
+
+    const mask = e.target.dataset.mask;
+
+    if (mask) {
+      e.target.value = maskInput(mask, value);
+    }
+  }
+
   return {
     ...state,
     ...config,
@@ -31,6 +67,7 @@ const useForm = (config) => {
     resetForm,
     state,
     dispatch,
+    onValidate
   };
 };
 
