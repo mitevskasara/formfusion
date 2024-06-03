@@ -2,7 +2,7 @@
 
 Bug fixes
 - Uncaught ReferenceError: Cannot access 'resetForm' before initialization is fixed when using controlled version.
-- TypeError: o is not a function is fixed when validateOnChange is enabled.
+- TypeError: onValidate is not a function is fixed when validateOnChange is enabled.
 
 ## 1.1.5 (2024-05-31)
 
