@@ -17,9 +17,10 @@ const Form = forwardRef(
     ref,
   ) => {
     const formRef = useRef(null);
-    const { values, errors, resetForm } = config?.values
-      ? { values: config.values, errors: config.errors, resetForm }
+    const formConfig = config?.values
+      ? { values: config.values, errors: config.errors }
       : useFormHelpers();
+    const { values, errors, resetForm } = formConfig;
 
     function handleSubmit(e) {
       e.preventDefault();

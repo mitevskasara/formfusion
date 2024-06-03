@@ -1,6 +1,7 @@
-## 1.0.5 (2024-06-03)
+## 1.0.7 (2024-06-03)
 
 Bug fixes
+- Uncaught ReferenceError: Cannot access 'resetForm' before initialization is fixed when using controlled version.
 
 ## 1.0.5 (2024-05-31)
 
