@@ -87,6 +87,7 @@ const Form = forwardRef(
           {...rest}
           onSubmit={rest.action ? undefined : handleSubmit}
           ref={config?.formRef ?? ref ?? formRef}
+          className="FormFusion"
         >
           {children}
         </form>
