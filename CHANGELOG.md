@@ -1,9 +1,9 @@
-## 1.0.7 (2024-06-03)
+## 1.1.8 (2024-06-03)
 
 Bug fixes
 - Uncaught ReferenceError: Cannot access 'resetForm' before initialization is fixed when using controlled version.
 
-## 1.0.5 (2024-05-31)
+## 1.1.5 (2024-05-31)
 
 Two new optional properties introduced in Input component:
 - **hideArrows**: Whether or not to hide the default arrows of a type 'number' input
@@ -13,7 +13,7 @@ Two new optional properties introduced in Input component:
 One new optional property introduced in Textarea component:
 - **helperText**: Additional info text shown below the input field for a better user experience
 
-## 1.0.4 (2024-05-28)
+## 1.1.4 (2024-05-28)
 
 Released styled version of the library
 
