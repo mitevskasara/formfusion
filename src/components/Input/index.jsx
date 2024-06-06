@@ -83,9 +83,10 @@ const Input = ({
           aria-invalid="false"
           aria-errormessage={
             !Boolean(ref?.current?.validity.valid)
-              ? ref?.current?.validationMessage
+              ? `FormFusion-Input-${rest.id}-error`
               : undefined
           }
+          aria-describedby={helperText && `FormFusion-Input-${rest.id}-helperText`}
           title={
             !nativeTypes.includes(type)
               ? type?.startsWith("postal-code")
@@ -97,8 +98,8 @@ const Input = ({
         {type === 'checkbox' &&
           <span className="FormFusion-Input__root__checkmark"></span>}
       </Component>
-      {helperText && <span className={helperTextClasses}>{helperText}</span>}
-      <span className={errorClasses}>{errors[rest.name]}</span>
+      {helperText && <span className={helperTextClasses} id={`FormFusion-Input-${rest.id}-helperText`}>{helperText}</span>}
+      <span className={errorClasses} id={`FormFusion-Input-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
     </div>
   );
 };
