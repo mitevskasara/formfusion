@@ -80,26 +80,13 @@ const Input = ({
           onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
           onInvalid={(e) => onValidate(e, validation)}
           data-type={inputTypes[type] && type}
-          aria-invalid="false"
-          aria-errormessage={
-            !Boolean(ref?.current?.validity.valid)
-              ? `FormFusion-Input-${rest.id}-error`
-              : undefined
-          }
-          aria-describedby={helperText && `FormFusion-Input-${rest.id}-helperText`}
-          title={
-            !nativeTypes.includes(type)
-              ? type?.startsWith("postal-code")
-                ? validity["postal-code"].patternMismatch
-                : validity[type]?.patternMismatch
-              : undefined
-          }
+          aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
         />
         {type === 'checkbox' &&
           <span className="FormFusion-Input__root__checkmark"></span>}
       </Component>
-      {helperText && <span className={helperTextClasses} id={`FormFusion-Input-${rest.id}-helperText`}>{helperText}</span>}
-      <span className={errorClasses} id={`FormFusion-Input-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
+      {helperText && <span className={helperTextClasses} id={`FormFusion-${rest.id}-helperText`}>{helperText}</span>}
+      <span className={errorClasses} id={`FormFusion-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
     </div>
   );
 };

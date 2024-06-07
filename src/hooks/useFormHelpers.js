@@ -20,7 +20,7 @@ const useFormHelpers = () => {
 
   function onValidate(e, customValidity) {
     e.preventDefault();
-    const { name, value, validity } = e.target;
+    const { id, name, value, validity } = e.target;
 
     if (customValidity) {
       Object.keys(customValidity).map((key) => {
@@ -33,6 +33,12 @@ const useFormHelpers = () => {
     }
 
     e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+
+    if (!Boolean(validity.valid)) {
+      e.target.setAttribute("aria-errormessage", `FormFusion-${id}-error`);
+    } else {
+      e.target.removeAttribute("aria-errormessage");
+    }
 
     if (
       !e.target.validity.valid ||

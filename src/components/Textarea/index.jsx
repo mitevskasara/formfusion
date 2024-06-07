@@ -46,12 +46,10 @@ const Textarea = ({
         onFocus={controlled ? onFocus : undefined}
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
-        aria-invalid={errors[rest.name] ? "true" : "false"}
-        aria-errormessage={errors[rest.name] ? `FormFusion-Textarea-${rest.id}-error` : undefined}
-        aria-describedby={helperText && `FormFusion-Input-${rest.id}-helperText`}
+        aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
       />
-      {helperText && <span className={helperTextClasses} id={`FormFusion-Textarea-${rest.id}-helperText`}>{helperText}</span>}
-      <span className={errorClasses} id={`FormFusion-Textarea-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
+      {helperText && <span className={helperTextClasses} id={`FormFusion-${rest.id}-helperText`}>{helperText}</span>}
+      <span className={errorClasses} id={`FormFusion-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
     </div>
   );
 };
