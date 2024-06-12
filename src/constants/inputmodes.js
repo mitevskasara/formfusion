@@ -1,0 +1,17 @@
+export default {
+  'numeric': 'numeric',
+  'email': 'email',
+  'tel': 'tel',
+  'url': 'url',
+  'search': 'search',
+  'credit-card-number-basic': 'numeric',
+  'ccv': 'numeric',
+  'ccv-amex': 'numeric',
+  'ein': 'numeric',
+  'jan': 'numeric',
+  'ean-8': 'numeric',
+  'ean-13': 'numeric',
+  'ean-14': 'numeric',
+  'imei': 'numeric',
+  'username': 'email',
+};

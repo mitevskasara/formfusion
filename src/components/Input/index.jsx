@@ -1,9 +1,11 @@
 import React, { useRef } from "react";
 import inputTypes from "../../constants/types";
+import inputModes from "../../constants/inputmodes";
 import nativeTypes from "../../constants/nativeTypes";
 import validity from "../../constants/validity";
 import { onPaste } from "../../utils/helpers";
 import useFormHelpers from "../../hooks/useFormHelpers";
+import hidden from "../../constants/hidden";
 
 const Input = ({
   type,
@@ -61,7 +63,7 @@ const Input = ({
           data-testid="input"
           data-mask={mask}
           className={inputClasses}
-          type={nativeTypes.includes(type) ? type : "text"}
+          type={nativeTypes.includes(type) ? type : hidden[type] ? hidden[type] : "text"}
           pattern={
             rest.pattern
               ? rest.pattern
@@ -74,6 +76,7 @@ const Input = ({
               ? (e) => onValidate(e, validation)
               : undefined
           }
+          maxLength={mask ? mask.length : rest.maxLength}
           onChange={controlled ? onChange : undefined}
           onFocus={controlled ? onFocus : undefined}
           onPaste={mask ? onPaste : undefined}
@@ -81,6 +84,7 @@ const Input = ({
           onInvalid={(e) => onValidate(e, validation)}
           data-type={inputTypes[type] && type}
           aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
+          inputMode={rest.inputMode || inputModes[type] || 'text'}
         />
         {type === 'checkbox' &&
           <span className="FormFusion-Input__root__checkmark"></span>}

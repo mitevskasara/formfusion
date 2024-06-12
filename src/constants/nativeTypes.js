@@ -10,7 +10,6 @@ export default [
   "image",
   "month",
   "number",
-  "password",
   "radio",
   "range",
   "reset",
