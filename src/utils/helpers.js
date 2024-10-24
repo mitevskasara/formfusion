@@ -1,4 +1,4 @@
-import maskInput from "../utils/mask";
+import maskInput from '../utils/mask';
 
 export function parseEntries(obj) {
   for (const [key, value] of Object.entries(obj)) {
@@ -12,7 +12,7 @@ export function parseEntries(obj) {
 
 export function onPaste(e) {
   const { dataset } = e.target;
-  let paste = (e.clipboardData || window.clipboardData).getData("text");
+  let paste = (e.clipboardData || window.clipboardData).getData('text');
   const mask = dataset.mask;
   if (mask) {
     e.target.value = maskInput(mask, paste);

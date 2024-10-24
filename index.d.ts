@@ -1,33 +1,33 @@
-declare module "formfusion" {
-  import * as React from "react";
+declare module 'formfusion' {
+  import * as React from 'react';
 
   export interface CustomValidityValue {
-    badInput?: string | "";
-    customError?: string | "";
-    patternMismatch?: string | "";
-    rangeOverflow?: string | "";
-    rangeUnderflow?: string | "";
-    stepMismatch?: string | "";
-    tooLong?: string | "";
-    tooShort?: string | "";
-    typeMismatch?: string | "";
-    valid?: string | "";
-    valueMissing?: string | "";
+    badInput?: string | '';
+    customError?: string | '';
+    patternMismatch?: string | '';
+    rangeOverflow?: string | '';
+    rangeUnderflow?: string | '';
+    stepMismatch?: string | '';
+    tooLong?: string | '';
+    tooShort?: string | '';
+    typeMismatch?: string | '';
+    valid?: string | '';
+    valueMissing?: string | '';
   }
 
   export interface CustomValidity {
     [key: string]: {
-      badInput?: string | "";
-      customError?: string | "";
-      patternMismatch?: string | "";
-      rangeOverflow?: string | "";
-      rangeUnderflow?: string | "";
-      stepMismatch?: string | "";
-      tooLong?: string | "";
-      tooShort?: string | "";
-      typeMismatch?: string | "";
-      valid?: string | "";
-      valueMissing?: string | "";
+      badInput?: string | '';
+      customError?: string | '';
+      patternMismatch?: string | '';
+      rangeOverflow?: string | '';
+      rangeUnderflow?: string | '';
+      stepMismatch?: string | '';
+      tooLong?: string | '';
+      tooShort?: string | '';
+      typeMismatch?: string | '';
+      valid?: string | '';
+      valueMissing?: string | '';
     };
   }
 
@@ -50,7 +50,7 @@ declare module "formfusion" {
     onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
     onValidate: (
       e: React.ChangeEvent<HTMLInputElement>,
-      customValidity?: CustomValidityValue,
+      customValidity?: CustomValidityValue
     ) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     resetForm: () => void;
@@ -68,7 +68,7 @@ declare module "formfusion" {
 
   interface FormProps
     extends FormConfigParams,
-    Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> { }
+      Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {}
 
   export type RegexPatterns = {
     NUMERIC: string;
@@ -140,19 +140,19 @@ declare module "formfusion" {
 
   type ReplaceUnderscoreWithHyphen<S extends string> =
     S extends `${infer Prefix}_${infer Suffix}`
-    ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
-    : S;
+      ? `${Prefix}-${ReplaceUnderscoreWithHyphen<Suffix>}`
+      : S;
 
   type LowercaseKeys<T> = {
     [K in keyof T as K extends string
-    ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
-    : never]: T[K];
+      ? ReplaceUnderscoreWithHyphen<Lowercase<K>>
+      : never]: T[K];
   };
 
   type CamelCase<T extends string> =
     T extends `${infer Before}_${infer Char}${infer After}`
-    ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
-    : Lowercase<T>;
+      ? `${Lowercase<Before>}${Capitalize<Char>}${CamelCase<After>}`
+      : Lowercase<T>;
 
   type CamelCaseKeys<T> = {
     [K in keyof T as CamelCase<string & K>]: T[K];
@@ -165,28 +165,28 @@ declare module "formfusion" {
   export type Types = LowercaseKeys<RegexPatterns>;
 
   export type NativeTypes =
-    | "button"
-    | "checkbox"
-    | "color"
-    | "date"
-    | "datetime-local"
-    | "email"
-    | "file"
-    | "hidden"
-    | "image"
-    | "month"
-    | "number"
-    | "password"
-    | "radio"
-    | "range"
-    | "reset"
-    | "search"
-    | "submit"
-    | "tel"
-    | "text"
-    | "time"
-    | "url"
-    | "week";
+    | 'button'
+    | 'checkbox'
+    | 'color'
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'file'
+    | 'hidden'
+    | 'image'
+    | 'month'
+    | 'number'
+    | 'password'
+    | 'radio'
+    | 'range'
+    | 'reset'
+    | 'search'
+    | 'submit'
+    | 'tel'
+    | 'text'
+    | 'time'
+    | 'url'
+    | 'week';
 
   export type Type = NativeTypes | keyof LowercaseKeys<RegexPatterns>;
 
@@ -211,12 +211,18 @@ declare module "formfusion" {
     name: string;
     validation?: CustomValidityValue;
     label?: string;
-    classes?: { root?: string; field?: string; label?: string; error?: string; helperText?: string; };
+    classes?: {
+      root?: string;
+      field?: string;
+      label?: string;
+      error?: string;
+      helperText?: string;
+    };
     className?: string;
     mask?: string;
     hideArrows?: boolean;
     helperText?: string;
-  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
+  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
   export type InputPropsWithType = InputPropsBase & {
     type: Type | string;
@@ -237,11 +243,32 @@ declare module "formfusion" {
     className?: string;
   } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
+  export type SelectProps = {
+    id: string;
+    name: string;
+    required?: boolean;
+    multiple?: boolean;
+    validation?: CustomValidityValue;
+    label?: string;
+    classes?: {
+      root?: string;
+      field?: string;
+      label?: string;
+      error?: string;
+      helperText?: string;
+    };
+    className?: string;
+    options: Array<{ value: string; label: string }>;
+    helperText?: string;
+  };
+
   export const Form: (props: FormProps) => any;
 
   export const Input: (props: InputProps) => any;
 
   export const Textarea: (props: TextareaProps) => any;
+
+  export const Select: (props: SelectProps) => any;
 
   export const useForm: (config: FormConfigParams) => FormConfig;
 

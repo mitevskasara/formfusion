@@ -4,4 +4,5 @@ node_modules
 src
 plugins
 esbuild.js
-tests
+__tests__
+.prettierrc

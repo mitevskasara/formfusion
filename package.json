@@ -5,11 +5,13 @@
   "private": false,
   "scripts": {
     "build": "find . -mindepth 1 -maxdepth 1 -type d ! -name 'node_modules' ! -name 'src' ! -name 'plugins' -exec sh -c 'find \"{}\" -type f -name \"*.js\" | read' \\; -exec rm -rf {} \\; && node esbuild.js",
-    "test": "jest src/tests/*.test.jsx",
+    "test": "jest",
     "prefix-css": "postcss src/style.css -u autoprefixer -o ./style.css --no-map",
     "minify-css": "postcss style.css -u cssnano -o style.css --no-map",
     "version": "conventional-changelog -p -i CHANGELOG.md -s -r 0",
-    "publish-package": "npm publish --access public"
+    "publish-package": "npm publish --access public",
+    "format": "prettier --write .",
+    "check-format": "prettier --check ."
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,6 @@
     "url": "https://github.com/corelabui/formfusion/issues"
   },
   "homepage": "https://www.corelabui.com/formfusion",
-  "peerDependencies": {},
   "devDependencies": {
     "@babel/preset-react": "^7.23.3",
     "@testing-library/jest-dom": "^6.4.2",
@@ -43,6 +44,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.38",
     "postcss-cli": "^11.0.0",
+    "prettier": "^3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
