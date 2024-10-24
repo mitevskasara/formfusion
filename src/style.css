@@ -89,7 +89,7 @@
 }
 
 /* Firefox */
-.FormFusion-Input__root__field[type=number] {
+.FormFusion-Input__root__field[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
@@ -130,30 +130,39 @@
   border-radius: var(--border-radius);
 }
 
-.FormFusion-Input__root__field--checkbox:hover input~.FormFusion-Input__root__checkmark {
+.FormFusion-Input__root__field--checkbox:hover
+  input
+  ~ .FormFusion-Input__root__checkmark {
   background-color: #ccc;
 }
 
-.FormFusion-Input__root__field--checkbox input:checked~.FormFusion-Input__root__checkmark {
+.FormFusion-Input__root__field--checkbox
+  input:checked
+  ~ .FormFusion-Input__root__checkmark {
   background-color: var(--checkbox-background);
 }
 
-.FormFusion-Input__root__field--checkbox input:disabled~.FormFusion-Input__root__checkmark {
+.FormFusion-Input__root__field--checkbox
+  input:disabled
+  ~ .FormFusion-Input__root__checkmark {
   background-color: var(--border-disabled-color);
   cursor: not-allowed;
 }
 
 .FormFusion-Input__root__checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
 
-.FormFusion-Input__root__field--checkbox input:checked~.FormFusion-Input__root__checkmark:after {
+.FormFusion-Input__root__field--checkbox
+  input:checked
+  ~ .FormFusion-Input__root__checkmark:after {
   display: block;
 }
 
-.FormFusion-Input__root__field--checkbox .FormFusion-Input__root__checkmark:after {
+.FormFusion-Input__root__field--checkbox
+  .FormFusion-Input__root__checkmark:after {
   left: 0.35em;
   top: 0.25em;
   width: 0.1em;
@@ -164,7 +173,6 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
 
 .FormFusion-Select__root {
   position: relative;

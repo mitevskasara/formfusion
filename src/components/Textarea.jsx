@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import useFormHelpers from "../hooks/useFormHelpers";
+import React, { useRef } from 'react';
+import useFormHelpers from '../hooks/useFormHelpers';
 
 const Textarea = ({
   validation,
@@ -7,7 +7,8 @@ const Textarea = ({
   classes,
   className,
   helperText,
-  ...rest }) => {
+  ...rest
+}) => {
   const ref = useRef(null);
   const {
     values,
@@ -20,11 +21,21 @@ const Textarea = ({
     onValidate,
   } = useFormHelpers();
 
-  let rootClasses = className ? `FormFusion-Textarea__root ${className}` : "FormFusion-Textarea__root";
-  let textareaClasses = className ? `FormFusion-Textarea__root__field ${className}` : "FormFusion-Textarea__root__field";
-  let labelClasses = classes?.label ? `FormFusion-Textarea__root__label ${classes?.label}` : "FormFusion-Textarea__root__label";
-  let errorClasses = classes?.error ? `FormFusion-Textarea__root__error ${classes?.error}` : "FormFusion-Textarea__root__error";
-  let helperTextClasses = classes?.helperText ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}` : 'FormFusion-Input__root__field__helper-text';
+  let rootClasses = className
+    ? `FormFusion-Textarea__root ${className}`
+    : 'FormFusion-Textarea__root';
+  let textareaClasses = className
+    ? `FormFusion-Textarea__root__field ${className}`
+    : 'FormFusion-Textarea__root__field';
+  let labelClasses = classes?.label
+    ? `FormFusion-Textarea__root__label ${classes?.label}`
+    : 'FormFusion-Textarea__root__label';
+  let errorClasses = classes?.error
+    ? `FormFusion-Textarea__root__error ${classes?.error}`
+    : 'FormFusion-Textarea__root__error';
+  let helperTextClasses = classes?.helperText
+    ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}`
+    : 'FormFusion-Input__root__field__helper-text';
 
   if (classes?.field) textareaClasses += `${classes.field}`;
 
@@ -36,7 +47,7 @@ const Textarea = ({
       <textarea
         {...rest}
         ref={ref}
-        value={controlled ? values[rest.name] || "" : undefined}
+        value={controlled ? values[rest.name] || '' : undefined}
         data-testid="textarea"
         className={textareaClasses}
         onInput={
@@ -48,8 +59,21 @@ const Textarea = ({
         onInvalid={(e) => onValidate(e, validation)}
         aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
       />
-      {helperText && <span className={helperTextClasses} id={`FormFusion-${rest.id}-helperText`}>{helperText}</span>}
-      <span className={errorClasses} id={`FormFusion-${rest.id}-error`} aria-live="polite">{errors[rest.name]}</span>
+      {helperText && (
+        <span
+          className={helperTextClasses}
+          id={`FormFusion-${rest.id}-helperText`}
+        >
+          {helperText}
+        </span>
+      )}
+      <span
+        className={errorClasses}
+        id={`FormFusion-${rest.id}-error`}
+        aria-live="polite"
+      >
+        {errors[rest.name]}
+      </span>
     </div>
   );
 };

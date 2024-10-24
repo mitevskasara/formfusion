@@ -1,13 +1,13 @@
-import { useRef } from "react";
-import inputTypes from "../constants/types";
-import nativeTypes from "../constants/nativeTypes";
-import validity from "../constants/validity";
+import { useRef } from 'react';
+import inputTypes from '../constants/types';
+import nativeTypes from '../constants/nativeTypes';
+import validity from '../constants/validity';
 
 const connect = (
   config,
   type,
-  validation = type?.startsWith("postal-code")
-    ? validity["postal-code"]
+  validation = type?.startsWith('postal-code')
+    ? validity['postal-code']
     : validity[type],
   ...rest
 ) => {
@@ -23,7 +23,7 @@ const connect = (
 
   return {
     ref: inputRef,
-    type: nativeTypes.includes(type) ? type : "text",
+    type: nativeTypes.includes(type) ? type : 'text',
     pattern: rest.pattern
       ? rest.pattern
       : nativeTypes.includes(type)
@@ -34,11 +34,11 @@ const connect = (
     onFocus: onFocus,
     onBlur: validateOnBlur ? (e) => onValidate(e, validation) : undefined,
     onInvalid: (e) => onValidate(e, validation),
-    "data-type": inputTypes[type] && type,
-    "aria-invalid": !Boolean(inputRef?.current?.validity?.valid)
-      ? "true"
-      : "false",
-    "aria-errormessage": !Boolean(inputRef?.current?.validity?.valid)
+    'data-type': inputTypes[type] && type,
+    'aria-invalid': !Boolean(inputRef?.current?.validity?.valid)
+      ? 'true'
+      : 'false',
+    'aria-errormessage': !Boolean(inputRef?.current?.validity?.valid)
       ? inputRef?.current?.validationMessage
       : undefined,
   };

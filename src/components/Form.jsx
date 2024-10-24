@@ -1,7 +1,7 @@
-import React, { forwardRef, useEffect, useRef } from "react";
-import FormContext from "../context";
-import { parseEntries } from "../utils/helpers";
-import useFormHelpers from "../hooks/useFormHelpers";
+import React, { forwardRef, useEffect, useRef } from 'react';
+import FormContext from '../context';
+import { parseEntries } from '../utils/helpers';
+import useFormHelpers from '../hooks/useFormHelpers';
 
 const Form = forwardRef(
   (
@@ -14,7 +14,7 @@ const Form = forwardRef(
       validateOnBlur = true,
       ...rest
     },
-    ref,
+    ref
   ) => {
     const formRef = useRef(null);
     const helpers = useFormHelpers();
@@ -34,11 +34,11 @@ const Form = forwardRef(
       if (config && Object.keys(values).length > 0) {
         Object.keys(values).forEach((key) => {
           switch (typeof values[key]) {
-            case "string": {
+            case 'string': {
               formData.append(key, values[key]);
               break;
             }
-            case "object": {
+            case 'object': {
               formData.append(key, JSON.stringify(values[key]));
               break;
             }
@@ -48,9 +48,9 @@ const Form = forwardRef(
         });
       }
 
-      if (typeof config?.onSubmit === "function") {
+      if (typeof config?.onSubmit === 'function') {
         config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
-      } else if (typeof onSubmit === "function") {
+      } else if (typeof onSubmit === 'function') {
         onSubmit(parseEntries(Object.fromEntries(formData.entries())));
       }
     }
@@ -59,18 +59,18 @@ const Form = forwardRef(
       const form = ref?.current;
 
       const handleFormReset = () => {
-        if (typeof resetForm === "function") {
+        if (typeof resetForm === 'function') {
           resetForm();
         }
       };
 
       if (form) {
-        form.addEventListener("reset", handleFormReset);
+        form.addEventListener('reset', handleFormReset);
       }
 
       return () => {
         if (form) {
-          form.removeEventListener("reset", handleFormReset);
+          form.removeEventListener('reset', handleFormReset);
         }
       };
     }, [ref?.current, resetForm]);
@@ -96,7 +96,7 @@ const Form = forwardRef(
         </form>
       </FormContext.Provider>
     );
-  },
+  }
 );
 
 export default Form;

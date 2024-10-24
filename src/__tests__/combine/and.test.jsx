@@ -1,11 +1,11 @@
-import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import Form from "../../components/Form";
-import Input from "../../components/Input";
-import patterns from "../../constants/patterns";
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Form from '../../components/Form';
+import Input from '../../components/Input';
+import patterns from '../../constants/patterns';
 
-describe("Testing validity of combined patterns", () => {
+describe('Testing validity of combined patterns', () => {
   let input;
 
   beforeAll(() => {
@@ -17,12 +17,12 @@ describe("Testing validity of combined patterns", () => {
           name="combined"
           pattern={[patterns.alphanumeric, patterns.minLetters(2)]}
         />
-      </Form>,
+      </Form>
     );
-    input = screen.getByTestId("input");
+    input = screen.getByTestId('input');
   });
 
-  test("Testing valid data-patterns attribute", () => {
+  test('Testing valid data-patterns attribute', () => {
     // expect(input.getAttribute("data-patterns")).toBe([
     //   patterns.alphanumeric,
     //   patterns.minLetters(2),

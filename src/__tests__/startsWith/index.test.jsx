@@ -1,12 +1,12 @@
-import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import Form from "../../components/Form";
-import Input from "../../components/Input";
-import patterns from "../../constants/patterns";
-import isRegexPatternValid from "../utils/regexValidation";
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Form from '../../components/Form';
+import Input from '../../components/Input';
+import patterns from '../../constants/patterns';
+import isRegexPatternValid from '../utils/regexValidation';
 
-describe("Testing validity of input pattern startsWith", () => {
+describe('Testing validity of input pattern startsWith', () => {
   let input;
 
   beforeAll(() => {
@@ -15,53 +15,53 @@ describe("Testing validity of input pattern startsWith", () => {
         <Input
           id="startsWith"
           name="startsWith"
-          pattern={patterns.startsWith("abc")}
+          pattern={patterns.startsWith('abc')}
           required={true}
         />
-      </Form>,
+      </Form>
     );
-    input = screen.getByTestId("input");
+    input = screen.getByTestId('input');
   });
 
-  test("Validating regex pattern", () => {
-    expect(isRegexPatternValid(patterns.startsWith("abc"))).toBe(true);
+  test('Validating regex pattern', () => {
+    expect(isRegexPatternValid(patterns.startsWith('abc'))).toBe(true);
   });
 
-  test("Testing correct pattern", () => {
-    expect(input.getAttribute("pattern")).toBe(patterns.startsWith("abc"));
+  test('Testing correct pattern', () => {
+    expect(input.getAttribute('pattern')).toBe(patterns.startsWith('abc'));
   });
 
-  test("Testing value: abcgdgdg, validity true", () => {
+  test('Testing value: abcgdgdg, validity true', () => {
     fireEvent.change(input, {
-      target: { value: "abcgdgdg" },
+      target: { value: 'abcgdgdg' },
     });
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: abc tyyd, validity true", () => {
+  test('Testing value: abc tyyd, validity true', () => {
     fireEvent.change(input, {
-      target: { value: "abc tyyd" },
+      target: { value: 'abc tyyd' },
     });
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: abc123, validity true", () => {
+  test('Testing value: abc123, validity true', () => {
     fireEvent.change(input, {
-      target: { value: "abc123" },
+      target: { value: 'abc123' },
     });
     expect(input.validity.valid).toBe(true);
   });
 
-  test("Testing value: cgdjd, validity false", () => {
+  test('Testing value: cgdjd, validity false', () => {
     fireEvent.change(input, {
-      target: { value: "cgdjd" },
+      target: { value: 'cgdjd' },
     });
     expect(input.validity.valid).toBe(false);
   });
 
-  test("Testing value: saraabcsd, validity false", () => {
+  test('Testing value: saraabcsd, validity false', () => {
     fireEvent.change(input, {
-      target: { value: "saraabcsd" },
+      target: { value: 'saraabcsd' },
     });
     expect(input.validity.valid).toBe(false);
   });

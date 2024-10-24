@@ -62,12 +62,12 @@ import 'formfusion/style.css';
 Example of using FormFusion for a simple uncontrolled form with username field with validation
 
 ```jsx
-import React from "react";
-import { Form, Input } from "formfusion";
+import React from 'react';
+import { Form, Input } from 'formfusion';
 
 const MyForm = () => {
   const onSubmit = (data) => {
-    console.log("Form submitted successfully", data);
+    console.log('Form submitted successfully', data);
   };
   return (
     <Form onSubmit={onSubmit}>

@@ -3,11 +3,18 @@ import useFormHelpers from '../hooks/useFormHelpers';
 
 const getSelectedLabels = (selectedOptions, options, multiple, placeholder) => {
   if (multiple) {
-    return selectedOptions
-      .map(option => options.find(opt => opt.value === option)?.label || option)
-      .join(', ') || placeholder;
+    return (
+      selectedOptions
+        .map(
+          (option) =>
+            options.find((opt) => opt.value === option)?.label || option
+        )
+        .join(', ') || placeholder
+    );
   } else {
-    return options.find(opt => opt.value === selectedOptions)?.label || placeholder;
+    return (
+      options.find((opt) => opt.value === selectedOptions)?.label || placeholder
+    );
   }
 };
 
@@ -22,12 +29,7 @@ const Select = ({
   validation = 'Please fill in this field.',
   ...rest
 }) => {
-  const {
-    values,
-    errors,
-    onChange,
-    onValidate
-  } = useFormHelpers();
+  const { values, errors, onChange, onValidate } = useFormHelpers();
 
   const [isOpen, setIsOpen] = useState(false);
   const selectedOptions = values[rest.name] || (multiple ? [] : '');
@@ -36,17 +38,31 @@ const Select = ({
   const listRef = useRef(null);
   const hiddenInputRef = useRef(null);
 
-  let labelClasses = classes?.label ? `FormFusion-Select__root__label ${classes.label}` : "FormFusion-Select__root__label";
-  let rootClasses = classes?.root ? `FormFusion-Select__root ${classes.root}` : "FormFusion-Select__root";
-  let selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : "FormFusion-Select__root__control"} ${errors[rest.name] ? 'FormFusion-Select__root__control--error' : ''}`;
-  let menuClasses = classes?.menu ? `FormFusion-Select__root__menu ${classes.menu}` : "FormFusion-Select__root__menu";
-  let menuListClasses = classes?.menuList ? `FormFusion-Select__root__menu__list ${classes.menuList}` : "FormFusion-Select__root__menu__list";
-  let optionClasses = classes?.option ? `FormFusion-Select__root__menu__option ${classes.option}` : "FormFusion-Select__root__menu__option";
-  let errorClasses = classes?.error ? `FormFusion-Select__root__error ${classes.error}` : "FormFusion-Select__root__error";
-  let helperTextClasses = classes?.helperText ? `FormFusion-Select__root__field__helper-text ${classes.helperText}` : 'FormFusion-Select__root__field__helper-text';
+  let labelClasses = classes?.label
+    ? `FormFusion-Select__root__label ${classes.label}`
+    : 'FormFusion-Select__root__label';
+  let rootClasses = classes?.root
+    ? `FormFusion-Select__root ${classes.root}`
+    : 'FormFusion-Select__root';
+  let selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : 'FormFusion-Select__root__control'} ${errors[rest.name] ? 'FormFusion-Select__root__control--error' : ''}`;
+  let menuClasses = classes?.menu
+    ? `FormFusion-Select__root__menu ${classes.menu}`
+    : 'FormFusion-Select__root__menu';
+  let menuListClasses = classes?.menuList
+    ? `FormFusion-Select__root__menu__list ${classes.menuList}`
+    : 'FormFusion-Select__root__menu__list';
+  let optionClasses = classes?.option
+    ? `FormFusion-Select__root__menu__option ${classes.option}`
+    : 'FormFusion-Select__root__menu__option';
+  let errorClasses = classes?.error
+    ? `FormFusion-Select__root__error ${classes.error}`
+    : 'FormFusion-Select__root__error';
+  let helperTextClasses = classes?.helperText
+    ? `FormFusion-Select__root__field__helper-text ${classes.helperText}`
+    : 'FormFusion-Select__root__field__helper-text';
 
-  const selectedLabels = useMemo(() =>
-    getSelectedLabels(selectedOptions, options, multiple, placeholder),
+  const selectedLabels = useMemo(
+    () => getSelectedLabels(selectedOptions, options, multiple, placeholder),
     [selectedOptions, options, multiple, placeholder]
   );
 
@@ -71,8 +87,8 @@ const Select = ({
     onChange({
       target: {
         name: rest.name,
-        value: updatedValue
-      }
+        value: updatedValue,
+      },
     });
 
     if (rest.required) {
@@ -83,9 +99,9 @@ const Select = ({
           validity: {
             valid: Boolean(updatedValue),
           },
-          validationMessage: validation
+          validationMessage: validation,
         },
-        preventDefault: () => { }
+        preventDefault: () => {},
       });
     }
 
@@ -109,7 +125,9 @@ const Select = ({
       case 'ArrowUp':
         e.preventDefault();
         if (isOpen) {
-          setHighlightedIndex((prevIndex) => (prevIndex - 1 + options.length) % options.length);
+          setHighlightedIndex(
+            (prevIndex) => (prevIndex - 1 + options.length) % options.length
+          );
         }
         break;
       case 'Enter':
@@ -161,7 +179,7 @@ const Select = ({
           role="combobox"
           aria-controls="FormFusion-select-list"
           aria-autocomplete="list"
-          aria-required={rest.required ? "true" : "false"}
+          aria-required={rest.required ? 'true' : 'false'}
         >
           {selectedLabels}
         </div>
@@ -180,7 +198,11 @@ const Select = ({
                   key={option.value}
                   className={`${optionClasses} ${highlightedIndex === index ? 'FormFusion-Select__root__menu__option--highlighted' : ''}`}
                   role="option"
-                  aria-selected={multiple ? selectedOptions.includes(option.value) : selectedOptions === option.value}
+                  aria-selected={
+                    multiple
+                      ? selectedOptions.includes(option.value)
+                      : selectedOptions === option.value
+                  }
                   onClick={() => handleSelect(option)}
                 >
                   {option.label}

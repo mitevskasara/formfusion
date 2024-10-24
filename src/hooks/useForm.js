@@ -1,7 +1,7 @@
-import { useReducer } from "react";
-import reducer, { initialState } from "../state/reducer";
-import ACTIONS from "../state/actions";
-import maskInput from "../utils/mask";
+import { useReducer } from 'react';
+import reducer, { initialState } from '../state/reducer';
+import ACTIONS from '../state/actions';
+import maskInput from '../utils/mask';
 
 const useForm = (config) => {
   const [state, dispatch] = useReducer(reducer, {
@@ -33,12 +33,12 @@ const useForm = (config) => {
         if (validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
         } else {
-          e.target.setCustomValidity("");
+          e.target.setCustomValidity('');
         }
       });
     }
 
-    e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+    e.target.setAttribute('aria-invalid', !Boolean(validity.valid));
 
     if (
       !e.target.validity.valid ||
@@ -47,7 +47,7 @@ const useForm = (config) => {
       dispatch({
         type: ACTIONS.SET_ERRORS,
         payload: {
-          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
+          [name]: e.target.validity.valid ? '' : e.target.validationMessage,
         },
       });
     }
@@ -67,7 +67,7 @@ const useForm = (config) => {
     resetForm,
     state,
     dispatch,
-    onValidate
+    onValidate,
   };
 };
 

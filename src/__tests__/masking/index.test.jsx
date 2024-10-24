@@ -1,14 +1,14 @@
-import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import Form from "../../components/Form";
-import Input from "../../components/Input";
-import patterns from "../../constants/types";
-import isRegexPatternValid from "../utils/regexValidation";
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Form from '../../components/Form';
+import Input from '../../components/Input';
+import patterns from '../../constants/types';
+import isRegexPatternValid from '../utils/regexValidation';
 
-describe("Testing input masking", () => {
+describe('Testing input masking', () => {
   let input;
-  const mask = "(##) ## ## ##";
+  const mask = '(##) ## ## ##';
 
   beforeAll(() => {
     render(
@@ -20,18 +20,18 @@ describe("Testing input masking", () => {
           mask={mask}
           required={true}
         />
-      </Form>,
+      </Form>
     );
-    input = screen.getByTestId("input");
+    input = screen.getByTestId('input');
   });
 
-  test("Testing if mask exists as attribute", () => {
-    expect(input.getAttribute("data-mask")).toBe(mask);
+  test('Testing if mask exists as attribute', () => {
+    expect(input.getAttribute('data-mask')).toBe(mask);
   });
 
   test(`Testing value: ${mask}, validity true`, () => {
-    fireEvent.change(input, { target: { value: "12345678" } });
+    fireEvent.change(input, { target: { value: '12345678' } });
     console.log(input.dataset);
-    expect(input.value).toBe("(12) 34 56 78");
+    expect(input.value).toBe('(12) 34 56 78');
   });
 });

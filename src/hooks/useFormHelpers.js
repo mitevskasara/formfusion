@@ -1,8 +1,8 @@
-import { useContext, useReducer } from "react";
-import reducer, { initialState } from "../state/reducer";
-import FormContext from "../context";
-import ACTIONS from "../state/actions";
-import maskInput from "../utils/mask";
+import { useContext, useReducer } from 'react';
+import reducer, { initialState } from '../state/reducer';
+import FormContext from '../context';
+import ACTIONS from '../state/actions';
+import maskInput from '../utils/mask';
 
 const useFormHelpers = () => {
   const config = useContext(FormContext);
@@ -10,12 +10,12 @@ const useFormHelpers = () => {
   const [state, dispatch] = config?.dispatch
     ? [config?.state, config?.dispatch]
     : useReducer(reducer, {
-      ...initialState,
-      values: config?.initialValues ?? {},
-    });
+        ...initialState,
+        values: config?.initialValues ?? {},
+      });
 
   function initValue(key) {
-    dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: "" } });
+    dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: '' } });
   }
 
   function onValidate(e, customValidity) {
@@ -27,19 +27,19 @@ const useFormHelpers = () => {
         if (validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
         } else {
-          e.target.setCustomValidity("");
+          e.target.setCustomValidity('');
         }
       });
     }
 
     if (typeof e.target.setAttribute === 'function') {
-      e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+      e.target.setAttribute('aria-invalid', !Boolean(validity.valid));
     }
 
     if (!Boolean(validity.valid)) {
-      e.target.setAttribute("aria-errormessage", `FormFusion-${id}-error`);
+      e.target.setAttribute('aria-errormessage', `FormFusion-${id}-error`);
     } else {
-      e.target.removeAttribute("aria-errormessage");
+      e.target.removeAttribute('aria-errormessage');
     }
 
     if (
@@ -49,7 +49,7 @@ const useFormHelpers = () => {
       dispatch({
         type: ACTIONS.SET_ERRORS,
         payload: {
-          [name]: e.target.validity.valid ? "" : e.target.validationMessage,
+          [name]: e.target.validity.valid ? '' : e.target.validationMessage,
         },
       });
     }
