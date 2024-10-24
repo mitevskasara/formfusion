@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
-import inputTypes from "../../constants/types";
-import inputModes from "../../constants/inputmodes";
-import nativeTypes from "../../constants/nativeTypes";
-import validity from "../../constants/validity";
-import { onPaste } from "../../utils/helpers";
-import useFormHelpers from "../../hooks/useFormHelpers";
-import hidden from "../../constants/hidden";
+import inputTypes from "../constants/types";
+import nativeTypes from "../constants/nativeTypes";
+import validity from "../constants/validity";
+import { onPaste } from "../utils/helpers";
+import useFormHelpers from "../hooks/useFormHelpers";
+import inputModes from "../constants/inputmodes";
+import hidden from "../constants/hidden";
 
 const Input = ({
   type,
@@ -49,12 +49,11 @@ const Input = ({
   return (
     <div className={rootClasses}>
       <Component {...componentProps}>
-        {type !== 'checkbox' &&
+        {type === 'checkbox' ?
+          <>{label}</> :
           <label htmlFor={rest.id} className={labelClasses}>
             {label}
           </label>}
-        {type === 'checkbox' &&
-          <>{label}</>}
         <input
           {...rest}
           ref={ref}

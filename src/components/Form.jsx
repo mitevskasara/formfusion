@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef } from "react";
-import FormContext from "../../context";
-import { parseEntries } from "../../utils/helpers";
-import useFormHelpers from "../../hooks/useFormHelpers";
+import FormContext from "../context";
+import { parseEntries } from "../utils/helpers";
+import useFormHelpers from "../hooks/useFormHelpers";
 
 const Form = forwardRef(
   (
@@ -17,18 +17,20 @@ const Form = forwardRef(
     ref,
   ) => {
     const formRef = useRef(null);
-    const formConfig = config?.values
-      ? { values: config.values, errors: config.errors }
-      : useFormHelpers();
+    const helpers = useFormHelpers();
+    const formConfig = config ? { ...helpers, ...config } : helpers;
     const { values, errors, resetForm } = formConfig;
 
     function handleSubmit(e) {
       e.preventDefault();
-      if (Object.keys(errors).filter((key) => errors[key]).length) {
-        e.preventDefault();
-      }
+
       const form = e.target;
       const formData = new FormData(form);
+
+      if (Object.keys(errors).filter((key) => errors[key]).length) {
+        return;
+      }
+
       if (config && Object.keys(values).length > 0) {
         Object.keys(values).forEach((key) => {
           switch (typeof values[key]) {

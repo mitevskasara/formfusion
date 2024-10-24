@@ -32,7 +32,9 @@ const useFormHelpers = () => {
       });
     }
 
-    e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+    if (typeof e.target.setAttribute === 'function') {
+      e.target.setAttribute("aria-invalid", !Boolean(validity.valid));
+    }
 
     if (!Boolean(validity.valid)) {
       e.target.setAttribute("aria-errormessage", `FormFusion-${id}-error`);
@@ -52,7 +54,7 @@ const useFormHelpers = () => {
       });
     }
 
-    const mask = e.target.dataset.mask;
+    const mask = e.target.dataset?.mask;
 
     if (mask) {
       e.target.value = maskInput(mask, value);

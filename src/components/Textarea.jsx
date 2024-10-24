@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import useFormHelpers from "../../hooks/useFormHelpers";
+import useFormHelpers from "../hooks/useFormHelpers";
 
 const Textarea = ({
   validation,

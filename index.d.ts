@@ -237,11 +237,26 @@ declare module "formfusion" {
     className?: string;
   } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
+  export type SelectProps = {
+    id: string;
+    name: string;
+    required?: boolean;
+    multiple?: boolean;
+    validation?: CustomValidityValue;
+    label?: string;
+    classes?: { root?: string; field?: string; label?: string; error?: string; helperText?: string; };
+    className?: string;
+    options: Array<{ value: string; label: string }>;
+    helperText?: string;
+  };
+
   export const Form: (props: FormProps) => any;
 
   export const Input: (props: InputProps) => any;
 
   export const Textarea: (props: TextareaProps) => any;
+
+  export const Select: (props: SelectProps) => any;
 
   export const useForm: (config: FormConfigParams) => FormConfig;
 

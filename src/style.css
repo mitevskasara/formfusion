@@ -7,29 +7,36 @@
   --border-focus-color: #023e8a;
   --border-disabled-color: #d3d3d357;
   --border-radius: 3px;
-  --input-padding: 1em;
+  --input-padding: 0.7em 1em;
+  --field-background: #ffffff;
+  --field-background-light: #f1f1f1;
 
   --checkbox-color: #ffffff;
   --checkbox-background: #023e8a;
 }
 
 .FormFusion-Input__root,
-.FormFusion-Textarea__root {
+.FormFusion-Textarea__root,
+.FormFusion-Select__root {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
 }
 
 .FormFusion-Input__root__field,
-.FormFusion-Textarea__root__field {
+.FormFusion-Textarea__root__field,
+.FormFusion-Select__root__control {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   outline: none;
   padding: var(--input-padding);
+  font-size: inherit;
+  background-color: var(--field-background);
 }
 
 .FormFusion-Input__root__error,
-.FormFusion-Textarea__root__error {
+.FormFusion-Textarea__root__error,
+.FormFusion-Select__root__error {
   font-size: small;
   color: var(--error);
 }
@@ -40,8 +47,10 @@
 }
 
 .FormFusion-Input__root__field:focus,
-.FormFusion-Textarea__root__field:focus {
+.FormFusion-Textarea__root__field:focus,
+.FormFusion-Select__root__control:focus {
   border: 1px solid var(--border-focus-color);
+  outline: none;
 }
 
 .FormFusion-Input__root__field::placeholder,
@@ -60,11 +69,14 @@
 }
 
 .FormFusion-Input__root__field[aria-invalid='true']:not(:focus),
-.FormFusion-Textarea__root__field[aria-invalid='true']:not(:focus) {
+.FormFusion-Textarea__root__field[aria-invalid='true']:not(:focus),
+.FormFusion-Select__root__control--error {
   border: 1px solid var(--error);
 }
 
-.FormFusion-Input__root__label {
+.FormFusion-Input__root__label,
+.FormFusion-Textarea__root__label,
+.FormFusion-Select__root__label {
   font-size: medium;
   width: fit-content;
 }
@@ -82,7 +94,8 @@
   -moz-appearance: textfield;
 }
 
-.FormFusion-Input__root__field__helper-text {
+.FormFusion-Input__root__field__helper-text,
+.FormFusion-Select__root__field__helper-text {
   font-size: small;
   color: var(--text-secondary);
 }
@@ -150,4 +163,36 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+
+.FormFusion-Select__root {
+  position: relative;
+}
+
+.FormFusion-Select__root__control {
+  cursor: pointer;
+}
+
+.FormFusion-Select__root__menu__list {
+  position: absolute;
+  width: 100%;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--field-background);
+  z-index: 1000;
+  margin-top: 0.5em;
+  padding: 0;
+  list-style-type: none;
+}
+
+.FormFusion-Select__root__menu__option {
+  padding: var(--input-padding);
+  cursor: pointer;
+}
+
+.FormFusion-Select__root__menu__option:hover,
+.FormFusion-Select__root__menu__option--highlighted {
+  background-color: var(--field-background-light);
 }
