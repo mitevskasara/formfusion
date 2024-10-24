@@ -3,3 +3,5 @@ node_modules
 index.js
 style.css
 esbuild.js
+package.json
+package-lock.json
