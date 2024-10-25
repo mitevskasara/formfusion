@@ -124,8 +124,10 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 1em;
-  width: 1em;
+  height: 1.5em;
+  width: 1.5em;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: var(--border-color);
   border-radius: var(--border-radius);
 }
@@ -154,10 +156,10 @@
 }
 
 .FormFusion-Input__root__field--checkbox .FormFusion-Input__root__checkmark:after {
-  left: 0.35em;
+  height: 0.6em;
+  left: 0.6em;
   top: 0.25em;
-  width: 0.1em;
-  height: 0.3em;
+  width: 0.2em;
   border: solid var(--checkbox-color);
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);
