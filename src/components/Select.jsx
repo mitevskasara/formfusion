@@ -180,6 +180,7 @@ const Select = ({
           aria-controls="FormFusion-select-list"
           aria-autocomplete="list"
           aria-required={rest.required ? 'true' : 'false'}
+          data-placeholder={selectedLabels === placeholder}
         >
           {selectedLabels}
         </div>
