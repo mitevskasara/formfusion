@@ -250,6 +250,7 @@ declare module 'formfusion' {
     multiple?: boolean;
     validation?: CustomValidityValue;
     label?: string;
+    placeholder?: string;
     classes?: {
       root?: string;
       field?: string;
