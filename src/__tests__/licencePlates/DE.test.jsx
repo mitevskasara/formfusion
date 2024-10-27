@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Form from '../../components/Form';
 import Input from '../../components/Input';
-import licencePlates from '../../constants/data/licencePlates';
+import licencePlates from '@formfusion/licence-plates';
 
 describe('Testing validity with DE licence plate', () => {
   let input;
@@ -11,14 +11,19 @@ describe('Testing validity with DE licence plate', () => {
   beforeAll(() => {
     render(
       <Form onSubmit={() => {}}>
-        <Input id="tel" name="tel" type="licence-plate-de" required={true} />
+        <Input
+          id="field"
+          name="field"
+          type={licencePlates.de}
+          required={true}
+        />
       </Form>
     );
     input = screen.getByTestId('input');
   });
 
   test('Testing correct pattern', () => {
-    expect(input.getAttribute('pattern')).toBe(licencePlates.DE);
+    expect(input.getAttribute('pattern')).toBe(licencePlates.de);
   });
 
   test('Valid license plate: D-X1', () => {

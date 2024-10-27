@@ -17,7 +17,6 @@ describe('Testing validity of input type url', () => {
     );
     input = screen.getByTestId('input');
   });
-
   test('Validating regex pattern', () => {
     expect(isRegexPatternValid(patterns.url)).toBe(true);
   });

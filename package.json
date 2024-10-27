@@ -35,7 +35,10 @@
   },
   "homepage": "https://www.corelabui.com/formfusion",
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.23.3",
+    "@formfusion/licence-plates": "^1.0.2",
+    "@formfusion/postcodes": "^1.0.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "autoprefixer": "^10.4.19",
@@ -49,11 +52,15 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "peerDependencies": {},
   "jest": {
     "testEnvironment": "jsdom",
     "transform": {
       "\\.(js|jsx)$": "babel-jest"
-    }
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/.history/",
+      "<rootDir>/src/__tests__/utils/"
+    ]
   }
 }

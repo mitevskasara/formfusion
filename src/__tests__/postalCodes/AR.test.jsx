@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Form from '../../components/Form';
 import Input from '../../components/Input';
-import postalCodes from '../../constants/data/postalCodes';
+import postalCodes from '@formfusion/postcodes';
 
 describe('Testing validity with AR postal codes', () => {
   let input;
@@ -11,14 +11,14 @@ describe('Testing validity with AR postal codes', () => {
   beforeAll(() => {
     render(
       <Form onSubmit={() => {}}>
-        <Input id="tel" name="tel" type="postal-code-ar" required={true} />
+        <Input id="field" name="field" type={postalCodes.ar} required={true} />
       </Form>
     );
     input = screen.getByTestId('input');
   });
 
   test('Testing correct pattern', () => {
-    expect(input.getAttribute('pattern')).toBe(postalCodes.AR);
+    expect(input.getAttribute('pattern')).toBe(postalCodes.ar);
   });
 
   test('Testing code: 6!26325HDgs, validity false', () => {

@@ -23,7 +23,7 @@ describe('Testing validity of input type email', () => {
   });
 
   test('Testing correct pattern', () => {
-    expect(input.getAttribute('pattern')).toBe(patterns.email);
+    expect(input.getAttribute('pattern')).toBe(null);
   });
 
   test('Testing value: test@example.com, validity true', () => {

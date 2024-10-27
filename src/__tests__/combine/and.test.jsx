@@ -23,9 +23,12 @@ describe('Testing validity of combined patterns', () => {
   });
 
   test('Testing valid data-patterns attribute', () => {
-    // expect(input.getAttribute("data-patterns")).toBe([
-    //   patterns.alphanumeric,
-    //   patterns.minLetters(2),
-    // ]);
+    const expectedPatterns = [patterns.alphanumeric, patterns.minLetters(2)];
+    expect(input.getAttribute('data-pattern')).toBe(expectedPatterns.join(','));
+  });
+
+  test('Testing valid input for alphanumeric pattern', () => {
+    fireEvent.change(input, { target: { value: 'abc123' } });
+    expect(input.validity.valid).toBe(true);
   });
 });
