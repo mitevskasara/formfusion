@@ -237,15 +237,15 @@ declare module 'formfusion' {
     mask?: string;
     hideArrows?: boolean;
     helperText?: string;
-  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'pattern'>;
+  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
   export type InputPropsWithType = InputPropsBase & {
-    type: Type | string;
+    type: Type | string | CombineResult;
     pattern?: never;
   };
 
   export type InputPropsWithPattern = InputPropsBase & {
-    pattern: string | CombineResult;
+    pattern: string;
     type?: never;
   };
 

@@ -9,8 +9,10 @@ import hidden from '../constants/hidden';
 
 const Input = ({
   type,
-  validation = type?.startsWith('postal-code')
-    ? validity['postal-code']
+  validation = typeof type === 'string'
+    ? type?.startsWith('postal-code')
+      ? validity['postal-code']
+      : validity[type]
     : validity[type],
   label,
   classes,
@@ -32,8 +34,7 @@ const Input = ({
     onValidate,
   } = useFormHelpers();
 
-  const joinedPatterns =
-    typeof rest.pattern === 'object' ? rest.pattern.patterns : [];
+  const joinedPatterns = typeof type === 'object' ? type.patterns : [];
 
   let rootClasses = classes?.root
     ? `FormFusion-Input__root ${classes?.root}`
@@ -85,7 +86,7 @@ const Input = ({
           className={inputClasses}
           type={nativeTypes.includes(type) ? type : hidden[type] || 'text'}
           data-pattern={JSON.stringify(joinedPatterns)}
-          data-operator={rest.pattern?.operator}
+          data-operator={type?.operator}
           pattern={
             joinedPatterns?.length > 0
               ? undefined

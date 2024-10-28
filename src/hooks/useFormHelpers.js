@@ -26,34 +26,40 @@ const useFormHelpers = () => {
     const patterns = e.target.dataset.pattern
       ? JSON.parse(e.target.dataset.pattern)
       : [];
-    const operator = e.target.dataset.operator;
 
-    let matches;
+    if (patterns?.length > 0) {
+      const operator = e.target.dataset.operator;
+      let matches;
 
-    switch (operator) {
-      case CombineOperators.AND: {
-        matches = patterns.every((pattern) => new RegExp(pattern).test(value));
-        break;
+      switch (operator) {
+        case CombineOperators.AND: {
+          matches = patterns.every((pattern) =>
+            new RegExp(pattern).test(value)
+          );
+          break;
+        }
+        case CombineOperators.OR: {
+          matches = patterns.some((pattern) => new RegExp(pattern).test(value));
+          break;
+        }
+        case CombineOperators.NOR: {
+          matches = patterns.every(
+            (pattern) => !new RegExp(pattern).test(value)
+          );
+          break;
+        }
       }
-      case CombineOperators.OR: {
-        matches = patterns.some((pattern) => new RegExp(pattern).test(value));
-        break;
-      }
-      case CombineOperators.NOR: {
-        matches = patterns.every((pattern) => !new RegExp(pattern).test(value));
-        break;
-      }
-    }
 
-    if (!matches) {
-      e.target.setCustomValidity(customValidity?.invalid || 'Invalid field.');
-    } else {
-      e.target.setCustomValidity('');
+      if (!matches) {
+        e.target.setCustomValidity(customValidity?.invalid || 'Invalid field.');
+      } else {
+        e.target.setCustomValidity('');
+      }
     }
 
     if (customValidity && !patterns?.length) {
       Object.keys(customValidity).map((key) => {
-        if (validity[key]) {
+        if (e.target.validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
         } else {
           e.target.setCustomValidity('');

@@ -1,15 +1,21 @@
 ## Changelog
 
+### [1.1.18] - 2024-10-28
+
+#### Features
+
+- **Combined Validation Patterns**: Added functionality to allow the combination of multiple validation patterns for improved flexibility. (Commit: [#f605302](https://github.com/mitevskasara/formfusion/commit/f605302))
+
 ### [1.1.13] - 2024-10-24
 
 #### Features
 
-- **Select Component**: Introduced a new `Select` component to enhance user input options. (Commit: [#d2f44b6](https://github.com/your-repo/commit/d2f44b6))
-- **InputMode Enhancement**: Implemented `inputmode` attribute support and fixed patterns for password and email inputs for better validation. (Commit: [e15c72f5](https://github.com/your-repo/commit/e15c72f5))
+- **Select Component**: Introduced a new `Select` component to enhance user input options. (Commit: [#d2f44b6](https://github.com/mitevskasara/formfusion/commit/d2f44b6))
+- **InputMode Enhancement**: Implemented `inputmode` attribute support and fixed patterns for password and email inputs for better validation. (Commit: [e15c72f5](https://github.com/mitevskasara/formfusion/commit/e15c72f5))
 
 #### Bug Fixes
 
-- **Accessibility Improvements**: Enhanced accessibility features for error messages in `Input` and `Textarea` components to support better user experience. (Commits: [d96e0ce7](https://github.com/your-repo/commit/d96e0ce7), [faf371db](https://github.com/your-repo/commit/faf371db))
+- **Accessibility Improvements**: Enhanced accessibility features for error messages in `Input` and `Textarea` components to support better user experience. (Commits: [d96e0ce7](https://github.com/mitevskasara/formfusion/commit/d96e0ce7), [faf371db](https://github.com/mitevskasara/formfusion/commit/faf371db))
 
 ### [1.1.9] - 2024-06-03
 
@@ -52,7 +58,7 @@
 
 #### Features
 
-- Enabled custom form values through the newly defined `[setFieldValue](https://www.corelabui.com/formfusion/api/useform#config-setFieldValue)` method.
+- Enabled custom form values through the newly defined [setFieldValue](https://formfusion.dev/docs/api/useform#config-setFieldValue) method.
 
 #### Bug Fixes
 

@@ -1,6 +1,6 @@
 {
   "name": "formfusion",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/corelabui/formfusion/issues"
   },
-  "homepage": "https://www.corelabui.com/formfusion",
+  "homepage": "https://formfusion.dev",
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.23.3",
