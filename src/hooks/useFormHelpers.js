@@ -3,6 +3,7 @@ import reducer, { initialState } from '../state/reducer';
 import FormContext from '../context';
 import ACTIONS from '../state/actions';
 import maskInput from '../utils/mask';
+import { CombineOperators } from '../utils/combine';
 
 const useFormHelpers = () => {
   const config = useContext(FormContext);
@@ -20,9 +21,37 @@ const useFormHelpers = () => {
 
   function onValidate(e, customValidity) {
     e.preventDefault();
-    const { id, name, value, validity } = e.target;
+    const { id, name, value } = e.target;
 
-    if (customValidity) {
+    const patterns = e.target.dataset.pattern
+      ? JSON.parse(e.target.dataset.pattern)
+      : [];
+    const operator = e.target.dataset.operator;
+
+    let matches;
+
+    switch (operator) {
+      case CombineOperators.AND: {
+        matches = patterns.every((pattern) => new RegExp(pattern).test(value));
+        break;
+      }
+      case CombineOperators.OR: {
+        matches = patterns.some((pattern) => new RegExp(pattern).test(value));
+        break;
+      }
+      case CombineOperators.NOR: {
+        matches = patterns.every((pattern) => !new RegExp(pattern).test(value));
+        break;
+      }
+    }
+
+    if (!matches) {
+      e.target.setCustomValidity(customValidity?.invalid || 'Invalid field.');
+    } else {
+      e.target.setCustomValidity('');
+    }
+
+    if (customValidity && !patterns?.length) {
       Object.keys(customValidity).map((key) => {
         if (validity[key]) {
           e.target.setCustomValidity(customValidity[key]);
@@ -33,10 +62,10 @@ const useFormHelpers = () => {
     }
 
     if (typeof e.target.setAttribute === 'function') {
-      e.target.setAttribute('aria-invalid', !Boolean(validity.valid));
+      e.target.setAttribute('aria-invalid', !Boolean(e.target.validity.valid));
     }
 
-    if (!Boolean(validity.valid)) {
+    if (!Boolean(e.target.validity.valid)) {
       e.target.setAttribute('aria-errormessage', `FormFusion-${id}-error`);
     } else {
       e.target.removeAttribute('aria-errormessage');

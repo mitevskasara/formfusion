@@ -7,11 +7,11 @@ import patterns from '../../constants/patterns';
 
 describe('Testing validity of combined patterns', () => {
   let input;
+  let form;
 
   beforeAll(() => {
-    console.log(patterns.minLetters);
     render(
-      <Form onSubmit={() => {}}>
+      <Form onSubmit={() => {}} validateOnChange>
         <Input
           id="combined"
           name="combined"
@@ -20,15 +20,39 @@ describe('Testing validity of combined patterns', () => {
       </Form>
     );
     input = screen.getByTestId('input');
+    form = screen.getByTestId('form');
   });
 
   test('Testing valid data-patterns attribute', () => {
     const expectedPatterns = [patterns.alphanumeric, patterns.minLetters(2)];
-    expect(input.getAttribute('data-pattern')).toBe(expectedPatterns.join(','));
+    expect(input.getAttribute('data-pattern')).toBe(
+      JSON.stringify(expectedPatterns)
+    );
   });
 
   test('Testing valid input for alphanumeric pattern', () => {
     fireEvent.change(input, { target: { value: 'abc123' } });
+    fireEvent.submit(form);
     expect(input.validity.valid).toBe(true);
+  });
+
+  test('Testing input that meets minLetters requirement', () => {
+    fireEvent.change(input, { target: { value: 'ab123' } });
+    fireEvent.blur(input);
+    fireEvent.submit(form);
+    expect(input.validity.valid).toBe(true);
+  });
+
+  test('Testing input that fails the alphanumeric pattern', () => {
+    fireEvent.change(input, { target: { value: 'abc@123' } });
+    fireEvent.blur(input);
+    fireEvent.submit(form);
+    expect(input.validity.valid).toBe(false);
+  });
+
+  test('Testing input that fails minLetters requirement', () => {
+    fireEvent.change(input, { target: { value: '1a' } });
+    fireEvent.submit(form);
+    expect(input.validity.valid).toBe(false);
   });
 });

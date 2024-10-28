@@ -13,6 +13,7 @@ declare module 'formfusion' {
     typeMismatch?: string | '';
     valid?: string | '';
     valueMissing?: string | '';
+    invalid?: string | '';
   }
 
   export interface CustomValidity {
@@ -28,6 +29,7 @@ declare module 'formfusion' {
       typeMismatch?: string | '';
       valid?: string | '';
       valueMissing?: string | '';
+      invalid?: string | '';
     };
   }
 
@@ -207,6 +209,19 @@ declare module 'formfusion' {
     notExistIn: (array: string[]) => string;
   } & CamelCaseKeys<RegexPatterns>;
 
+  type PatternOperator = 'AND' | 'OR' | 'NOR';
+
+  interface CombineResult {
+    patterns: string[];
+    operator: PatternOperator;
+  }
+
+  interface CombineFunctions {
+    and: (...args: string[]) => CombineResult;
+    or: (...args: string[]) => CombineResult;
+    nor: (...args: string[]) => CombineResult;
+  }
+
   export type InputPropsBase = {
     name: string;
     validation?: CustomValidityValue;
@@ -222,7 +237,7 @@ declare module 'formfusion' {
     mask?: string;
     hideArrows?: boolean;
     helperText?: string;
-  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
+  } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'pattern'>;
 
   export type InputPropsWithType = InputPropsBase & {
     type: Type | string;
@@ -230,7 +245,7 @@ declare module 'formfusion' {
   };
 
   export type InputPropsWithPattern = InputPropsBase & {
-    pattern: string;
+    pattern: string | CombineResult;
     type?: never;
   };
 
@@ -261,6 +276,18 @@ declare module 'formfusion' {
     className?: string;
     options: Array<{ value: string; label: string }>;
     helperText?: string;
+  };
+
+  export const combine: CombineFunctions = {
+    and: (...args: string[]): CombineResult => {
+      return { patterns: args, operator: 'AND' };
+    },
+    or: (...args: string[]): CombineResult => {
+      return { patterns: args, operator: 'OR' };
+    },
+    nor: (...args: string[]): CombineResult => {
+      return { patterns: args, operator: 'NOR' };
+    },
   };
 
   export const Form: (props: FormProps) => any;

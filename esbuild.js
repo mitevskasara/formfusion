@@ -1,6 +1,8 @@
 const esbuild = require("esbuild");
 const deps = require("./package.json");
 
+const peerDependencies = deps.peerDependencies || {};
+
 esbuild
   .build({
     entryPoints: ["src/index.js"],
@@ -12,7 +14,7 @@ esbuild
     format: "cjs",
     target: "node14",
     external: Object.keys(deps.devDependencies).concat(
-      Object.keys(deps.peerDependencies),
+      Object.keys(peerDependencies),
     ),
   })
   .catch((err) => {

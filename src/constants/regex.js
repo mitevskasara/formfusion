@@ -1,7 +1,7 @@
 export default {
-  NUMERIC: '\\d+$',
-  ALPHABETIC: '^[a-zA-Z\\s]+',
-  ALPHANUMERIC: '^[a-zA-Z0-9\\s]+',
+  NUMERIC: '^\\d+$',
+  ALPHABETIC: '^[a-zA-Z\\s]+$',
+  ALPHANUMERIC: '^[a-zA-Z0-9\\s]+$',
   LOWERCASE: '^[a-z]+$',
   UPPERCASE: '^[A-Z]+$',
   BOOLEAN: '^(true|false|yes|no|1|0)$',

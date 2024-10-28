@@ -88,6 +88,7 @@ const Form = forwardRef(
       >
         <form
           {...rest}
+          data-testid="form"
           onSubmit={rest.action ? undefined : handleSubmit}
           ref={config?.formRef ?? ref ?? formRef}
           className={`FormFusion ${rest?.className ?? ''}`}

@@ -31,6 +31,10 @@ const Input = ({
     onFocus,
     onValidate,
   } = useFormHelpers();
+
+  const joinedPatterns =
+    typeof rest.pattern === 'object' ? rest.pattern.patterns : [];
+
   let rootClasses = classes?.root
     ? `FormFusion-Input__root ${classes?.root}`
     : 'FormFusion-Input__root';
@@ -79,19 +83,16 @@ const Input = ({
           data-testid="input"
           data-mask={mask}
           className={inputClasses}
-          type={
-            nativeTypes.includes(type)
-              ? type
-              : hidden[type]
-                ? hidden[type]
-                : 'text'
-          }
+          type={nativeTypes.includes(type) ? type : hidden[type] || 'text'}
+          data-pattern={JSON.stringify(joinedPatterns)}
+          data-operator={rest.pattern?.operator}
           pattern={
-            rest.pattern
-              ? rest.pattern
-              : nativeTypes.includes(type)
-                ? undefined
-                : inputTypes[type] || type
+            joinedPatterns?.length > 0
+              ? undefined
+              : rest.pattern ||
+                (nativeTypes.includes(type)
+                  ? undefined
+                  : inputTypes[type] || type)
           }
           onInput={
             mask || validateOnChange
