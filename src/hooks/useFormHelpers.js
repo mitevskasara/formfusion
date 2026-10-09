@@ -22,47 +22,68 @@ const useFormHelpers = () => {
   function onValidate(e, customValidity) {
     e.preventDefault();
     const { id, name, value } = e.target;
+    const dataset = e.target.dataset || {};
+    const setCustomValidity =
+      typeof e.target.setCustomValidity === 'function'
+        ? (message) => e.target.setCustomValidity(message)
+        : () => {};
 
-    const patterns = e.target.dataset.pattern
-      ? JSON.parse(e.target.dataset.pattern)
-      : [];
+    let patterns = [];
+    try {
+      patterns = dataset.pattern ? JSON.parse(dataset.pattern) : [];
+    } catch (_error) {
+      patterns = [];
+    }
 
-    if (patterns?.length > 0) {
-      const operator = e.target.dataset.operator;
-      let matches;
+    if (Array.isArray(patterns) && patterns.length > 0) {
+      const operator = dataset.operator || CombineOperators.AND;
 
-      switch (operator) {
-        case CombineOperators.AND: {
-          matches = patterns.every((pattern) =>
-            new RegExp(pattern).test(value)
-          );
-          break;
+      const test = (pattern) => {
+        try {
+          return new RegExp(`^(?:${pattern})$`).test(value);
+        } catch (_error) {
+          return false;
         }
+      };
+
+      let matches;
+      switch (operator) {
         case CombineOperators.OR: {
-          matches = patterns.some((pattern) => new RegExp(pattern).test(value));
+          matches = patterns.some(test);
           break;
         }
         case CombineOperators.NOR: {
-          matches = patterns.every(
-            (pattern) => !new RegExp(pattern).test(value)
-          );
+          matches = patterns.every((pattern) => !test(pattern));
+          break;
+        }
+        case CombineOperators.AND:
+        default: {
+          matches = patterns.every(test);
           break;
         }
       }
 
       if (!matches) {
-        e.target.setCustomValidity(customValidity?.invalid || 'Invalid field.');
+        setCustomValidity(
+          customValidity?.patternMismatch ||
+            customValidity?.invalid ||
+            'Invalid field.'
+        );
       } else {
-        e.target.setCustomValidity('');
+        setCustomValidity('');
       }
     }
 
-    if (customValidity && !patterns?.length) {
+    if (
+      customValidity &&
+      typeof customValidity === 'object' &&
+      !patterns?.length
+    ) {
       Object.keys(customValidity).map((key) => {
-        if (e.target.validity[key]) {
-          e.target.setCustomValidity(customValidity[key]);
+        if (e.target.validity?.[key]) {
+          setCustomValidity(customValidity[key]);
         } else {
-          e.target.setCustomValidity('');
+          setCustomValidity('');
         }
       });
     }

@@ -21,8 +21,10 @@ const Textarea = ({
     onValidate,
   } = useFormHelpers();
 
-  let rootClasses = className
-    ? `FormFusion-Textarea__root ${className}`
+  const fieldId = rest.id || rest.name;
+
+  let rootClasses = classes?.root
+    ? `FormFusion-Textarea__root ${classes.root}`
     : 'FormFusion-Textarea__root';
   let textareaClasses = className
     ? `FormFusion-Textarea__root__field ${className}`
@@ -37,11 +39,11 @@ const Textarea = ({
     ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}`
     : 'FormFusion-Input__root__field__helper-text';
 
-  if (classes?.field) textareaClasses += `${classes.field}`;
+  if (classes?.field) textareaClasses += ` ${classes.field}`;
 
   return (
     <div className={rootClasses}>
-      <label htmlFor={rest.name} className={labelClasses}>
+      <label htmlFor={fieldId} className={labelClasses}>
         {label}
       </label>
       <textarea
@@ -57,19 +59,19 @@ const Textarea = ({
         onFocus={controlled ? onFocus : undefined}
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
-        aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
+        aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
       />
       {helperText && (
         <span
           className={helperTextClasses}
-          id={`FormFusion-${rest.id}-helperText`}
+          id={`FormFusion-${fieldId}-helperText`}
         >
           {helperText}
         </span>
       )}
       <span
         className={errorClasses}
-        id={`FormFusion-${rest.id}-error`}
+        id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
         {errors[rest.name]}

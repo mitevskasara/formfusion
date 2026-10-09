@@ -1,7 +1,20 @@
+function escapeForCharClass(str) {
+  return str.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&');
+}
+
 function maskInput(mask, value) {
-  const charArray = value
-    .replace(new RegExp(`[${mask.match(/[^#]/g).join('')}]`, 'g'), '')
-    .split('');
+  if (typeof mask !== 'string') return value == null ? '' : String(value);
+
+  const stringValue = value == null ? '' : String(value);
+  const literals = (mask.match(/[^#]/g) || []).join('');
+  const charArray = (
+    literals
+      ? stringValue.replace(
+          new RegExp(`[${escapeForCharClass(literals)}]`, 'g'),
+          ''
+        )
+      : stringValue
+  ).split('');
 
   let masked = '';
   let charIndex = 0;
@@ -11,7 +24,7 @@ function maskInput(mask, value) {
       if (charIndex < charArray.length) {
         masked += charArray[charIndex++];
       }
-    } else if (value[i]) {
+    } else if (stringValue[i]) {
       masked += mask[i];
     }
   }

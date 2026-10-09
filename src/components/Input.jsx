@@ -35,6 +35,7 @@ const Input = ({
   } = useFormHelpers();
 
   const joinedPatterns = typeof type === 'object' ? type.patterns : [];
+  const fieldId = rest.id || rest.name;
 
   let rootClasses = classes?.root
     ? `FormFusion-Input__root ${classes?.root}`
@@ -57,14 +58,13 @@ const Input = ({
     type === 'checkbox'
       ? {
           className: `${labelClasses} FormFusion-Input__root__field--checkbox`,
-          htmlFor: rest.id,
+          htmlFor: fieldId,
         }
       : {};
 
   if (hideArrows)
     inputClasses += ' FormFusion-Input__root__field--hidden-arrows';
-  if (classes?.field)
-    inputClasses += `FormFusion-Input__root__field ${classes.field}`;
+  if (classes?.field) inputClasses += ` ${classes.field}`;
 
   return (
     <div className={rootClasses}>
@@ -72,7 +72,7 @@ const Input = ({
         {type === 'checkbox' ? (
           <>{label}</>
         ) : (
-          <label htmlFor={rest.id} className={labelClasses}>
+          <label htmlFor={fieldId} className={labelClasses}>
             {label}
           </label>
         )}
@@ -107,7 +107,7 @@ const Input = ({
           onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
           onInvalid={(e) => onValidate(e, validation)}
           data-type={inputTypes[type] && type}
-          aria-describedby={helperText && `FormFusion-${rest.id}-helperText`}
+          aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
           inputMode={rest.inputMode || inputModes[type] || 'text'}
         />
         {type === 'checkbox' && (
@@ -117,14 +117,14 @@ const Input = ({
       {helperText && (
         <span
           className={helperTextClasses}
-          id={`FormFusion-${rest.id}-helperText`}
+          id={`FormFusion-${fieldId}-helperText`}
         >
           {helperText}
         </span>
       )}
       <span
         className={errorClasses}
-        id={`FormFusion-${rest.id}-error`}
+        id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
         {errors[rest.name]}

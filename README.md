@@ -115,7 +115,7 @@ You can combine multiple validation rules for a single field using the combine f
 
 ```jsx
 import React from 'react';
-import { Form, Input, rules } from 'formfusion';
+import { Form, Input, rules, combine } from 'formfusion';
 
 const MyForm = () => {
   const onSubmit = (data) => {
@@ -135,6 +135,109 @@ const MyForm = () => {
 };
 
 export default MyForm;
+```
+
+Combined patterns are matched as a full match (equivalent to the native `pattern` attribute). If you omit the operator, `AND` is used by default.
+
+#### 4. Textarea
+
+```jsx
+import React from 'react';
+import { Form, Textarea } from 'formfusion';
+
+const MyForm = () => {
+  const onSubmit = (data) => {
+    console.log('Form submitted successfully', data);
+  };
+  return (
+    <Form onSubmit={onSubmit}>
+      <Textarea
+        id="message"
+        name="message"
+        label="Message"
+        rows={4}
+        required
+        helperText="Share your feedback with us."
+      />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+};
+
+export default MyForm;
+```
+
+#### 5. Select
+
+```jsx
+import React from 'react';
+import { Form, Select } from 'formfusion';
+
+const MyForm = () => {
+  const onSubmit = (data) => {
+    console.log('Form submitted successfully', data);
+  };
+  return (
+    <Form onSubmit={onSubmit}>
+      <Select
+        id="country"
+        name="country"
+        label="Country"
+        required
+        options={[
+          { value: 'mk', label: 'Macedonia' },
+          { value: 'us', label: 'United States' },
+        ]}
+        multiple
+      />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+};
+
+export default MyForm;
+```
+
+`Select` supports single and multiple selection (`multiple`) and works with the same `validation` prop as `Input`.
+
+#### 6. Managing state with useForm and connect
+
+`useForm` returns the form state and validation helpers, and `connect` binds them to plain native inputs:
+
+```jsx
+import React, { useRef } from 'react';
+import { useForm, connect } from 'formfusion';
+
+const SignupForm = () => {
+  const formRef = useRef(null);
+  const formConfig = useForm({
+    formRef,
+    initialValues: { username: '' },
+  });
+
+  const inputProps = connect(
+    {
+      ...formConfig,
+      validateOnChange: true,
+      validateOnBlur: true,
+      controlled: true,
+      onChange: (e) => formConfig.setFieldValue(e.target.name, e.target.value),
+    },
+    'username',
+    { patternMismatch: 'Please enter a valid username.' },
+    { placeholder: 'Enter username' }
+  );
+
+  return (
+    <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
+      <label htmlFor="username">Username</label>
+      <input id="username" name="username" {...inputProps} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default SignupForm;
 ```
 
 Start managing your forms efficiently!
