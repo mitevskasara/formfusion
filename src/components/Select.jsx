@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import useFormHelpers from '../hooks/useFormHelpers';
 
 const getSelectedLabels = (selectedOptions, options, multiple, placeholder) => {
@@ -26,38 +26,50 @@ const Select = ({
   classes,
   className,
   placeholder = multiple ? 'Select options' : 'Select an option',
-  validation = 'Please fill in this field.',
+  validation = { valueMissing: 'Please fill in this field.' },
   ...rest
 }) => {
   const { values, errors, onChange, onValidate } = useFormHelpers();
+
+  const validationConfig =
+    typeof validation === 'string' ? { valueMissing: validation } : validation;
 
   const [isOpen, setIsOpen] = useState(false);
   const selectedOptions = values[rest.name] || (multiple ? [] : '');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const selectRef = useRef(null);
-  const listRef = useRef(null);
   const hiddenInputRef = useRef(null);
 
-  let labelClasses = classes?.label
+  const labelId = `${rest.id}-label`;
+  const listId = `${rest.id}-list`;
+  const errorId = `${rest.id}-error`;
+  const helperId = `${rest.id}-helperText`;
+
+  const getOptionId = (index) => `${rest.id}-option-${index}`;
+
+  const serializeValue = (value) =>
+    Array.isArray(value) ? value.join(',') : (value ?? '');
+
+  const labelClasses = classes?.label
     ? `FormFusion-Select__root__label ${classes.label}`
     : 'FormFusion-Select__root__label';
-  let rootClasses = classes?.root
+  const rootClasses = classes?.root
     ? `FormFusion-Select__root ${classes.root}`
     : 'FormFusion-Select__root';
-  let selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : 'FormFusion-Select__root__control'} ${errors[rest.name] ? 'FormFusion-Select__root__control--error' : ''}`;
-  let menuClasses = classes?.menu
+  const selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : 'FormFusion-Select__root__control'} ${errors[rest.name] ? 'FormFusion-Select__root__control--error' : ''}`;
+  const menuClasses = classes?.menu
     ? `FormFusion-Select__root__menu ${classes.menu}`
     : 'FormFusion-Select__root__menu';
-  let menuListClasses = classes?.menuList
+  const menuListClasses = classes?.menuList
     ? `FormFusion-Select__root__menu__list ${classes.menuList}`
     : 'FormFusion-Select__root__menu__list';
-  let optionClasses = classes?.option
+  const optionClasses = classes?.option
     ? `FormFusion-Select__root__menu__option ${classes.option}`
     : 'FormFusion-Select__root__menu__option';
-  let errorClasses = classes?.error
+  const errorClasses = classes?.error
     ? `FormFusion-Select__root__error ${classes.error}`
     : 'FormFusion-Select__root__error';
-  let helperTextClasses = classes?.helperText
+  const helperTextClasses = classes?.helperText
     ? `FormFusion-Select__root__field__helper-text ${classes.helperText}`
     : 'FormFusion-Select__root__field__helper-text';
 
@@ -68,6 +80,18 @@ const Select = ({
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
+  };
+
+  const validateSelection = (updatedValue) => {
+    if (!rest.required) return;
+
+    if (hiddenInputRef.current) {
+      hiddenInputRef.current.value = serializeValue(updatedValue);
+      onValidate(
+        { target: hiddenInputRef.current, preventDefault: () => {} },
+        validationConfig
+      );
+    }
   };
 
   const handleSelect = (option) => {
@@ -91,23 +115,7 @@ const Select = ({
       },
     });
 
-    if (rest.required) {
-      onValidate({
-        target: {
-          name: rest.name,
-          value: updatedValue,
-          validity: {
-            valid: Boolean(updatedValue),
-          },
-          validationMessage: validation,
-        },
-        preventDefault: () => {},
-      });
-    }
-
-    if (hiddenInputRef.current) {
-      hiddenInputRef.current.value = updatedValue;
-    }
+    validateSelection(updatedValue);
 
     selectRef.current.focus();
   };
@@ -156,30 +164,31 @@ const Select = ({
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      listRef.current.focus();
-    }
-  }, [isOpen]);
-
   return (
     <div className={rootClasses} onKeyDown={handleKeyDown} onBlur={handleBlur}>
-      <label htmlFor={rest.id} className={labelClasses}>
+      <label id={labelId} htmlFor={rest.id} className={labelClasses}>
         {label}
       </label>
       <div className="FormFusion-Select__root__inner">
         <div
+          id={rest.id}
           ref={selectRef}
           className={selectClasses}
           tabIndex="0"
           onClick={handleToggle}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-labelledby={rest.id}
+          aria-labelledby={labelId}
           role="combobox"
-          aria-controls="FormFusion-select-list"
+          aria-controls={listId}
+          aria-activedescendant={
+            isOpen ? getOptionId(highlightedIndex) : undefined
+          }
           aria-autocomplete="list"
           aria-required={rest.required ? 'true' : 'false'}
+          aria-invalid={errors[rest.name] ? 'true' : 'false'}
+          aria-errormessage={errors[rest.name] ? errorId : undefined}
+          aria-describedby={helperText ? helperId : undefined}
           data-placeholder={selectedLabels === placeholder}
         >
           {selectedLabels}
@@ -187,8 +196,7 @@ const Select = ({
         {isOpen && (
           <div className={menuClasses}>
             <ul
-              id="FormFusion-select-list"
-              ref={listRef}
+              id={listId}
               className={menuListClasses}
               role="listbox"
               aria-multiselectable={multiple}
@@ -197,6 +205,7 @@ const Select = ({
               {options.map((option, index) => (
                 <li
                   key={option.value}
+                  id={getOptionId(index)}
                   className={`${optionClasses} ${highlightedIndex === index ? 'FormFusion-Select__root__menu__option--highlighted' : ''}`}
                   role="option"
                   aria-selected={
@@ -213,17 +222,24 @@ const Select = ({
           </div>
         )}
       </div>
-      {helperText && <span className={helperTextClasses}>{helperText}</span>}
-      <span className={errorClasses}>{errors[rest.name]}</span>
+      {helperText && (
+        <span className={helperTextClasses} id={helperId}>
+          {helperText}
+        </span>
+      )}
+      <span className={errorClasses} id={errorId} aria-live="polite">
+        {errors[rest.name]}
+      </span>
       <input
         type="text"
         name={rest.name}
         ref={hiddenInputRef}
-        defaultValue={selectedOptions}
+        defaultValue={serializeValue(selectedOptions)}
         required={rest.required}
+        tabIndex={-1}
         style={{ position: 'absolute', left: '-9999px' }}
         aria-hidden="true"
-        onInvalid={(e) => onValidate(e, validation)}
+        onInvalid={(e) => onValidate(e, validationConfig)}
       />
     </div>
   );

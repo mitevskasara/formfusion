@@ -1,7 +1,7 @@
 .FormFusion {
   --error: #da344d;
-  --text: #000000bf;
-  --text-secondary: #000000ab;
+  --text: #1f1f1f;
+  --text-secondary: #3a3a3a;
   --text-disabled: #00000073;
   --border-color: #d3d3d3;
   --border-focus-color: #023e8a;
@@ -49,8 +49,9 @@
 .FormFusion-Input__root__field:focus,
 .FormFusion-Textarea__root__field:focus,
 .FormFusion-Select__root__control:focus {
-  border: 1px solid var(--border-focus-color);
-  outline: none;
+  border-color: var(--border-focus-color);
+  outline: 2px solid var(--border-focus-color);
+  outline-offset: 1px;
 }
 
 .FormFusion-Input__root__field::placeholder,
@@ -130,6 +131,12 @@
   transform: translateY(-50%);
   background-color: var(--border-color);
   border-radius: var(--border-radius);
+}
+
+.FormFusion-Input__root__field--checkbox input:focus~.FormFusion-Input__root__checkmark,
+.FormFusion-Input__root__field--checkbox input:focus-visible~.FormFusion-Input__root__checkmark {
+  outline: 2px solid var(--border-focus-color);
+  outline-offset: 2px;
 }
 
 .FormFusion-Input__root__field--checkbox:hover input~.FormFusion-Input__root__checkmark {

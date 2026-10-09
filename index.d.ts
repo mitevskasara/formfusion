@@ -278,17 +278,7 @@ declare module 'formfusion' {
     helperText?: string;
   };
 
-  export const combine: CombineFunctions = {
-    and: (...args: string[]): CombineResult => {
-      return { patterns: args, operator: 'AND' };
-    },
-    or: (...args: string[]): CombineResult => {
-      return { patterns: args, operator: 'OR' };
-    },
-    nor: (...args: string[]): CombineResult => {
-      return { patterns: args, operator: 'NOR' };
-    },
-  };
+  export const combine: CombineFunctions;
 
   export const Form: (props: FormProps) => any;
 
@@ -300,7 +290,12 @@ declare module 'formfusion' {
 
   export const useForm: (config: FormConfigParams) => FormConfig;
 
-  export const connect: (config: FormConfigParams, type: Type) => object;
+  export const connect: (
+    config: FormConfigParams,
+    type: Type | CombineResult,
+    validation?: CustomValidityValue,
+    ...rest: any[]
+  ) => object;
 
   export const rules: Rules;
 }

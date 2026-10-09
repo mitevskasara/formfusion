@@ -29,10 +29,23 @@
   "main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "style.css",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
   "author": "Sara Mitevska",
   "license": "BSD-2-Clause license",
   "bugs": {
-    "url": "https://github.com/corelabui/formfusion/issues"
+    "url": "https://github.com/mitevskasara/formfusion/issues"
   },
   "homepage": "https://formfusion.dev",
   "devDependencies": {
