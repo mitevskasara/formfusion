@@ -76,4 +76,21 @@ describe('Testing Select component', () => {
     fireEvent.click(combos[0]);
     expect(screen.getByRole('listbox')).toHaveAttribute('id', 'one-list');
   });
+
+  test('falls back to the name prop when id is not provided', () => {
+    render(
+      <Form onSubmit={() => {}}>
+        <Select
+          name="country"
+          label="Country"
+          options={[{ value: 'a', label: 'A' }]}
+        />
+      </Form>
+    );
+
+    const combo = screen.getByRole('combobox');
+    expect(combo).toHaveAttribute('id', 'country');
+    expect(combo).toHaveAttribute('aria-labelledby', 'country-label');
+    expect(screen.getByLabelText('Country')).toBe(combo);
+  });
 });

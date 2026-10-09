@@ -33,7 +33,8 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.mjs",
-      "require": "./index.js"
+      "require": "./index.js",
+      "default": "./index.js"
     },
     "./style.css": "./style.css",
     "./package.json": "./package.json"
@@ -58,7 +59,7 @@
     "url": "https://github.com/mitevskasara/formfusion/issues"
   },
   "homepage": "https://formfusion.dev",
-"devDependencies": {
+  "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.23.3",
     "@formfusion/licence-plates": "^1.0.2",

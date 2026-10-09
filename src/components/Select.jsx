@@ -40,12 +40,13 @@ const Select = ({
   const selectRef = useRef(null);
   const hiddenInputRef = useRef(null);
 
-  const labelId = `${rest.id}-label`;
-  const listId = `${rest.id}-list`;
-  const errorId = `${rest.id}-error`;
-  const helperId = `${rest.id}-helperText`;
+  const fieldId = rest.id || rest.name;
+  const labelId = `${fieldId}-label`;
+  const listId = `${fieldId}-list`;
+  const errorId = `${fieldId}-error`;
+  const helperId = `${fieldId}-helperText`;
 
-  const getOptionId = (index) => `${rest.id}-option-${index}`;
+  const getOptionId = (index) => `${fieldId}-option-${index}`;
 
   const serializeValue = (value) =>
     Array.isArray(value) ? value.join(',') : (value ?? '');
@@ -166,12 +167,12 @@ const Select = ({
 
   return (
     <div className={rootClasses} onKeyDown={handleKeyDown} onBlur={handleBlur}>
-      <label id={labelId} htmlFor={rest.id} className={labelClasses}>
+      <label id={labelId} htmlFor={fieldId} className={labelClasses}>
         {label}
       </label>
       <div className="FormFusion-Select__root__inner">
         <div
-          id={rest.id}
+          id={fieldId}
           ref={selectRef}
           className={selectClasses}
           tabIndex="0"
