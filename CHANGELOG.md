@@ -1,5 +1,29 @@
 ## Changelog
 
+### [1.2.0] - 2026-10-09
+
+#### Features
+
+- **Dual ESM/CJS Builds**: FormFusion now ships `index.js` (CommonJS) and `index.mjs` (ESM) behind a scoped `exports` map, builds for the browser platform, and declares `react` as a peer dependency. (Commits: [c7f20c5](https://github.com/mitevskasara/formfusion/commit/c7f20c5), [13a88cc](https://github.com/mitevskasara/formfusion/commit/13a88cc))
+- **Select id fallback**: `Select` now falls back to the `name` prop for its id, label reference, and ARIA ids — consistent with `Input` and `Textarea`. (Commit: [640a9fa](https://github.com/mitevskasara/formfusion/commit/640a9fa))
+
+#### Bug Fixes
+
+- **Select required validation**: selecting an option in a required `Select` no longer throws.
+- **Combined validation patterns**: patterns now default to the `AND` operator and are matched as a full match, consistent with the native `pattern` attribute.
+- **Invalid regexes**: corrected `ISBN-13`, `HSL`, `HSL comma/space`, `BASE32`, `BASE58`, `BASE64`, and `FQDN` patterns. (Commit: [438ecb9](https://github.com/mitevskasara/formfusion/commit/438ecb9))
+- **Custom validation messages**: `patternMismatch` messages are now applied to combined fields.
+- **`classes.field`**: extra classes join with a separator and the base class is not duplicated; `Textarea` labels are correctly associated with the textarea.
+- **Masking**: all-`#` masks and regex-special mask literals no longer throw.
+- **`connect()`**: no longer throws for combined patterns and maps `password`/`ccv` to `type="password"`.
+- **`index.d.ts`**: removed invalid ambient initializers; `connect` signature updated.
+- **Accessibility**: visible focus outlines, a checkbox focus ring, improved contrast tokens, and `Select` ARIA wiring (`aria-expanded`, `aria-controls`, `aria-activedescendant`, `aria-invalid`, `aria-errormessage`).
+- **Prototype pollution**: `parseEntries` no longer assigns through `__proto__` and uses `Object.defineProperty` for parsed form values.
+
+#### Documentation
+
+- README now documents `Textarea`, `Select`, combined rules, and `useForm`/`connect`. (Commit: [ea8ed37](https://github.com/mitevskasara/formfusion/commit/ea8ed37))
+
 ### [1.1.18] - 2024-10-28
 
 #### Features
