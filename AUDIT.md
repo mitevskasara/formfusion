@@ -119,44 +119,53 @@ interpolated into a `RegExp` character class without escaping (`]`, `\`, `^`, `-
 ## Security
 
 - `npm audit --omit=dev` → **0 vulnerabilities** (no runtime dependencies shipped).
-- Full toolchain audit → **57 vulns (46 high, 1 critical)** in dev-only transitive deps
-  (`svgo` via cssnano, `ws`, `yaml`); not published.
+- Full toolchain audit → now **21 dev-only transitive vulns** (20 moderate, 1 high) after the
+  dependency upgrade (was 57: 46 high, 1 critical). Remainder is inside jest's own dependency
+  tree (`@babel/runtime`, `argparse`, `js-yaml`, `sprintf-js`, `@jest/*`) — no non-breaking fix.
 - **ReDoS risk**: developer/user-supplied patterns compiled with raw `new RegExp` without
   sanitization/timeout; bundled `IPV6`/`HSL` patterns are complex.
 - `parseEntries` (`src/utils/helpers.js:3-11`) `JSON.parse`s every submitted value; field names
-  like `__proto__`/`constructor` are unguarded.
+  like `__proto__`/`constructor` were unguarded (fixed — `src/utils/helpers.js:3`).
 - No XSS sinks (`dangerouslySetInnerHTML`/`eval`) found.
 
 ---
 
 ## Outdated / maintenance
 
-- Dependencies ~2 years behind: React 18.2 → 19.3, Jest 29 → 30, esbuild 0.18 → 0.28,
-  Babel 7 → 8, testing-library 14 → 16.
-- `package.json`: no `peerDependencies` (React should be one), no `files`/`exports`/`sideEffects`;
-  `"module": "index.js"` points at the **CJS** bundle. No `prepare`/`prepublishOnly`.
-- `esbuild.js`: `platform:"node"`, `target:"node14"` (EOL) for a browser React library; CJS only.
-- No ESLint, no `typecheck` script, no CI, no coverage thresholds.
-- **Test gaps**: 123 files target `Input`; none for `Select`, `Textarea`, `Form`, `useForm`,
-  `connect`, `combine.or/nor`, controlled mode, or masking.
+- Dependencies were ~2 years behind (React 18.2 → **19.3**, Jest 29 → **30.5**, esbuild 0.18 →
+  **0.28**, testing-library 14 → **16.3**, postcss/cssnano/autoprefixer bumps). Done on
+  `fix/audit-priority-fixes`.
+- `package.json`: had no `peerDependencies`, `files`/`exports`/`sideEffects`; `"module"` pointed
+  at the **CJS** bundle. Now: `peerDependencies: { react: ">=16.8.0" }`, `exports` map, `module`
+  → `index.mjs`, `sideEffects`, `files` (fixed).
+- `esbuild.js`: was `platform:"node"`/`target:"node14"` (EOL), CJS only. Now dual \*\*ESM (index.mjs)
+  - CJS (index.js)\*\*, `platform:"browser"`, `target:"es2018"`. Both bundles verified via `node`.
+- No ESLint, no `typecheck` script, no CI, no coverage thresholds — still open.
+- **Test gaps** (still open): `combine.or/nor`, controlled mode. `Select`/`Textarea`/`mask`/
+  no-operator `combine` now covered.
+- `jest` workers: default parallelism (10 cores) intermittently SIGSEGVs during full runs on this
+  machine; stable with `maxWorkers: "50%"` (set in `package.json`).
 
 ---
 
 ## Fix status
 
-Tracked in the working session; see checklist below (updated as fixes land).
+All items below landed on branch `fix/audit-priority-fixes`.
 
-- [ ] #1 Select required crash
-- [ ] #2 operator default
-- [ ] #3 connect crash
-- [ ] #4 invalid regexes
-- [ ] #5 `index.d.ts`
-- [ ] #6 pattern anchoring in combine path
-- [ ] #7 `classes.field`
-- [ ] #8 Textarea label
-- [ ] #9 mask safety
-- [ ] #10 Select ARIA
-- [ ] #11 custom validity keys
-- [ ] P2 focus outlines / contrast
-- [ ] packaging (peerDeps, sideEffects, files)
-- [ ] tests for new behavior
+- [x] #1 Select required crash
+- [x] #2 operator default
+- [x] #3 connect crash
+- [x] #4 invalid regexes
+- [x] #5 `index.d.ts`
+- [x] #6 pattern anchoring in combine path
+- [x] #7 `classes.field`
+- [x] #8 Textarea label
+- [x] #9 mask safety
+- [x] #10 Select ARIA
+- [x] #11 custom validity keys
+- [x] P2 focus outlines / contrast
+- [x] packaging (peerDeps, exports, sideEffects, files, ESM build)
+- [x] tests for new behavior
+- [x] README docs (combine import, Textarea, Select, useForm/connect)
+- [x] `parseEntries` prototype-pollution guard
+- [x] dependency upgrades (React 19, Jest 30, esbuild 0.28, RTL 16)
