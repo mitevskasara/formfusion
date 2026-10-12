@@ -82,7 +82,7 @@
 
 #### Features
 
-- Enabled custom form values through the newly defined [setFieldValue](https://formfusion.dev/docs/api/useform#config-setFieldValue) method.
+- Enabled custom form values through the newly defined [setFieldValue](https://formfusion-eta.vercel.app/docs/api/useform#config-setFieldValue) method.
 
 #### Bug Fixes
 

@@ -14,7 +14,7 @@ FormFusion is based on the native HTML validation and extends the native [input 
 - **ccv**
 - **uuid**
 - **ssn**
-- **...and many more** - See full list of types [here](https://formfusion.dev/docs/api/validation)
+- **...and many more** - See full list of types [here](https://formfusion-eta.vercel.app/docs/api/validation)
 
 Additionally, FormFusion provides other more specific sets of validation rules such as rules for postcodes validaion, IBAN numbers validation, Licence plates validation etc.
 These sets are not included in the formfusion package to ensure optimal size and performance but they can be installed separately.
@@ -55,7 +55,7 @@ yarn add formfusion
 
 ### Styled version (Optional)
 
-FormFusion is unstyled by default. To use the styled version, import the styles into your main file. You can customize the default FormFusion theme by overriding the CSS variables or by applying your own class names to the FormFusion components. For more information on the defined theme, please refer to the styling [documentation](https://formfusion.dev/docs/api/styling).
+FormFusion is unstyled by default. To use the styled version, import the styles into your main file. You can customize the default FormFusion theme by overriding the CSS variables or by applying your own class names to the FormFusion components. For more information on the defined theme, please refer to the styling [documentation](https://formfusion-eta.vercel.app/docs/api/styling).
 
 ```jsx
 import 'formfusion/style.css';
@@ -65,7 +65,7 @@ import 'formfusion/style.css';
 
 #### 1. Validating using the 'Type' property
 
-You can apply validation rules by passing the desired rule name to the <code>type</code> property. The full list of available rules can be found [here](https://formfusion.dev/docs/api/validation).
+You can apply validation rules by passing the desired rule name to the <code>type</code> property. The full list of available rules can be found [here](https://formfusion-eta.vercel.app/docs/api/validation).
 
 ```jsx
 import React from 'react';
@@ -242,6 +242,6 @@ export default SignupForm;
 
 Start managing your forms efficiently!
 
-For detailed documentation and examples, please visit our [Documentation Page](https://formfusion.dev/docs).
+For detailed documentation and examples, please visit our [Documentation Page](https://formfusion-eta.vercel.app/docs).
 
 ---
