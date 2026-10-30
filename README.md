@@ -111,7 +111,7 @@ export default MyForm;
 
 #### 3. Combining validation rules
 
-You can combine multiple validation rules for a single field using the combine function along with one of three operators: AND, OR, and NOR. You may use any of the provided rules from FormFusion or include your own valid regex.
+You can combine multiple validation rules for a single field using the `combine` function along with one of three operators: AND, OR, and NOR. Import `combine` from `formfusion` alongside the components and `rules` (as shown below). You may use any of the provided rules from FormFusion or include your own valid regex.
 
 ```jsx
 import React from 'react';
