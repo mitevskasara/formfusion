@@ -1,8 +1,8 @@
 name: Publish to npm
 
+# Only called by release-please.yml: npm trusted publishing is configured
+# for that workflow, so a direct trigger here would be rejected by npm.
 on:
-  push:
-    tags: ['v*']
   workflow_call:
     inputs:
       tag_name:
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-${{ github.ref }}
+  group: publish-${{ inputs.tag_name }}
   cancel-in-progress: false
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag_name || github.ref }}
+          ref: ${{ inputs.tag_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,7 +49,7 @@ jobs:
 
       - name: Verify tag matches package.json version
         env:
-          TAG_NAME: ${{ inputs.tag_name || github.ref_name }}
+          TAG_NAME: ${{ inputs.tag_name }}
         run: test "v$(node -p 'require("./package.json").version')" = "$TAG_NAME"
 
       - name: Build

@@ -96,6 +96,6 @@ Keep commits focused. Put regenerated bundles in the commit that caused them. Ne
   1. Every push to `main` updates an open release PR that bumps `package.json`, `.release-please-manifest.json` and `CHANGELOG.md` based on the commits.
   2. Merging the release PR creates the `vX.Y.Z` tag and GitHub release, then calls `.github/workflows/publish.yml`. That workflow runs CI, checks that the tag matches `package.json`, builds, and runs `npm publish --provenance` through npm OIDC trusted publishing (no token) in the `npm` environment.
   - **Don't bump `version` or edit `CHANGELOG.md` by hand.** Release Please owns both.
-  - Pushing a `v*` tag manually also triggers `publish.yml`. Only do that to recover a failed release.
+  - `publish.yml` only runs when `release-please.yml` calls it. npm's trusted publisher is configured for `release-please.yml`, so if you rename that file, update the setting on npmjs.com too. To recover a failed publish, re-run the failed jobs of that Release Please run from the Actions tab. Don't push tags by hand or add other triggers to `publish.yml`, because npm will reject them.
 - Commit `package-lock.json` along with any dependency change, and keep it portable (CI runs `npm ci` on Linux).
 - Only the files listed in `package.json` → `files` ship to npm. Update that list and `exports` if you add a published artifact.
