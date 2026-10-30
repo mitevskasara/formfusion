@@ -1,6 +1,6 @@
 {
   "name": "formfusion",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "Efficient and adaptable form management solution featuring out-of-the-box validation.",
   "private": false,
   "scripts": {
