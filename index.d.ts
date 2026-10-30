@@ -2,35 +2,18 @@ declare module 'formfusion' {
   import * as React from 'react';
 
   export interface CustomValidityValue {
-    badInput?: string | '';
-    customError?: string | '';
-    patternMismatch?: string | '';
-    rangeOverflow?: string | '';
-    rangeUnderflow?: string | '';
-    stepMismatch?: string | '';
-    tooLong?: string | '';
-    tooShort?: string | '';
-    typeMismatch?: string | '';
-    valid?: string | '';
-    valueMissing?: string | '';
-    invalid?: string | '';
-  }
-
-  export interface CustomValidity {
-    [key: string]: {
-      badInput?: string | '';
-      customError?: string | '';
-      patternMismatch?: string | '';
-      rangeOverflow?: string | '';
-      rangeUnderflow?: string | '';
-      stepMismatch?: string | '';
-      tooLong?: string | '';
-      tooShort?: string | '';
-      typeMismatch?: string | '';
-      valid?: string | '';
-      valueMissing?: string | '';
-      invalid?: string | '';
-    };
+    badInput?: string;
+    customError?: string;
+    patternMismatch?: string;
+    rangeOverflow?: string;
+    rangeUnderflow?: string;
+    stepMismatch?: string;
+    tooLong?: string;
+    tooShort?: string;
+    typeMismatch?: string;
+    valid?: string;
+    valueMissing?: string;
+    invalid?: string;
   }
 
   export interface FormValues {
@@ -41,29 +24,34 @@ declare module 'formfusion' {
     [key: string]: string;
   }
 
-  export interface FormConfig {
-    formRef: React.RefObject<HTMLFormElement>;
-    values: FormValues;
-    errors: FormErrors;
-    touched: Record<string, boolean>;
-    setFieldValue: (key: string, value: any) => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
-    onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
-    onValidate: (
-      e: React.ChangeEvent<HTMLInputElement>,
-      customValidity?: CustomValidityValue
-    ) => void;
-    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    resetForm: () => void;
+  type NoInfer<T> = [T][T extends any ? 0 : never];
+
+  export interface UseFormParams<T extends FormValues = FormValues> {
+    formRef?: React.RefObject<HTMLFormElement>;
+    initialValues?: NoInfer<T>;
+    onSubmit?: (values: NoInfer<T>) => void;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
   }
 
+  export interface FormConfig<T extends FormValues = FormValues>
+    extends Omit<UseFormParams<T>, 'formRef'> {
+    formRef: React.RefObject<HTMLFormElement>;
+    values: T;
+    errors: FormErrors;
+    touched: Record<string, boolean>;
+    setFieldValue: <K extends keyof T & string>(key: K, value: T[K]) => void;
+    onValidate: (
+      e: React.ChangeEvent<HTMLInputElement>,
+      customValidity?: CustomValidityValue
+    ) => void;
+    resetForm: () => void;
+  }
+
   interface FormConfigParams {
-    config?: FormConfig;
-    onSubmit?: (values: any) => void;
-    initialValues?: any;
+    config?: FormConfig<any>;
+    onSubmit?: (values: FormValues) => void;
+    initialValues?: FormValues;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
   }
@@ -102,10 +90,7 @@ declare module 'formfusion' {
     IPV6: string;
     UUID: string;
     GUID: string;
-    // ISBN-10 codes
-    // SSN: string;
     SSN: string;
-    // SSN: string;
     EIN: string;
     ITIN: string;
     ATIN: string;
@@ -160,10 +145,6 @@ declare module 'formfusion' {
     [K in keyof T as CamelCase<string & K>]: T[K];
   };
 
-  type LowercaseKeysOfPatterns<T> = {
-    [K in keyof T as K extends string ? Lowercase<K> : never]: T[K];
-  };
-
   export type Types = LowercaseKeys<RegexPatterns>;
 
   export type NativeTypes =
@@ -209,7 +190,7 @@ declare module 'formfusion' {
     notExistIn: (array: string[]) => string;
   } & CamelCaseKeys<RegexPatterns>;
 
-  type PatternOperator = 'AND' | 'OR' | 'NOR';
+  type PatternOperator = 'and' | 'or' | 'nor';
 
   interface CombineResult {
     patterns: string[];
@@ -240,7 +221,7 @@ declare module 'formfusion' {
   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
   export type InputPropsWithType = InputPropsBase & {
-    type: Type | string | CombineResult;
+    type: Type | (string & {}) | CombineResult;
     pattern?: never;
   };
 
@@ -259,11 +240,11 @@ declare module 'formfusion' {
   } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
   export type SelectProps = {
-    id: string;
+    id?: string;
     name: string;
     required?: boolean;
     multiple?: boolean;
-    validation?: CustomValidityValue;
+    validation?: CustomValidityValue | string;
     label?: string;
     placeholder?: string;
     classes?: {
@@ -280,22 +261,57 @@ declare module 'formfusion' {
 
   export const combine: CombineFunctions;
 
-  export const Form: (props: FormProps) => any;
+  export const Form: React.ForwardRefExoticComponent<
+    FormProps & React.RefAttributes<HTMLFormElement>
+  >;
 
-  export const Input: (props: InputProps) => any;
+  export const Input: (props: InputProps) => React.ReactElement;
 
-  export const Textarea: (props: TextareaProps) => any;
+  export const Textarea: (props: TextareaProps) => React.ReactElement;
 
-  export const Select: (props: SelectProps) => any;
+  export const Select: (props: SelectProps) => React.ReactElement;
 
-  export const useForm: (config: FormConfigParams) => FormConfig;
+  export const useForm: <T extends FormValues = FormValues>(
+    config: UseFormParams<T>
+  ) => FormConfig<T>;
 
-  export const connect: (
-    config: FormConfigParams,
+  export interface ConnectProps<T extends HTMLElement = HTMLInputElement> {
+    ref: React.RefObject<T | null>;
+    name: string;
+    type: string;
+    pattern?: string;
+    onInput?: React.FormEventHandler<T>;
+    onChange?: React.ChangeEventHandler<T>;
+    onFocus?: React.FocusEventHandler<T>;
+    onBlur?: React.FocusEventHandler<T>;
+    onInvalid: React.FormEventHandler<T>;
+    'data-type'?: string;
+    'data-pattern': string;
+    'data-operator'?: string;
+    'data-mask'?: string;
+    maxLength?: number;
+    inputMode: React.HTMLAttributes<T>['inputMode'];
+    onPaste?: React.ClipboardEventHandler<T>;
+    'aria-invalid': 'true' | 'false';
+    'aria-errormessage'?: string;
+  }
+
+  export interface ConnectConfig extends Partial<FormConfig<any>> {
+    onValidate: FormConfig['onValidate'];
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    controlled?: boolean;
+  }
+
+  export const useConnect: <
+    T extends HTMLElement = HTMLInputElement,
+    P extends Record<string, any> = {},
+  >(
+    config: ConnectConfig,
     type: Type | CombineResult,
-    validation?: CustomValidityValue,
-    ...rest: any[]
-  ) => object;
+    validation: CustomValidityValue | undefined,
+    props: P & { name: string; id?: string; pattern?: string; mask?: string }
+  ) => Omit<P, 'mask'> & ConnectProps<T>;
 
   export const rules: Rules;
 }

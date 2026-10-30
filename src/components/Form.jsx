@@ -1,7 +1,10 @@
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import FormContext from '../context';
-import { parseEntries } from '../utils/helpers';
-import useFormHelpers from '../hooks/useFormHelpers';
+import reducer, { initialState } from '../state/reducer';
+import createStore from '../state/store';
+import ACTIONS from '../state/actions';
+import { resetValidity } from '../utils/validate';
+import { getFormValues } from '../utils/helpers';
 
 const Form = forwardRef(
   (
@@ -17,79 +20,71 @@ const Form = forwardRef(
     ref
   ) => {
     const formRef = useRef(null);
-    const helpers = useFormHelpers();
-    const formConfig = config ? { ...helpers, ...config } : helpers;
-    const { values, errors, resetForm } = formConfig;
+    const [ownStore] = useState(() =>
+      createStore(reducer, { ...initialState, values: initialValues })
+    );
+    const store = config?.store ?? ownStore;
+
+    const contextFormRef = config?.formRef ?? formRef;
+    const contextValidateOnChange =
+      config?.validateOnChange ?? validateOnChange;
+    const contextValidateOnBlur = config?.validateOnBlur ?? validateOnBlur;
+    const controlled = Boolean(config);
+
+    const contextValue = useMemo(
+      () => ({
+        store,
+        formRef: contextFormRef,
+        validateOnChange: contextValidateOnChange,
+        validateOnBlur: contextValidateOnBlur,
+        controlled,
+      }),
+      [
+        store,
+        contextFormRef,
+        contextValidateOnChange,
+        contextValidateOnBlur,
+        controlled,
+      ]
+    );
 
     function handleSubmit(e) {
       e.preventDefault();
 
       const form = e.target;
-      const formData = new FormData(form);
 
-      if (Object.keys(errors).filter((key) => errors[key]).length) {
+      if (!form.checkValidity()) {
         return;
       }
 
-      if (config && Object.keys(values).length > 0) {
-        Object.keys(values).forEach((key) => {
-          switch (typeof values[key]) {
-            case 'string': {
-              formData.append(key, values[key]);
-              break;
-            }
-            case 'object': {
-              formData.append(key, JSON.stringify(values[key]));
-              break;
-            }
-            default:
-              formData.append(key, values[key]);
-          }
-        });
-      }
+      const values = getFormValues(
+        form,
+        config ? store.getState().values : undefined
+      );
+      const submit =
+        typeof config?.onSubmit === 'function' ? config.onSubmit : onSubmit;
 
-      if (typeof config?.onSubmit === 'function') {
-        config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
-      } else if (typeof onSubmit === 'function') {
-        onSubmit(parseEntries(Object.fromEntries(formData.entries())));
+      if (typeof submit === 'function') {
+        submit(values);
       }
     }
 
-    useEffect(() => {
-      const form = ref?.current;
-
-      const handleFormReset = () => {
-        if (typeof resetForm === 'function') {
-          resetForm();
-        }
-      };
-
-      if (form) {
-        form.addEventListener('reset', handleFormReset);
-      }
-
-      return () => {
-        if (form) {
-          form.removeEventListener('reset', handleFormReset);
-        }
-      };
-    }, [ref?.current, resetForm]);
+    function handleReset(e) {
+      rest.onReset?.(e);
+      resetValidity(e.currentTarget);
+      store.dispatch({
+        type: ACTIONS.RESET,
+        payload: config ? config.initialValues : initialValues,
+      });
+    }
 
     return (
-      <FormContext.Provider
-        value={{
-          ...config,
-          formRef: config?.formRef ?? formRef,
-          initialValues: config?.values ?? initialValues,
-          validateOnChange: config?.validateOnChange ?? validateOnChange,
-          validateOnBlur: config?.validateOnBlur ?? validateOnBlur,
-          controlled: Boolean(config),
-        }}
-      >
+      <FormContext.Provider value={contextValue}>
         <form
           {...rest}
           data-testid="form"
           onSubmit={rest.action ? undefined : handleSubmit}
+          onReset={handleReset}
           ref={config?.formRef ?? ref ?? formRef}
           className={`FormFusion ${rest?.className ?? ''}`}
         >
@@ -99,5 +94,7 @@ const Form = forwardRef(
     );
   }
 );
+
+Form.displayName = 'Form';
 
 export default Form;

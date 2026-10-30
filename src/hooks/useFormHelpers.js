@@ -1,127 +1,33 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useState } from 'react';
 import reducer, { initialState } from '../state/reducer';
+import createStore from '../state/store';
 import FormContext from '../context';
 import ACTIONS from '../state/actions';
-import maskInput from '../utils/mask';
-import { CombineOperators } from '../utils/combine';
+import validateField from '../utils/validate';
+import useStoreSelector from './useStoreSelector';
 
-const useFormHelpers = () => {
+const useFormHelpers = (name) => {
   const config = useContext(FormContext);
 
-  const [state, dispatch] = config?.dispatch
-    ? [config?.state, config?.dispatch]
-    : useReducer(reducer, {
-        ...initialState,
-        values: config?.initialValues ?? {},
-      });
+  const [localStore] = useState(() => createStore(reducer, initialState));
+  const store = config?.store ?? localStore;
+  const { dispatch } = store;
 
-  function initValue(key) {
-    dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: '' } });
-  }
+  const value = useStoreSelector(store, (state) => state.values?.[name]);
+  const error = useStoreSelector(store, (state) => state.errors?.[name]);
 
   function onValidate(e, customValidity) {
-    e.preventDefault();
-    const { id, name, value } = e.target;
-    const dataset = e.target.dataset || {};
-    const setCustomValidity =
-      typeof e.target.setCustomValidity === 'function'
-        ? (message) => e.target.setCustomValidity(message)
-        : () => {};
-
-    let patterns = [];
-    try {
-      patterns = dataset.pattern ? JSON.parse(dataset.pattern) : [];
-    } catch (_error) {
-      patterns = [];
-    }
-
-    if (Array.isArray(patterns) && patterns.length > 0) {
-      const operator = dataset.operator || CombineOperators.AND;
-
-      const test = (pattern) => {
-        try {
-          return new RegExp(`^(?:${pattern})$`).test(value);
-        } catch (_error) {
-          return false;
-        }
-      };
-
-      let matches;
-      switch (operator) {
-        case CombineOperators.OR: {
-          matches = patterns.some(test);
-          break;
-        }
-        case CombineOperators.NOR: {
-          matches = patterns.every((pattern) => !test(pattern));
-          break;
-        }
-        case CombineOperators.AND:
-        default: {
-          matches = patterns.every(test);
-          break;
-        }
-      }
-
-      if (!matches) {
-        setCustomValidity(
-          customValidity?.patternMismatch ||
-            customValidity?.invalid ||
-            'Invalid field.'
-        );
-      } else {
-        setCustomValidity('');
-      }
-    }
-
-    if (
-      customValidity &&
-      typeof customValidity === 'object' &&
-      !patterns?.length
-    ) {
-      Object.keys(customValidity).map((key) => {
-        if (e.target.validity?.[key]) {
-          setCustomValidity(customValidity[key]);
-        } else {
-          setCustomValidity('');
-        }
-      });
-    }
-
-    if (typeof e.target.setAttribute === 'function') {
-      e.target.setAttribute('aria-invalid', !Boolean(e.target.validity.valid));
-    }
-
-    if (!Boolean(e.target.validity.valid)) {
-      e.target.setAttribute('aria-errormessage', `FormFusion-${id}-error`);
-    } else {
-      e.target.removeAttribute('aria-errormessage');
-    }
-
-    if (
-      !e.target.validity.valid ||
-      (e.target.validity.valid && state.errors[name])
-    ) {
-      dispatch({
-        type: ACTIONS.SET_ERRORS,
-        payload: {
-          [name]: e.target.validity.valid ? '' : e.target.validationMessage,
-        },
-      });
-    }
-
-    const mask = e.target.dataset?.mask;
-
-    if (mask) {
-      e.target.value = maskInput(mask, value);
-    }
+    validateField(e, customValidity, {
+      errors: store.getState().errors,
+      dispatch,
+    });
   }
 
   function onChange(e) {
-    const { name, value, checked } = e.target;
+    const { name, value, checked, type } = e.target;
     dispatch({
       type: ACTIONS.SET_VALUES,
-      payload: { [name]: checked ? Boolean(checked) : value },
+      payload: { [name]: type === 'checkbox' ? checked : value },
     });
   }
 
@@ -129,22 +35,15 @@ const useFormHelpers = () => {
     dispatch({ type: ACTIONS.SET_TOUCHED, payload: { [e.target.name]: true } });
   }
 
-  function resetForm() {
-    if (Object.keys(state.values).length > 0) {
-      dispatch({ type: ACTIONS.SET_VALUES, payload: {} });
-      dispatch({ type: ACTIONS.SET_ERRORS, payload: {} });
-      dispatch({ type: ACTIONS.SET_TOUCHED, payload: {} });
-    }
-  }
-
   return {
-    ...config,
-    ...state,
-    initValue,
+    value,
+    error,
+    controlled: config?.controlled,
+    validateOnChange: config?.validateOnChange,
+    validateOnBlur: config?.validateOnBlur,
     onChange,
     onFocus,
     onValidate,
-    resetForm,
   };
 };
 

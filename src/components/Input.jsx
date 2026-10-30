@@ -1,19 +1,11 @@
 import React, { useRef } from 'react';
-import inputTypes from '../constants/types';
-import nativeTypes from '../constants/nativeTypes';
-import validity from '../constants/validity';
-import { onPaste } from '../utils/helpers';
 import useFormHelpers from '../hooks/useFormHelpers';
-import inputModes from '../constants/inputmodes';
-import hidden from '../constants/hidden';
+import { resolveValidation } from '../utils/validate';
+import getValidationProps from '../utils/validationProps';
 
 const Input = ({
   type,
-  validation = typeof type === 'string'
-    ? type?.startsWith('postal-code')
-      ? validity['postal-code']
-      : validity[type]
-    : validity[type],
+  validation: customValidation,
   label,
   classes,
   className,
@@ -23,18 +15,18 @@ const Input = ({
   ...rest
 }) => {
   const ref = useRef(null);
+  const validation = resolveValidation(type, customValidation);
   const {
-    values,
-    errors,
+    value,
+    error,
     validateOnChange,
     validateOnBlur,
     controlled,
     onChange,
     onFocus,
     onValidate,
-  } = useFormHelpers();
+  } = useFormHelpers(rest.name);
 
-  const joinedPatterns = typeof type === 'object' ? type.patterns : [];
   const fieldId = rest.id || rest.name;
 
   let rootClasses = classes?.root
@@ -53,14 +45,14 @@ const Input = ({
     ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}`
     : 'FormFusion-Input__root__field__helper-text';
 
-  const Component = type === 'checkbox' ? 'label' : React.Fragment;
-  const componentProps =
-    type === 'checkbox'
-      ? {
-          className: `${labelClasses} FormFusion-Input__root__field--checkbox`,
-          htmlFor: fieldId,
-        }
-      : {};
+  const isCheckbox = type === 'checkbox';
+  const Component = isCheckbox ? 'label' : React.Fragment;
+  const componentProps = isCheckbox
+    ? {
+        className: `${labelClasses} FormFusion-Input__root__field--checkbox`,
+        htmlFor: fieldId,
+      }
+    : {};
 
   if (hideArrows)
     inputClasses += ' FormFusion-Input__root__field--hidden-arrows';
@@ -69,7 +61,7 @@ const Input = ({
   return (
     <div className={rootClasses}>
       <Component {...componentProps}>
-        {type === 'checkbox' ? (
+        {isCheckbox ? (
           <>{label}</>
         ) : (
           <label htmlFor={fieldId} className={labelClasses}>
@@ -79,38 +71,32 @@ const Input = ({
         <input
           {...rest}
           ref={ref}
-          defaultValue={controlled ? undefined : values && values[rest.name]}
-          value={controlled ? values[rest.name] || '' : undefined}
-          data-testid="input"
-          data-mask={mask}
-          className={inputClasses}
-          type={nativeTypes.includes(type) ? type : hidden[type] || 'text'}
-          data-pattern={JSON.stringify(joinedPatterns)}
-          data-operator={type?.operator}
-          pattern={
-            joinedPatterns?.length > 0
-              ? undefined
-              : rest.pattern ||
-                (nativeTypes.includes(type)
-                  ? undefined
-                  : inputTypes[type] || type)
-          }
-          onInput={
-            mask || validateOnChange
-              ? (e) => onValidate(e, validation)
+          defaultValue={controlled || isCheckbox ? undefined : value}
+          value={isCheckbox ? rest.value : controlled ? value || '' : undefined}
+          checked={controlled && isCheckbox ? Boolean(value) : undefined}
+          defaultChecked={
+            !controlled && isCheckbox
+              ? (value ?? rest.defaultChecked)
               : undefined
           }
-          maxLength={mask ? mask.length : rest.maxLength}
+          data-testid="input"
+          className={inputClasses}
+          {...getValidationProps(type, validation, {
+            mask,
+            pattern: rest.pattern,
+            maxLength: rest.maxLength,
+            inputMode: rest.inputMode,
+            onValidate,
+            validateOnChange,
+            validateOnBlur,
+          })}
           onChange={controlled ? onChange : undefined}
           onFocus={controlled ? onFocus : undefined}
-          onPaste={mask ? onPaste : undefined}
-          onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
-          onInvalid={(e) => onValidate(e, validation)}
-          data-type={inputTypes[type] && type}
           aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
-          inputMode={rest.inputMode || inputModes[type] || 'text'}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
         />
-        {type === 'checkbox' && (
+        {isCheckbox && (
           <span className="FormFusion-Input__root__checkmark"></span>
         )}
       </Component>
@@ -127,7 +113,7 @@ const Input = ({
         id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
-        {errors[rest.name]}
+        {error}
       </span>
     </div>
   );

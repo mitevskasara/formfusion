@@ -63,6 +63,8 @@ import 'formfusion/style.css';
 
 ### Using the built-in validation
 
+`onSubmit` is called only when every field is valid. It receives the field values by name, exactly as entered: strings (and `File`s for file inputs), never parsed into numbers or booleans. Fields that share a name, such as a group of checkboxes, are submitted as an array. With `useForm`, values from the form state keep their type and take precedence over the field values.
+
 #### 1. Validating using the 'Type' property
 
 You can apply validation rules by passing the desired rule name to the <code>type</code> property. The full list of available rules can be found [here](https://formfusion-eta.vercel.app/docs/api/validation).
@@ -84,6 +86,21 @@ const MyForm = () => {
 };
 
 export default MyForm;
+```
+
+Built-in types come with default error messages. Other checks, and fields without a built-in type, use the browser's messages. To customize them, pass a `validation` object keyed by [validity state](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). It is merged with the type's defaults, so you only list the messages you want to change. If several checks fail, the first failing key in the object wins:
+
+```jsx
+<Input
+  id="username"
+  name="username"
+  type="username"
+  required
+  validation={{
+    valueMissing: 'Please enter a username.',
+    patternMismatch: 'Use letters, numbers, @, - or _ only.',
+  }}
+/>
 ```
 
 #### 2. Validating using Rules
@@ -111,7 +128,7 @@ export default MyForm;
 
 #### 3. Combining validation rules
 
-You can combine multiple validation rules for a single field using the combine function along with one of three operators: AND, OR, and NOR. You may use any of the provided rules from FormFusion or include your own valid regex.
+You can combine multiple validation rules for a single field using the `combine` function along with one of three operators: AND, OR, and NOR. Import `combine` from `formfusion` alongside the components and `rules` (as shown below). You may use any of the provided rules from FormFusion or include your own valid regex.
 
 ```jsx
 import React from 'react';
@@ -200,13 +217,13 @@ export default MyForm;
 
 `Select` supports single and multiple selection (`multiple`) and works with the same `validation` prop as `Input`.
 
-#### 6. Managing state with useForm and connect
+#### 6. Managing state with useForm and useConnect
 
-`useForm` returns the form state and validation helpers, and `connect` binds them to plain native inputs:
+`useForm` returns the form state and validation helpers, and `useConnect` binds them to plain native inputs. `useConnect` keeps an input ref, so call it at the top level of a component like any other hook. The fourth argument holds the input's props and must include its `name`. They are merged into the result, along with `aria-invalid` and `aria-errormessage` from the field's error state. Render the error in an element with the id `FormFusion-<id or name>-error`, so `aria-errormessage` points at it. A `pattern` there overrides the pattern of the given type. `combine()` rules work as the type, and a `mask` in the props masks the input, just like on `Input`.
 
 ```jsx
 import React, { useRef } from 'react';
-import { useForm, connect } from 'formfusion';
+import { useForm, useConnect } from 'formfusion';
 
 const SignupForm = () => {
   const formRef = useRef(null);
@@ -215,7 +232,7 @@ const SignupForm = () => {
     initialValues: { username: '' },
   });
 
-  const inputProps = connect(
+  const inputProps = useConnect(
     {
       ...formConfig,
       validateOnChange: true,
@@ -225,19 +242,40 @@ const SignupForm = () => {
     },
     'username',
     { patternMismatch: 'Please enter a valid username.' },
-    { placeholder: 'Enter username' }
+    { name: 'username', placeholder: 'Enter username' }
   );
 
   return (
     <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
       <label htmlFor="username">Username</label>
-      <input id="username" name="username" {...inputProps} />
+      <input id="username" {...inputProps} />
+      <span id="FormFusion-username-error" aria-live="polite">
+        {formConfig.errors.username}
+      </span>
       <button type="submit">Submit</button>
     </form>
   );
 };
 
 export default SignupForm;
+```
+
+With TypeScript, pass your form's shape to `useForm` to type `values`, `initialValues`, `onSubmit` and `setFieldValue`. Without it, values are typed as `Record<string, any>`.
+
+```tsx
+interface Signup {
+  username: string;
+  age: number;
+}
+
+const formConfig = useForm<Signup>({
+  formRef,
+  initialValues: { username: '', age: 0 },
+  onSubmit: (values) => save(values),
+});
+
+formConfig.setFieldValue('age', 30);
+formConfig.setFieldValue('agee', 30); // Error: not a field of Signup
 ```
 
 Start managing your forms efficiently!

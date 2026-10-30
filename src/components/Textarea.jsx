@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import useFormHelpers from '../hooks/useFormHelpers';
+import { updateValidity } from '../utils/validate';
 
 const Textarea = ({
   validation,
@@ -11,15 +12,15 @@ const Textarea = ({
 }) => {
   const ref = useRef(null);
   const {
-    values,
-    errors,
+    value,
+    error,
     validateOnChange,
     validateOnBlur,
     controlled,
     onChange,
     onFocus,
     onValidate,
-  } = useFormHelpers();
+  } = useFormHelpers(rest.name);
 
   const fieldId = rest.id || rest.name;
 
@@ -49,17 +50,21 @@ const Textarea = ({
       <textarea
         {...rest}
         ref={ref}
-        value={controlled ? values[rest.name] || '' : undefined}
+        value={controlled ? value || '' : undefined}
         data-testid="textarea"
         className={textareaClasses}
         onInput={
-          validateOnChange ? (e) => onValidate(e, validation) : undefined
+          validateOnChange
+            ? (e) => onValidate(e, validation)
+            : (e) => updateValidity(e.target, validation)
         }
         onChange={controlled ? onChange : undefined}
         onFocus={controlled ? onFocus : undefined}
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
         aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
       />
       {helperText && (
         <span
@@ -74,7 +79,7 @@ const Textarea = ({
         id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
-        {errors[rest.name]}
+        {error}
       </span>
     </div>
   );

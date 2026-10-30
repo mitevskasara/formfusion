@@ -1,19 +1,29 @@
 import maskInput from '../utils/mask';
 
-export function parseEntries(obj) {
-  for (const [key, value] of Object.entries(obj)) {
-    if (key === '__proto__') continue;
-    try {
-      const parsed = JSON.parse(value);
-      Object.defineProperty(obj, key, {
-        value: parsed,
-        writable: true,
-        enumerable: true,
-        configurable: true,
-      });
-    } catch (_error) {}
+const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+
+function setValue(values, key, value) {
+  Object.defineProperty(values, key, {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
+export function getFormValues(form, storeValues = {}) {
+  const values = {};
+  for (const [key, value] of new FormData(form)) {
+    setValue(
+      values,
+      key,
+      hasOwn(values, key) ? [].concat(values[key], value) : value
+    );
   }
-  return obj;
+  for (const key of Object.keys(storeValues)) {
+    setValue(values, key, storeValues[key]);
+  }
+  return values;
 }
 
 export function onPaste(e) {

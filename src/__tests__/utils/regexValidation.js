@@ -2,7 +2,7 @@ const isRegexPatternValid = (pattern) => {
   try {
     new RegExp(`^(?:${pattern})$`);
     return true;
-  } catch (e) {
+  } catch (_error) {
     return false;
   }
 };

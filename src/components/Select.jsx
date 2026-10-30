@@ -29,13 +29,13 @@ const Select = ({
   validation = { valueMissing: 'Please fill in this field.' },
   ...rest
 }) => {
-  const { values, errors, onChange, onValidate } = useFormHelpers();
+  const { value, error, onChange, onValidate } = useFormHelpers(rest.name);
 
   const validationConfig =
     typeof validation === 'string' ? { valueMissing: validation } : validation;
 
   const [isOpen, setIsOpen] = useState(false);
-  const selectedOptions = values[rest.name] || (multiple ? [] : '');
+  const selectedOptions = value || (multiple ? [] : '');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const selectRef = useRef(null);
   const hiddenInputRef = useRef(null);
@@ -57,7 +57,7 @@ const Select = ({
   const rootClasses = classes?.root
     ? `FormFusion-Select__root ${classes.root}`
     : 'FormFusion-Select__root';
-  const selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : 'FormFusion-Select__root__control'} ${errors[rest.name] ? 'FormFusion-Select__root__control--error' : ''}`;
+  const selectClasses = `${className ? `FormFusion-Select__root__control ${className}` : 'FormFusion-Select__root__control'} ${error ? 'FormFusion-Select__root__control--error' : ''}`;
   const menuClasses = classes?.menu
     ? `FormFusion-Select__root__menu ${classes.menu}`
     : 'FormFusion-Select__root__menu';
@@ -187,8 +187,8 @@ const Select = ({
           }
           aria-autocomplete="list"
           aria-required={rest.required ? 'true' : 'false'}
-          aria-invalid={errors[rest.name] ? 'true' : 'false'}
-          aria-errormessage={errors[rest.name] ? errorId : undefined}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-errormessage={error ? errorId : undefined}
           aria-describedby={helperText ? helperId : undefined}
           data-placeholder={selectedLabels === placeholder}
         >
@@ -229,7 +229,7 @@ const Select = ({
         </span>
       )}
       <span className={errorClasses} id={errorId} aria-live="polite">
-        {errors[rest.name]}
+        {error}
       </span>
       <input
         type="text"
