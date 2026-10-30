@@ -13,7 +13,7 @@ src/
   context/            FormContext
   constants/          regex.js (source of truth for patterns), types.js, patterns.js (`rules`),
                       validity.js, nativeTypes.js, inputmodes.js, hidden.js
-  utils/              combine, useConnect, mask, helpers
+  utils/              validate (shared field validation), combine, useConnect, mask, helpers
   style.css           Source styles (edit this file, not ./style.css)
   __tests__/          Jest + Testing Library suites, one folder per feature/pattern
 index.d.ts            Hand-maintained TypeScript types (edit by hand)
@@ -43,6 +43,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 - **Types:** `index.d.ts` is checked by `npm run typecheck` in strict mode, so keep it compiling.
 - **Components:** function components with default exports, one per file in `src/components/`, named in PascalCase. Destructure props with defaults in the signature and pass the rest through with `...rest`. Use `forwardRef` where a ref is exposed (as `Form` does).
 - **Hooks:** anything that calls a React hook must be named `use*` (e.g. `useConnect`, not `connect`) and must call hooks unconditionally, at the top level. Never put a hook call behind a ternary or an `if`.
+- **Validation** lives in one place: `validateField` in `src/utils/validate.js`. Both `useFormHelpers` (Form fields) and `useForm` (`useConnect`) call it. Never copy validation logic into a hook or component. Change `validateField` and test both paths.
 - **Shared logic** goes in `useFormHelpers`. State changes go through `dispatch` with `ACTIONS` from `src/state/actions`, never through ad-hoc local state.
 - **CSS class names** follow BEM with a `FormFusion-` prefix, e.g. `FormFusion-Input__root__field--checkbox`. User classes from `classes.*` / `className` are appended to the base class and never replace it.
 - **Accessibility matters.** Keep labels associated (`htmlFor` / `id`, with `id` falling back to `name`), keep the `aria-describedby`, `aria-invalid` and `aria-errormessage` wiring, and keep visible focus styles.

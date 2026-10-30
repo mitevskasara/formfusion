@@ -2,8 +2,7 @@ import { useContext, useReducer } from 'react';
 import reducer, { initialState } from '../state/reducer';
 import FormContext from '../context';
 import ACTIONS from '../state/actions';
-import maskInput from '../utils/mask';
-import { CombineOperators } from '../utils/combine';
+import validateField from '../utils/validate';
 
 const useFormHelpers = () => {
   const config = useContext(FormContext);
@@ -21,101 +20,7 @@ const useFormHelpers = () => {
   }
 
   function onValidate(e, customValidity) {
-    e.preventDefault();
-    const { id, name, value } = e.target;
-    const dataset = e.target.dataset || {};
-    const setCustomValidity =
-      typeof e.target.setCustomValidity === 'function'
-        ? (message) => e.target.setCustomValidity(message)
-        : () => {};
-
-    let patterns = [];
-    try {
-      patterns = dataset.pattern ? JSON.parse(dataset.pattern) : [];
-    } catch (_error) {
-      patterns = [];
-    }
-
-    if (Array.isArray(patterns) && patterns.length > 0) {
-      const operator = dataset.operator || CombineOperators.AND;
-
-      const test = (pattern) => {
-        try {
-          return new RegExp(`^(?:${pattern})$`).test(value);
-        } catch (_error) {
-          return false;
-        }
-      };
-
-      let matches;
-      switch (operator) {
-        case CombineOperators.OR: {
-          matches = patterns.some(test);
-          break;
-        }
-        case CombineOperators.NOR: {
-          matches = patterns.every((pattern) => !test(pattern));
-          break;
-        }
-        case CombineOperators.AND:
-        default: {
-          matches = patterns.every(test);
-          break;
-        }
-      }
-
-      if (!matches) {
-        setCustomValidity(
-          customValidity?.patternMismatch ||
-            customValidity?.invalid ||
-            'Invalid field.'
-        );
-      } else {
-        setCustomValidity('');
-      }
-    }
-
-    if (
-      customValidity &&
-      typeof customValidity === 'object' &&
-      !patterns?.length
-    ) {
-      Object.keys(customValidity).map((key) => {
-        if (e.target.validity?.[key]) {
-          setCustomValidity(customValidity[key]);
-        } else {
-          setCustomValidity('');
-        }
-      });
-    }
-
-    if (typeof e.target.setAttribute === 'function') {
-      e.target.setAttribute('aria-invalid', String(!e.target.validity.valid));
-    }
-
-    if (!e.target.validity.valid) {
-      e.target.setAttribute('aria-errormessage', `FormFusion-${id}-error`);
-    } else {
-      e.target.removeAttribute('aria-errormessage');
-    }
-
-    if (
-      !e.target.validity.valid ||
-      (e.target.validity.valid && state.errors[name])
-    ) {
-      dispatch({
-        type: ACTIONS.SET_ERRORS,
-        payload: {
-          [name]: e.target.validity.valid ? '' : e.target.validationMessage,
-        },
-      });
-    }
-
-    const mask = e.target.dataset?.mask;
-
-    if (mask) {
-      e.target.value = maskInput(mask, value);
-    }
+    validateField(e, customValidity, { errors: state.errors, dispatch });
   }
 
   function onChange(e) {
