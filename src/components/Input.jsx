@@ -50,14 +50,14 @@ const Input = ({
     ? `FormFusion-Input__root__field__helper-text ${classes?.helperText}`
     : 'FormFusion-Input__root__field__helper-text';
 
-  const Component = type === 'checkbox' ? 'label' : React.Fragment;
-  const componentProps =
-    type === 'checkbox'
-      ? {
-          className: `${labelClasses} FormFusion-Input__root__field--checkbox`,
-          htmlFor: fieldId,
-        }
-      : {};
+  const isCheckbox = type === 'checkbox';
+  const Component = isCheckbox ? 'label' : React.Fragment;
+  const componentProps = isCheckbox
+    ? {
+        className: `${labelClasses} FormFusion-Input__root__field--checkbox`,
+        htmlFor: fieldId,
+      }
+    : {};
 
   if (hideArrows)
     inputClasses += ' FormFusion-Input__root__field--hidden-arrows';
@@ -66,7 +66,7 @@ const Input = ({
   return (
     <div className={rootClasses}>
       <Component {...componentProps}>
-        {type === 'checkbox' ? (
+        {isCheckbox ? (
           <>{label}</>
         ) : (
           <label htmlFor={fieldId} className={labelClasses}>
@@ -76,8 +76,14 @@ const Input = ({
         <input
           {...rest}
           ref={ref}
-          defaultValue={controlled ? undefined : value}
-          value={controlled ? value || '' : undefined}
+          defaultValue={controlled || isCheckbox ? undefined : value}
+          value={isCheckbox ? rest.value : controlled ? value || '' : undefined}
+          checked={controlled && isCheckbox ? Boolean(value) : undefined}
+          defaultChecked={
+            !controlled && isCheckbox
+              ? (value ?? rest.defaultChecked)
+              : undefined
+          }
           data-testid="input"
           data-mask={mask}
           className={inputClasses}
@@ -109,7 +115,7 @@ const Input = ({
           aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
           inputMode={rest.inputMode || inputModes[type] || 'text'}
         />
-        {type === 'checkbox' && (
+        {isCheckbox && (
           <span className="FormFusion-Input__root__checkmark"></span>
         )}
       </Component>

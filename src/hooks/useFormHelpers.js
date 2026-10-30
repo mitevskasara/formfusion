@@ -24,10 +24,10 @@ const useFormHelpers = (name) => {
   }
 
   function onChange(e) {
-    const { name, value, checked } = e.target;
+    const { name, value, checked, type } = e.target;
     dispatch({
       type: ACTIONS.SET_VALUES,
-      payload: { [name]: checked ? Boolean(checked) : value },
+      payload: { [name]: type === 'checkbox' ? checked : value },
     });
   }
 
