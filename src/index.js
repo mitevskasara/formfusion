@@ -9,6 +9,4 @@ export { default as rules } from './constants/patterns';
 
 export { default as useConnect } from './utils/useConnect';
 
-export { default as connect } from './utils/useConnect';
-
 export { default as combine } from './utils/combine';

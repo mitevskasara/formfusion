@@ -320,8 +320,5 @@ declare module 'formfusion' {
     props: P & { name: string; id?: string; pattern?: string }
   ) => P & ConnectProps<T>;
 
-  /** @deprecated Use `useConnect` instead. */
-  export const connect: typeof useConnect;
-
   export const rules: Rules;
 }

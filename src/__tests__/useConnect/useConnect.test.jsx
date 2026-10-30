@@ -3,7 +3,6 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import useForm from '../../hooks/useForm';
 import useConnect from '../../utils/useConnect';
-import { connect, useConnect as exportedUseConnect } from '../../index';
 import patterns from '../../constants/regex';
 
 const validation = { patternMismatch: 'Please enter a valid email.' };
@@ -136,9 +135,5 @@ describe('useConnect', () => {
 
     expect(() => render(<Unnamed />)).toThrow('useConnect requires props.name');
     console.error.mockRestore();
-  });
-
-  test('keeps connect as a deprecated alias', () => {
-    expect(connect).toBe(exportedUseConnect);
   });
 });
