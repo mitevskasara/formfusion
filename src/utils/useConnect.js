@@ -4,7 +4,7 @@ import nativeTypes from '../constants/nativeTypes';
 import hiddenTypes from '../constants/hidden';
 import validity from '../constants/validity';
 
-const connect = (config, type, validation, ...rest) => {
+const useConnect = (config, type, validation, props = {}) => {
   const {
     controlled,
     onValidate,
@@ -30,13 +30,14 @@ const connect = (config, type, validation, ...rest) => {
     : isStringType && hiddenTypes[type]
       ? hiddenTypes[type]
       : 'text';
-  const pattern = rest.pattern
-    ? rest.pattern
+  const pattern = props.pattern
+    ? props.pattern
     : isNative || !isStringType
       ? undefined
       : inputTypes[type] || type;
 
   return {
+    ...props,
     ref: inputRef,
     type: inputType,
     pattern,
@@ -53,4 +54,4 @@ const connect = (config, type, validation, ...rest) => {
   };
 };
 
-export default connect;
+export default useConnect;

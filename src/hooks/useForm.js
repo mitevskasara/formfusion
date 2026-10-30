@@ -98,7 +98,7 @@ const useForm = (config) => {
       });
     }
 
-    e.target.setAttribute('aria-invalid', String(!Boolean(validity?.valid)));
+    e.target.setAttribute('aria-invalid', String(!validity?.valid));
 
     if (!validity?.valid || (validity?.valid && state.errors[name])) {
       dispatch({

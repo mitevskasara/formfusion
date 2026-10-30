@@ -200,13 +200,13 @@ export default MyForm;
 
 `Select` supports single and multiple selection (`multiple`) and works with the same `validation` prop as `Input`.
 
-#### 6. Managing state with useForm and connect
+#### 6. Managing state with useForm and useConnect
 
-`useForm` returns the form state and validation helpers, and `connect` binds them to plain native inputs:
+`useForm` returns the form state and validation helpers, and `useConnect` binds them to plain native inputs. `useConnect` keeps an input ref, so call it at the top level of a component like any other hook. The optional fourth argument holds extra input props: they are merged into the result, and its `pattern` overrides the pattern of the given type.
 
 ```jsx
 import React, { useRef } from 'react';
-import { useForm, connect } from 'formfusion';
+import { useForm, useConnect } from 'formfusion';
 
 const SignupForm = () => {
   const formRef = useRef(null);
@@ -215,7 +215,7 @@ const SignupForm = () => {
     initialValues: { username: '' },
   });
 
-  const inputProps = connect(
+  const inputProps = useConnect(
     {
       ...formConfig,
       validateOnChange: true,

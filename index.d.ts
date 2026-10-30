@@ -290,12 +290,35 @@ declare module 'formfusion' {
 
   export const useForm: (config: FormConfigParams) => FormConfig;
 
-  export const connect: (
-    config: FormConfigParams,
+  export interface ConnectProps<T extends HTMLElement = HTMLInputElement> {
+    ref: React.RefObject<T | null>;
+    type: string;
+    pattern?: string;
+    onInput?: React.FormEventHandler<T>;
+    onChange?: React.ChangeEventHandler<T>;
+    onFocus?: React.FocusEventHandler<T>;
+    onBlur?: React.FormEventHandler<T>;
+    onInvalid: React.FormEventHandler<T>;
+    'data-type'?: string;
+  }
+
+  export interface ConnectConfig extends Partial<FormConfig> {
+    onValidate: FormConfig['onValidate'];
+    controlled?: boolean;
+  }
+
+  export const useConnect: <
+    T extends HTMLElement = HTMLInputElement,
+    P extends Record<string, any> = {},
+  >(
+    config: ConnectConfig,
     type: Type | CombineResult,
     validation?: CustomValidityValue,
-    ...rest: any[]
-  ) => object;
+    props?: P & { pattern?: string }
+  ) => P & ConnectProps<T>;
+
+  /** @deprecated Use `useConnect` instead. */
+  export const connect: typeof useConnect;
 
   export const rules: Rules;
 }

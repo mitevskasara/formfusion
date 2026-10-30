@@ -1,0 +1,150 @@
+import React, { useRef } from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import useForm from '../../hooks/useForm';
+import useConnect from '../../utils/useConnect';
+import { connect, useConnect as exportedUseConnect } from '../../index';
+import patterns from '../../constants/regex';
+
+const validation = { patternMismatch: 'Please enter a valid email.' };
+
+const ConnectedInput = ({ onValidate, type = 'email', ...overrides }) => {
+  const formRef = useRef(null);
+  const form = useForm({ formRef });
+  const inputProps = useConnect(
+    {
+      ...form,
+      onValidate: onValidate ?? form.onValidate,
+      validateOnChange: true,
+      validateOnBlur: true,
+      ...overrides,
+    },
+    type,
+    validation
+  );
+
+  return (
+    <form ref={formRef}>
+      <input name="email" data-testid="email" {...inputProps} />
+    </form>
+  );
+};
+
+describe('useConnect', () => {
+  test('resolves type, pattern, and data-type from a named type', () => {
+    render(<ConnectedInput type="username" />);
+    const input = screen.getByTestId('email');
+
+    expect(input).toHaveAttribute('type', 'text');
+    expect(input).toHaveAttribute('pattern', patterns.USERNAME);
+    expect(input).toHaveAttribute('data-type', 'username');
+  });
+
+  test('uses the native type and no pattern for native inputs', () => {
+    render(<ConnectedInput />);
+    const input = screen.getByTestId('email');
+
+    expect(input).toHaveAttribute('type', 'email');
+    expect(input).not.toHaveAttribute('pattern');
+  });
+
+  test('keeps the same ref across rerenders', () => {
+    const refs = [];
+
+    const Harness = () => {
+      const ref = useConnect(
+        useForm({ formRef: { current: null } }),
+        'text'
+      ).ref;
+      refs.push(ref);
+      return <input name="name" ref={ref} />;
+    };
+
+    const { rerender } = render(<Harness />);
+    rerender(<Harness />);
+
+    expect(refs).toHaveLength(2);
+    expect(refs[0]).toBe(refs[1]);
+    expect(refs[0].current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  test('passes the resolved validation to onValidate', () => {
+    const onValidate = jest.fn();
+    render(<ConnectedInput onValidate={onValidate} />);
+
+    fireEvent.input(screen.getByTestId('email'), {
+      target: { value: 'user@example.com' },
+    });
+
+    expect(onValidate).toHaveBeenCalledTimes(1);
+    expect(onValidate.mock.calls[0][1]).toBe(validation);
+  });
+
+  test('validates on blur and on invalid', () => {
+    const onValidate = jest.fn();
+    render(<ConnectedInput onValidate={onValidate} />);
+    const input = screen.getByTestId('email');
+
+    fireEvent.blur(input);
+    fireEvent(input, new Event('invalid'));
+
+    expect(onValidate).toHaveBeenCalledTimes(2);
+  });
+
+  test('skips change and blur handlers when validation is disabled', () => {
+    const onValidate = jest.fn();
+    render(
+      <ConnectedInput
+        onValidate={onValidate}
+        validateOnChange={false}
+        validateOnBlur={false}
+      />
+    );
+    const input = screen.getByTestId('email');
+
+    fireEvent.input(input, { target: { value: 'user@example.com' } });
+    fireEvent.blur(input);
+
+    expect(onValidate).not.toHaveBeenCalled();
+  });
+
+  test('calls onChange only when controlled', () => {
+    const onChange = jest.fn();
+    const { unmount } = render(<ConnectedInput onChange={onChange} />);
+
+    fireEvent.change(screen.getByTestId('email'), {
+      target: { value: 'user@example.com' },
+    });
+    expect(onChange).not.toHaveBeenCalled();
+
+    unmount();
+
+    render(<ConnectedInput onChange={onChange} controlled />);
+    fireEvent.change(screen.getByTestId('email'), {
+      target: { value: 'user@example.com' },
+    });
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  test('merges extra props and lets them override the pattern', () => {
+    const Harness = () => {
+      const inputProps = useConnect(
+        useForm({ formRef: { current: null } }),
+        'username',
+        undefined,
+        { placeholder: 'Enter username', pattern: '^[a-z]+$' }
+      );
+      return <input name="username" data-testid="username" {...inputProps} />;
+    };
+
+    render(<Harness />);
+    const input = screen.getByTestId('username');
+
+    expect(input).toHaveAttribute('placeholder', 'Enter username');
+    expect(input).toHaveAttribute('pattern', '^[a-z]+$');
+  });
+
+  test('keeps connect as a deprecated alias', () => {
+    expect(connect).toBe(exportedUseConnect);
+  });
+});

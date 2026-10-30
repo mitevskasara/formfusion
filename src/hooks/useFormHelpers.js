@@ -8,12 +8,13 @@ import { CombineOperators } from '../utils/combine';
 const useFormHelpers = () => {
   const config = useContext(FormContext);
 
-  const [state, dispatch] = config?.dispatch
-    ? [config?.state, config?.dispatch]
-    : useReducer(reducer, {
-        ...initialState,
-        values: config?.initialValues ?? {},
-      });
+  const [localState, localDispatch] = useReducer(reducer, {
+    ...initialState,
+    values: config?.initialValues ?? {},
+  });
+
+  const state = config?.dispatch ? config.state : localState;
+  const dispatch = config?.dispatch ?? localDispatch;
 
   function initValue(key) {
     dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: '' } });
@@ -89,10 +90,10 @@ const useFormHelpers = () => {
     }
 
     if (typeof e.target.setAttribute === 'function') {
-      e.target.setAttribute('aria-invalid', !Boolean(e.target.validity.valid));
+      e.target.setAttribute('aria-invalid', String(!e.target.validity.valid));
     }
 
-    if (!Boolean(e.target.validity.valid)) {
+    if (!e.target.validity.valid) {
       e.target.setAttribute('aria-errormessage', `FormFusion-${id}-error`);
     } else {
       e.target.removeAttribute('aria-errormessage');

@@ -11,7 +11,9 @@ export function parseEntries(obj) {
         enumerable: true,
         configurable: true,
       });
-    } catch (_error) {}
+    } catch (_error) {
+      // Keep values that are not valid JSON as-is.
+    }
   }
   return obj;
 }
