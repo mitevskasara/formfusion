@@ -99,6 +99,8 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
   - `types.js` derives kebab-case input types from them (`credit-card-number`), and `patterns.js` derives camelCase `rules` (`creditCardNumber`). Don't duplicate patterns by hand.
   - Escape user-supplied strings before interpolating them into regexes (see `equals` / `contains` in `patterns.js`).
   - Every pattern must compile with `new RegExp(`^(?:${pattern})$`)`.
+  - List a type in `nativeTypes.js` only if the browser validates its format itself (e.g. `email`), because native types get no FormFusion pattern. Types the browser renders but doesn't check (e.g. `tel`) go in `hidden.js`, which keeps the HTML `type` and applies the pattern.
+  - Core patterns stay generic. Country-specific formats belong in the optional `@formfusion/*` packages.
 - **Security:** don't assign through user-controlled keys (`__proto__`). Use `Object.defineProperty`, as `getFormValues` does.
 - **Peer dependency:** `react >= 16.8`. Don't use APIs newer than hooks without guarding them, for example by choosing `React.useSyncExternalStore` or a fallback once at module level and passing `getServerSnapshot` so server rendering works. No runtime dependencies; see [Goals](#goals).
 - **Public API changes** need matching updates in `src/index.js`, `index.d.ts` and the README. Don't remove or rename a public export in a non-major release. Keep the old name as a deprecated alias (marked `/** @deprecated */` in `index.d.ts`) until the next major release, then remove it.
