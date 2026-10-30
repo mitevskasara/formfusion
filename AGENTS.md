@@ -144,7 +144,8 @@ Keep commits focused. Never commit `node_modules`, `.history`, `coverage`, `AUDI
 
 ## Branches, versioning and releases
 
-- Work on a branch, never directly on `main`. Existing branches are named by version (`1.2.2`) or by type (`fix/<topic>`, e.g. `fix/audit-priority-fixes`). Merge through pull requests.
+- Work on a branch, never directly on `main`. Name branches `type/topic` using the commit types, e.g. `feat/field-level-state`, `fix/select-crash`, `ci/release-please`. Never name a branch after a version: Release Please decides versions.
+- Merge through pull requests, with a **merge commit or rebase merge**, so every conventional commit reaches `main` and shows up in the changelog. If you squash, the PR title becomes the only commit Release Please sees. It must then be a conventional commit (e.g. `feat!: …`), and any breaking change needs a `BREAKING CHANGE:` line in the PR description.
 - **Releases are automated by Release Please** (`.github/workflows/release-please.yml`, `release-please-config.json`, `.release-please-manifest.json`):
   1. Every push to `main` updates an open release PR that bumps `package.json`, `.release-please-manifest.json` and `CHANGELOG.md` based on the commits.
   2. Merging the release PR creates the `vX.Y.Z` tag and GitHub release, then calls `.github/workflows/publish.yml`. That workflow runs CI, checks that the tag matches `package.json`, builds, and runs `npm publish --provenance` through npm OIDC trusted publishing (no token) in the `npm` environment.
