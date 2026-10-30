@@ -260,6 +260,24 @@ const SignupForm = () => {
 export default SignupForm;
 ```
 
+With TypeScript, pass your form's shape to `useForm` to type `values`, `initialValues`, `onSubmit` and `setFieldValue`. Without it, values are typed as `Record<string, any>`.
+
+```tsx
+interface Signup {
+  username: string;
+  age: number;
+}
+
+const formConfig = useForm<Signup>({
+  formRef,
+  initialValues: { username: '', age: 0 },
+  onSubmit: (values) => save(values),
+});
+
+formConfig.setFieldValue('age', 30);
+formConfig.setFieldValue('agee', 30); // Error: not a field of Signup
+```
+
 Start managing your forms efficiently!
 
 For detailed documentation and examples, please visit our [Documentation Page](https://formfusion-eta.vercel.app/docs).

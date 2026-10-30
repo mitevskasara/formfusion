@@ -24,20 +24,23 @@ declare module 'formfusion' {
     [key: string]: string;
   }
 
-  export interface UseFormParams {
+  type NoInfer<T> = [T][T extends any ? 0 : never];
+
+  export interface UseFormParams<T extends FormValues = FormValues> {
     formRef?: React.RefObject<HTMLFormElement>;
-    initialValues?: any;
-    onSubmit?: (values: any) => void;
+    initialValues?: NoInfer<T>;
+    onSubmit?: (values: NoInfer<T>) => void;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
   }
 
-  export interface FormConfig extends Omit<UseFormParams, 'formRef'> {
+  export interface FormConfig<T extends FormValues = FormValues>
+    extends Omit<UseFormParams<T>, 'formRef'> {
     formRef: React.RefObject<HTMLFormElement>;
-    values: FormValues;
+    values: T;
     errors: FormErrors;
     touched: Record<string, boolean>;
-    setFieldValue: (key: string, value: any) => void;
+    setFieldValue: <K extends keyof T & string>(key: K, value: T[K]) => void;
     onValidate: (
       e: React.ChangeEvent<HTMLInputElement>,
       customValidity?: CustomValidityValue
@@ -46,9 +49,9 @@ declare module 'formfusion' {
   }
 
   interface FormConfigParams {
-    config?: FormConfig;
-    onSubmit?: (values: any) => void;
-    initialValues?: any;
+    config?: FormConfig<any>;
+    onSubmit?: (values: FormValues) => void;
+    initialValues?: FormValues;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
   }
@@ -268,7 +271,9 @@ declare module 'formfusion' {
 
   export const Select: (props: SelectProps) => React.ReactElement;
 
-  export const useForm: (config: UseFormParams) => FormConfig;
+  export const useForm: <T extends FormValues = FormValues>(
+    config: UseFormParams<T>
+  ) => FormConfig<T>;
 
   export interface ConnectProps<T extends HTMLElement = HTMLInputElement> {
     ref: React.RefObject<T | null>;
@@ -291,7 +296,7 @@ declare module 'formfusion' {
     'aria-errormessage'?: string;
   }
 
-  export interface ConnectConfig extends Partial<FormConfig> {
+  export interface ConnectConfig extends Partial<FormConfig<any>> {
     onValidate: FormConfig['onValidate'];
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
