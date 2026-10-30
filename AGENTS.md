@@ -78,7 +78,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 
 ## Code conventions
 
-- **Language:** plain JavaScript and JSX. No TypeScript in `src/`. Babel (`preset-env`, `preset-react`) handles tests, and esbuild bundles for `browser` / `es2018`.
+- **Language:** plain JavaScript and JSX. No TypeScript in `src/`. Babel (`preset-env`, `preset-react`) handles tests, and esbuild bundles for `browser` / `es2018`. esbuild only lowers syntax, not built-in methods, so don't use APIs newer than ES2018 in `src/` (e.g. `replaceAll`, `Object.hasOwn`, `.at()`, `Object.fromEntries`, `.flat()`).
 - **Formatting (Prettier):** single quotes, semicolons, 2-space indent, `es5` trailing commas. Don't fight the formatter. In `.prettierignore`, generated root files are anchored (`/index.js`), so `src/**/index.js` is still formatted. Keep it that way.
 - **Linting (ESLint 9):** `@eslint/js` recommended, `react` and `react-hooks` rules. Prefix intentionally unused args and caught errors with `_` (`catch (_error)`). Comment empty catch blocks. Don't use redundant `Boolean(...)` casts.
 - **Types:** `index.d.ts` is checked by `npm run typecheck` in strict mode, so keep it compiling.
