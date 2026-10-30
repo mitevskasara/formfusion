@@ -3,6 +3,7 @@ import inputTypes from '../constants/types';
 import nativeTypes from '../constants/nativeTypes';
 import hiddenTypes from '../constants/hidden';
 import validity from '../constants/validity';
+import { updateValidity } from './validate';
 
 const useConnect = (config, type, validation, props = {}) => {
   if (!props.name) {
@@ -52,7 +53,7 @@ const useConnect = (config, type, validation, props = {}) => {
     pattern,
     onInput: validateOnChange
       ? (e) => onValidate(e, resolvedValidation)
-      : undefined,
+      : (e) => updateValidity(e.target, resolvedValidation),
     onChange: controlled ? onChange : undefined,
     onFocus: onFocus,
     onBlur: validateOnBlur

@@ -20,7 +20,7 @@ These five goals decide every design question. A change that works against one o
   - Reducers return the same state object when an update changes nothing, so subscribers aren't notified.
   - Update state only in event handlers or effects, never during render.
   - Event handlers read the current state at the moment of the event and don't subscribe, so `<Form>` doesn't re-render.
-- **Native validation:** don't block or replace native behaviour. Decide whether to submit with `form.checkValidity()`, not with JS `errors` state, which can be stale. Patterns must stay valid HTML `pattern` values.
+- **Native validation:** the browser's validity must always match the current value. On every keystroke, fields call `updateValidity` (custom messages and combined patterns, no state update, no re-render). The error text and `aria-*` update on blur, change (`validateOnChange`), or the `invalid` event, through `validateField`. Don't block or replace native behaviour. Decide whether to submit with `form.checkValidity()`, not with JS `errors` state, which can be stale. Patterns must stay valid HTML `pattern` values.
 - **Accessibility:**
   - Render `aria-invalid`, `aria-errormessage` and `aria-describedby` in JSX from state. Don't set them directly on the DOM, so React and user props can't overwrite them.
   - Error containers use `aria-live="polite"`. Labels use `htmlFor` / `id`, with the id falling back to `name`.
@@ -38,7 +38,6 @@ These five goals decide every design question. A change that works against one o
 
 **Known gaps (being fixed, don't copy them):**
 
-- After an error, `setCustomValidity` keeps the field invalid (`customError`) until it is validated again. A fixed field that is never blurred blocks the first submit.
 - `useForm` subscribes to the whole store to return `values` / `errors`, so in `config` mode every change re-renders the component that calls it, and all the fields it renders.
 
 ## Project layout
@@ -90,7 +89,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 
 - **Components:** function components with default exports, one per file in `src/components/`, named in PascalCase. Destructure props with defaults in the signature and pass the rest through with `...rest`. Use `forwardRef` where a ref is exposed (as `Form` does).
 - **Hooks:** anything that calls a React hook must be named `use*` (e.g. `useConnect`, not `connect`) and must call hooks unconditionally, at the top level. Never put a hook call behind a ternary or an `if`.
-- **Validation** lives in one place: `validateField` in `src/utils/validate.js`. Both `useFormHelpers` (Form fields) and `useForm` (`useConnect`) call it. Never copy validation logic into a hook or component. Change `validateField` and test both paths.
+- **Validation** lives in one place, `src/utils/validate.js`: `updateValidity` sets the browser validity and `validateField` also reports the error to state. Form fields (`Input`, `Textarea`, `Select` through `useFormHelpers`) and `useForm` / `useConnect` all use these two. Never copy validation logic into a hook or component. When you change them, test both the Form-field path and the `useConnect` path.
 - **Shared logic** goes in `useFormHelpers`. State changes go through `dispatch` with `ACTIONS` from `src/state/actions`, never through ad-hoc local state. See [Goals](#goals) for how fields may read state.
 - **CSS class names** follow BEM with a `FormFusion-` prefix, e.g. `FormFusion-Input__root__field--checkbox`. User classes from `classes.*` / `className` are appended to the base class and never replace it.
 - **Validation patterns:**

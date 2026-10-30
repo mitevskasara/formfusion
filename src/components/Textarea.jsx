@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import useFormHelpers from '../hooks/useFormHelpers';
+import { updateValidity } from '../utils/validate';
 
 const Textarea = ({
   validation,
@@ -53,7 +54,9 @@ const Textarea = ({
         data-testid="textarea"
         className={textareaClasses}
         onInput={
-          validateOnChange ? (e) => onValidate(e, validation) : undefined
+          validateOnChange
+            ? (e) => onValidate(e, validation)
+            : (e) => updateValidity(e.target, validation)
         }
         onChange={controlled ? onChange : undefined}
         onFocus={controlled ? onFocus : undefined}

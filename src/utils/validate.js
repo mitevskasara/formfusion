@@ -22,14 +22,15 @@ function matchesPatterns(patterns, operator, value) {
   }
 }
 
-function validateField(e, customValidity, { errors, dispatch }) {
-  e.preventDefault();
-  const { name, value } = e.target;
-  const dataset = e.target.dataset || {};
+export function updateValidity(target, customValidity) {
+  const { value } = target;
+  const dataset = target.dataset || {};
   const setCustomValidity =
-    typeof e.target.setCustomValidity === 'function'
-      ? (message) => e.target.setCustomValidity(message)
+    typeof target.setCustomValidity === 'function'
+      ? (message) => target.setCustomValidity(message)
       : () => {};
+
+  setCustomValidity('');
 
   let patterns = [];
   try {
@@ -47,24 +48,27 @@ function validateField(e, customValidity, { errors, dispatch }) {
           customValidity?.invalid ||
           'Invalid field.'
       );
-    } else {
-      setCustomValidity('');
     }
+    return;
   }
 
-  if (
-    customValidity &&
-    typeof customValidity === 'object' &&
-    !patterns?.length
-  ) {
+  if (customValidity && typeof customValidity === 'object') {
     Object.keys(customValidity).map((key) => {
-      if (e.target.validity?.[key]) {
+      if (target.validity?.[key]) {
         setCustomValidity(customValidity[key]);
       } else {
         setCustomValidity('');
       }
     });
   }
+}
+
+function validateField(e, customValidity, { errors, dispatch }) {
+  e.preventDefault();
+  const { name, value } = e.target;
+  const dataset = e.target.dataset || {};
+
+  updateValidity(e.target, customValidity);
 
   const valid = Boolean(e.target.validity?.valid);
 

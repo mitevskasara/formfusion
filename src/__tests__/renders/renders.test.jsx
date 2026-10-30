@@ -58,7 +58,7 @@ describe('Field-level re-renders', () => {
     expect(counter.counts.context).toBe(mounted.context);
   });
 
-  test('repeating the same invalid value does not re-render the field', () => {
+  test('typing or repeating the same invalid value does not re-render the field', () => {
     const counter = createCounter();
     renderForm(counter);
     const input = document.getElementById('first');
@@ -67,6 +67,7 @@ describe('Field-level re-renders', () => {
     const afterFirstError = counter.counts.first;
     blurWith(input, '!!!');
     blurWith(input, '???');
+    fireEvent.input(input, { target: { value: 'valid_user' } });
 
     expect(counter.counts.first).toBe(afterFirstError);
   });
@@ -120,7 +121,7 @@ describe('Field-level re-renders', () => {
 });
 
 describe('Submit', () => {
-  test('a fixed error in shared state does not block submit', () => {
+  test('submits on the first try after fixing an error without leaving the field', () => {
     const onSubmit = jest.fn();
     render(
       <Form onSubmit={onSubmit}>
@@ -131,8 +132,8 @@ describe('Submit', () => {
     const input = screen.getByTestId('input');
 
     blurWith(input, '!!!');
-    blurWith(input, 'valid_user');
-    fireEvent.submit(screen.getByTestId('form'));
+    fireEvent.input(input, { target: { value: 'valid_user' } });
+    act(() => screen.getByTestId('form').requestSubmit());
 
     expect(onSubmit).toHaveBeenCalledWith({ user: 'valid_user' });
   });

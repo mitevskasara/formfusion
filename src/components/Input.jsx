@@ -4,6 +4,7 @@ import nativeTypes from '../constants/nativeTypes';
 import validity from '../constants/validity';
 import { onPaste } from '../utils/helpers';
 import useFormHelpers from '../hooks/useFormHelpers';
+import { updateValidity } from '../utils/validate';
 import inputModes from '../constants/inputmodes';
 import hidden from '../constants/hidden';
 
@@ -98,7 +99,7 @@ const Input = ({
           onInput={
             mask || validateOnChange
               ? (e) => onValidate(e, validation)
-              : undefined
+              : (e) => updateValidity(e.target, validation)
           }
           maxLength={mask ? mask.length : rest.maxLength}
           onChange={controlled ? onChange : undefined}
