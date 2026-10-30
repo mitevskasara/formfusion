@@ -58,8 +58,8 @@ src/
   style.css           Source styles (edit this file, not ./style.css)
   __tests__/          Jest + Testing Library suites, one folder per feature/pattern
 index.d.ts            Hand-maintained TypeScript types (edit by hand)
-index.js, index.mjs   Generated CJS/ESM bundles (esbuild). Don't edit by hand.
-style.css             Generated, prefixed and minified CSS. Don't edit by hand.
+index.js, index.mjs   Generated CJS/ESM bundles (esbuild). Git-ignored, never edit or commit.
+style.css             Generated, prefixed and minified CSS. Git-ignored, never edit or commit.
 ```
 
 ## Commands
@@ -74,7 +74,7 @@ npm run format         # prettier --write .
 npm run check-format   # prettier --check .
 ```
 
-Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run check-format` and `npm test`. CI (`.github/workflows/ci.yml`) runs all of them plus `npm run build` on every PR and on every push to `main`. Lint must have no errors, and new code shouldn't add warnings. If you touched `src/`, also run `npm run build` and commit the regenerated `index.js`, `index.mjs` and `style.css` with it.
+Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run check-format` and `npm test`. CI (`.github/workflows/ci.yml`) runs all of them plus `npm run build` on every PR and on every push to `main`. Lint must have no errors, and new code shouldn't add warnings. If you touched `src/`, also run `npm run build` to check that it still builds and to measure the bundle size. The build output is git-ignored. `publish.yml` builds it fresh before every `npm publish`.
 
 ## Code conventions
 
@@ -138,9 +138,9 @@ Examples:
 
 - `feat: allow combining multiple validation patterns`
 - `fix: Select id fallback and packaging nits`
-- `build: regenerate style.css and library bundles`
+- `build: target es2018 for the browser bundles`
 
-Keep commits focused. Put regenerated bundles in the commit that caused them. Never commit `node_modules`, `.history`, `coverage` or `AUDIT.md`.
+Keep commits focused. Never commit `node_modules`, `.history`, `coverage`, `AUDIT.md` or the build output (`/index.js`, `/index.mjs`, `/style.css`).
 
 ## Branches, versioning and releases
 
