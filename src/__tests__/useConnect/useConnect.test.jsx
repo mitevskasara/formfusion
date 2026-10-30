@@ -58,7 +58,7 @@ describe('useConnect', () => {
     });
 
     expect(onValidate).toHaveBeenCalledTimes(1);
-    expect(onValidate.mock.calls[0][1]).toBe(validation);
+    expect(onValidate.mock.calls[0][1]).toMatchObject(validation);
   });
 
   test('skips change and blur handlers when validation is disabled', () => {

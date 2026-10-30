@@ -2,8 +2,7 @@ import { useRef } from 'react';
 import inputTypes from '../constants/types';
 import nativeTypes from '../constants/nativeTypes';
 import hiddenTypes from '../constants/hidden';
-import validity from '../constants/validity';
-import { updateValidity } from './validate';
+import { resolveValidation, updateValidity } from './validate';
 
 const useConnect = (config, type, validation, props = {}) => {
   if (!props.name) {
@@ -22,13 +21,7 @@ const useConnect = (config, type, validation, props = {}) => {
   const inputRef = useRef(null);
 
   const isStringType = typeof type === 'string';
-  const resolvedValidation =
-    validation ??
-    (isStringType && type.startsWith('postal-code')
-      ? validity['postal-code']
-      : isStringType
-        ? validity[type]
-        : undefined);
+  const resolvedValidation = resolveValidation(type, validation);
 
   const isNative = isStringType && nativeTypes.includes(type);
   const inputType = isNative

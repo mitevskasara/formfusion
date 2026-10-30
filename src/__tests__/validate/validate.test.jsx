@@ -27,7 +27,7 @@ describe('validateField', () => {
     });
   });
 
-  test('shows the custom message of the check that fails', () => {
+  test('shows the custom message of the failing check and keeps the type defaults', () => {
     render(
       <Form onSubmit={() => {}}>
         <Input
@@ -35,7 +35,7 @@ describe('validateField', () => {
           name="user"
           type="username"
           required
-          validation={{ valueMissing: 'Required', patternMismatch: 'Invalid' }}
+          validation={{ valueMissing: 'Required' }}
         />
       </Form>
     );
@@ -47,7 +47,7 @@ describe('validateField', () => {
 
     fireEvent.change(input, { target: { value: '!!!' } });
     fireEvent.blur(input);
-    expect(error).toHaveTextContent('Invalid');
+    expect(error).toHaveTextContent('Please enter a valid username');
 
     fireEvent.change(input, { target: { value: 'valid_user' } });
     fireEvent.blur(input);

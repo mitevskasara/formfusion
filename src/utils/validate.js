@@ -1,6 +1,7 @@
 import ACTIONS from '../state/actions';
 import maskInput from './mask';
 import { CombineOperators } from './combine';
+import validity from '../constants/validity';
 
 function matchesPatterns(patterns, operator, value) {
   const test = (pattern) => {
@@ -79,6 +80,17 @@ function validateField(e, customValidity, { errors, dispatch }) {
   if (dataset.mask) {
     e.target.value = maskInput(dataset.mask, value);
   }
+}
+
+export function resolveValidation(type, customValidity) {
+  const defaults =
+    typeof type === 'string'
+      ? validity[type.startsWith('postal-code') ? 'postal-code' : type]
+      : undefined;
+
+  return defaults && customValidity
+    ? { ...defaults, ...customValidity }
+    : (customValidity ?? defaults);
 }
 
 export function resetValidity(form) {

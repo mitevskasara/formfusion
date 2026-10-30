@@ -1,20 +1,15 @@
 import React, { useRef } from 'react';
 import inputTypes from '../constants/types';
 import nativeTypes from '../constants/nativeTypes';
-import validity from '../constants/validity';
 import { onPaste } from '../utils/helpers';
 import useFormHelpers from '../hooks/useFormHelpers';
-import { updateValidity } from '../utils/validate';
+import { resolveValidation, updateValidity } from '../utils/validate';
 import inputModes from '../constants/inputmodes';
 import hidden from '../constants/hidden';
 
 const Input = ({
   type,
-  validation = typeof type === 'string'
-    ? type?.startsWith('postal-code')
-      ? validity['postal-code']
-      : validity[type]
-    : validity[type],
+  validation: customValidation,
   label,
   classes,
   className,
@@ -24,6 +19,7 @@ const Input = ({
   ...rest
 }) => {
   const ref = useRef(null);
+  const validation = resolveValidation(type, customValidation);
   const {
     value,
     error,

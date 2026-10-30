@@ -86,7 +86,7 @@ const MyForm = () => {
 export default MyForm;
 ```
 
-To replace the browser's error messages, pass a `validation` object keyed by [validity state](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). If several checks fail, the message of the first failing key in the object is shown:
+Built-in types come with default error messages. Other checks, and fields without a built-in type, use the browser's messages. To customize them, pass a `validation` object keyed by [validity state](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). It is merged with the type's defaults, so you only list the messages you want to change. If several checks fail, the first failing key in the object wins:
 
 ```jsx
 <Input
