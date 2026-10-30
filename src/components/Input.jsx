@@ -24,15 +24,15 @@ const Input = ({
 }) => {
   const ref = useRef(null);
   const {
-    values,
-    errors,
+    value,
+    error,
     validateOnChange,
     validateOnBlur,
     controlled,
     onChange,
     onFocus,
     onValidate,
-  } = useFormHelpers();
+  } = useFormHelpers(rest.name);
 
   const joinedPatterns = typeof type === 'object' ? type.patterns : [];
   const fieldId = rest.id || rest.name;
@@ -79,8 +79,8 @@ const Input = ({
         <input
           {...rest}
           ref={ref}
-          defaultValue={controlled ? undefined : values && values[rest.name]}
-          value={controlled ? values[rest.name] || '' : undefined}
+          defaultValue={controlled ? undefined : value}
+          value={controlled ? value || '' : undefined}
           data-testid="input"
           data-mask={mask}
           className={inputClasses}
@@ -127,7 +127,7 @@ const Input = ({
         id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
-        {errors[rest.name]}
+        {error}
       </span>
     </div>
   );

@@ -1,26 +1,26 @@
-import { useContext, useReducer } from 'react';
+import { useContext, useState } from 'react';
 import reducer, { initialState } from '../state/reducer';
+import createStore from '../state/store';
 import FormContext from '../context';
 import ACTIONS from '../state/actions';
 import validateField from '../utils/validate';
+import useStoreSelector from './useStoreSelector';
 
-const useFormHelpers = () => {
+const useFormHelpers = (name) => {
   const config = useContext(FormContext);
 
-  const [localState, localDispatch] = useReducer(reducer, {
-    ...initialState,
-    values: config?.initialValues ?? {},
-  });
+  const [localStore] = useState(() => createStore(reducer, initialState));
+  const store = config?.store ?? localStore;
+  const { dispatch } = store;
 
-  const state = config?.dispatch ? config.state : localState;
-  const dispatch = config?.dispatch ?? localDispatch;
-
-  function initValue(key) {
-    dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: '' } });
-  }
+  const value = useStoreSelector(store, (state) => state.values?.[name]);
+  const error = useStoreSelector(store, (state) => state.errors?.[name]);
 
   function onValidate(e, customValidity) {
-    validateField(e, customValidity, { errors: state.errors, dispatch });
+    validateField(e, customValidity, {
+      errors: store.getState().errors,
+      dispatch,
+    });
   }
 
   function onChange(e) {
@@ -35,22 +35,15 @@ const useFormHelpers = () => {
     dispatch({ type: ACTIONS.SET_TOUCHED, payload: { [e.target.name]: true } });
   }
 
-  function resetForm() {
-    if (Object.keys(state.values).length > 0) {
-      dispatch({ type: ACTIONS.SET_VALUES, payload: {} });
-      dispatch({ type: ACTIONS.SET_ERRORS, payload: {} });
-      dispatch({ type: ACTIONS.SET_TOUCHED, payload: {} });
-    }
-  }
-
   return {
-    ...config,
-    ...state,
-    initValue,
+    value,
+    error,
+    controlled: config?.controlled,
+    validateOnChange: config?.validateOnChange,
+    validateOnBlur: config?.validateOnBlur,
     onChange,
     onFocus,
     onValidate,
-    resetForm,
   };
 };
 

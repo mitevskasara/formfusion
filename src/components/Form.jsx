@@ -1,7 +1,8 @@
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import FormContext from '../context';
+import reducer, { initialState } from '../state/reducer';
+import createStore from '../state/store';
 import { parseEntries } from '../utils/helpers';
-import useFormHelpers from '../hooks/useFormHelpers';
 
 const Form = forwardRef(
   (
@@ -17,19 +18,46 @@ const Form = forwardRef(
     ref
   ) => {
     const formRef = useRef(null);
-    const helpers = useFormHelpers();
-    const formConfig = config ? { ...helpers, ...config } : helpers;
-    const { values, errors, resetForm } = formConfig;
+    const [ownStore] = useState(() =>
+      createStore(reducer, { ...initialState, values: initialValues })
+    );
+    const store = config?.store ?? ownStore;
+    const resetForm = config?.resetForm;
+
+    const contextFormRef = config?.formRef ?? formRef;
+    const contextValidateOnChange =
+      config?.validateOnChange ?? validateOnChange;
+    const contextValidateOnBlur = config?.validateOnBlur ?? validateOnBlur;
+    const controlled = Boolean(config);
+
+    const contextValue = useMemo(
+      () => ({
+        store,
+        formRef: contextFormRef,
+        validateOnChange: contextValidateOnChange,
+        validateOnBlur: contextValidateOnBlur,
+        controlled,
+      }),
+      [
+        store,
+        contextFormRef,
+        contextValidateOnChange,
+        contextValidateOnBlur,
+        controlled,
+      ]
+    );
 
     function handleSubmit(e) {
       e.preventDefault();
 
       const form = e.target;
-      const formData = new FormData(form);
 
-      if (Object.keys(errors).filter((key) => errors[key]).length) {
+      if (!form.checkValidity()) {
         return;
       }
+
+      const formData = new FormData(form);
+      const { values } = store.getState();
 
       if (config && Object.keys(values).length > 0) {
         Object.keys(values).forEach((key) => {
@@ -76,16 +104,7 @@ const Form = forwardRef(
     }, [ref?.current, resetForm]);
 
     return (
-      <FormContext.Provider
-        value={{
-          ...config,
-          formRef: config?.formRef ?? formRef,
-          initialValues: config?.values ?? initialValues,
-          validateOnChange: config?.validateOnChange ?? validateOnChange,
-          validateOnBlur: config?.validateOnBlur ?? validateOnBlur,
-          controlled: Boolean(config),
-        }}
-      >
+      <FormContext.Provider value={contextValue}>
         <form
           {...rest}
           data-testid="form"

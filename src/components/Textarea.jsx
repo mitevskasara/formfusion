@@ -11,15 +11,15 @@ const Textarea = ({
 }) => {
   const ref = useRef(null);
   const {
-    values,
-    errors,
+    value,
+    error,
     validateOnChange,
     validateOnBlur,
     controlled,
     onChange,
     onFocus,
     onValidate,
-  } = useFormHelpers();
+  } = useFormHelpers(rest.name);
 
   const fieldId = rest.id || rest.name;
 
@@ -49,7 +49,7 @@ const Textarea = ({
       <textarea
         {...rest}
         ref={ref}
-        value={controlled ? values[rest.name] || '' : undefined}
+        value={controlled ? value || '' : undefined}
         data-testid="textarea"
         className={textareaClasses}
         onInput={
@@ -74,7 +74,7 @@ const Textarea = ({
         id={`FormFusion-${fieldId}-error`}
         aria-live="polite"
       >
-        {errors[rest.name]}
+        {error}
       </span>
     </div>
   );

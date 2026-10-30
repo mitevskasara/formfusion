@@ -22,8 +22,6 @@ function matchesPatterns(patterns, operator, value) {
   }
 }
 
-// Shared by Form fields (useFormHelpers) and useForm/useConnect, so both
-// validate, report errors and apply masks the same way.
 function validateField(e, customValidity, { errors, dispatch }) {
   e.preventDefault();
   const { id, name, value } = e.target;

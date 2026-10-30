@@ -15,7 +15,7 @@ These five goals decide every design question. A change that works against one o
 ### How the goals translate into rules
 
 - **State and rendering:**
-  - Form state lives in one store per form. Fields read it only through per-field subscriptions: their own value and error, as plain values, never whole objects.
+  - Form state lives in one store per form (`src/state/store`). `<Form>` creates it, or uses `config.store` from `useForm`. Fields read it only through `useFormHelpers(name)`, which subscribes with `useStoreSelector` to their own value and error. Selectors return plain values or stable references, never new objects.
   - The context value stays stable (`useMemo`), so changing state never re-renders every field that reads the context.
   - Reducers return the same state object when an update changes nothing, so subscribers aren't notified.
   - Update state only in event handlers or effects, never during render.
@@ -30,14 +30,15 @@ These five goals decide every design question. A change that works against one o
   - `package.json` must have no `dependencies`. Write small helpers in-house instead of adding a package, even a tiny one, e.g. the subscription store.
   - Country-specific or rarely used data goes in separate optional `@formfusion/*` packages (postcodes, licence plates), not in the core bundle.
   - Keep code tree-shakeable: named ESM exports, no import-time side effects (`sideEffects` lists only `*.css`).
-  - Baseline at 1.2.x: `index.mjs` is about 23.5 KB minified / 7.7 KB gzip, and `style.css` about 4.7 KB / 1.1 KB gzip. Check with `gzip -9c index.mjs | wc -c` after `npm run build`. State the size change in the PR, and justify any growth over ~0.5 KB gzip.
+  - Current size: `index.mjs` is about 24.2 KB minified / 8.1 KB gzip, and `style.css` about 4.7 KB / 1.1 KB gzip. Check with `gzip -9c index.mjs | wc -c` after `npm run build`. State the size change in the PR, and justify any growth over ~0.5 KB gzip.
 - **Tests guard the goals:**
-  - Changes to rendering or state come with render-count tests (`React.Profiler`). These check that typing in one field doesn't re-render other fields or `<Form>`, and that repeating the same invalid value doesn't re-render.
-  - Changes to fields come with a11y assertions: label association, `aria-invalid`, and `aria-errormessage` pointing at an existing error element.
+  - The render-count tests in `src/__tests__/renders/` (`React.Profiler`) check that a change in one field doesn't re-render other fields or `<Form>`, and that repeating the same invalid value doesn't re-render. Changes to rendering or state must keep them passing. Extend them only when the behaviour they guard changes.
+  - Field a11y (label association, `aria-invalid`, and `aria-errormessage` pointing at an existing error element) is asserted in the field's existing tests. Keep those assertions correct when a field changes.
 
 **Known gaps (being fixed, don't copy them):**
 
-- Uncontrolled `<Form>` fields still keep separate state, so reset can't clear their errors.
+- Reset doesn't restore `initialValues` or clear errors.
+- After an error, `setCustomValidity` keeps the field invalid (`customError`) until it is validated again. A fixed field that is never blurred blocks the first submit.
 - `validateField` sets `aria-*` directly on the DOM.
 - `useForm` / `config` mode keeps state in the parent's `useReducer`, so every change re-renders the parent and all its fields.
 
@@ -47,8 +48,9 @@ These five goals decide every design question. A change that works against one o
 src/
   index.js            Public entry point. Every public export goes through here.
   components/         Form, Input, Textarea, Select (.jsx)
-  hooks/              useForm (public), useFormHelpers (internal shared logic)
-  state/              useReducer actions + reducer
+  hooks/              useForm (public), useFormHelpers(name) (per-field state + handlers),
+                      useStoreSelector (subscribe to one value of the store)
+  state/              store (createStore: getState/dispatch/subscribe), reducer, actions
   context/            FormContext
   constants/          regex.js (source of truth for patterns), types.js, patterns.js (`rules`),
                       validity.js, nativeTypes.js, inputmodes.js, hidden.js
@@ -80,6 +82,13 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 - **Formatting (Prettier):** single quotes, semicolons, 2-space indent, `es5` trailing commas. Don't fight the formatter. In `.prettierignore`, generated root files are anchored (`/index.js`), so `src/**/index.js` is still formatted. Keep it that way.
 - **Linting (ESLint 9):** `@eslint/js` recommended, `react` and `react-hooks` rules. Prefix intentionally unused args and caught errors with `_` (`catch (_error)`). Comment empty catch blocks. Don't use redundant `Boolean(...)` casts.
 - **Types:** `index.d.ts` is checked by `npm run typecheck` in strict mode, so keep it compiling.
+- **No comments, unless really needed.** Code explains itself through names and structure. Don't write comments that restate the code, narrate design intent ("Form never subscribes…"), or document constraints and edge cases ("Selectors must return plain values…", "Catch updates between render and subscribe"). Rules and rationale belong in `AGENTS.md`, tests or the commit message. The only allowed comments are:
+
+  - JSDoc on the public API in `index.d.ts` (e.g. `/** @deprecated */`);
+  - the comment lint requires in an intentionally empty `catch` block.
+
+  If you think a comment is needed, try a clearer name, a small extracted function or a test first.
+
 - **Components:** function components with default exports, one per file in `src/components/`, named in PascalCase. Destructure props with defaults in the signature and pass the rest through with `...rest`. Use `forwardRef` where a ref is exposed (as `Form` does).
 - **Hooks:** anything that calls a React hook must be named `use*` (e.g. `useConnect`, not `connect`) and must call hooks unconditionally, at the top level. Never put a hook call behind a ternary or an `if`.
 - **Validation** lives in one place: `validateField` in `src/utils/validate.js`. Both `useFormHelpers` (Form fields) and `useForm` (`useConnect`) call it. Never copy validation logic into a hook or component. Change `validateField` and test both paths.
@@ -99,8 +108,12 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 - Tests go in `src/__tests__/<feature>/<name>.test.jsx`, e.g. `postalCodes/DE.test.jsx` or `combine/and.test.jsx`. Shared helpers go in `src/__tests__/utils/`, which Jest doesn't run as tests.
 - Follow the existing style: render a `<Form>` containing the component, get the field with `screen.getByTestId('input')`, call `fireEvent.change`, then assert on `input.validity.valid`. Name tests like `Testing value: <value>, validity true|false`.
 - For new patterns, include an `isRegexPatternValid` check plus both valid and invalid sample values.
-- Every bug fix should come with a regression test.
-- Render-count and accessibility tests are required for changes that affect rendering, state or fields. See [Goals](#goals).
+- **Don't over-test.** Every test must be meaningful and check exactly one important behaviour that nothing else already covers. Don't add tests that repeat another test with a different value, check implementation details or trivial code (e.g. that an unsubscribe function unsubscribes), or exist only to raise coverage.
+- **When to add or update tests:**
+  - **New feature:** add new tests, only if the feature needs them, and as few as cover its behaviour.
+  - **Updated feature or bug fix:** update the feature's existing tests (add the failing case to them, fix their assertions) instead of creating new test files. Create a new test only when no existing test covers that feature.
+  - **Refactor:** existing tests must keep passing unchanged. Don't add tests for a refactor.
+- Rendering and a11y guarantees are covered as described in [Goals](#goals).
 
 ## Commit conventions
 

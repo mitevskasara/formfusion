@@ -1,23 +1,29 @@
-import { useReducer } from 'react';
+import { useState } from 'react';
 import reducer, { initialState } from '../state/reducer';
+import createStore from '../state/store';
 import ACTIONS from '../state/actions';
 import validateField from '../utils/validate';
+import useStoreSelector from './useStoreSelector';
+
+const selectState = (state) => state;
 
 const useForm = (config) => {
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    values: config?.initialValues,
-  });
+  const [store] = useState(() =>
+    createStore(reducer, {
+      ...initialState,
+      values: config?.initialValues ?? {},
+    })
+  );
+  const { dispatch } = store;
+  const state = useStoreSelector(store, selectState);
 
   function setFieldValue(key, value) {
-    const formData = new FormData(config.formRef?.current);
-    formData.append(key, value);
     dispatch({ type: ACTIONS.SET_VALUES, payload: { [key]: value } });
   }
 
   function resetForm() {
     config.formRef?.current?.reset();
-    if (Object.keys(state.values).length > 0) {
+    if (Object.keys(store.getState().values).length > 0) {
       dispatch({ type: ACTIONS.SET_VALUES, payload: {} });
       dispatch({ type: ACTIONS.SET_ERRORS, payload: {} });
       dispatch({ type: ACTIONS.SET_TOUCHED, payload: {} });
@@ -25,7 +31,10 @@ const useForm = (config) => {
   }
 
   function onValidate(e, customValidity) {
-    validateField(e, customValidity, { errors: state.errors, dispatch });
+    validateField(e, customValidity, {
+      errors: store.getState().errors,
+      dispatch,
+    });
   }
 
   return {
@@ -37,6 +46,7 @@ const useForm = (config) => {
     state,
     dispatch,
     onValidate,
+    store,
   };
 };
 
