@@ -1,11 +1,7 @@
 import React, { useRef } from 'react';
-import inputTypes from '../constants/types';
-import nativeTypes from '../constants/nativeTypes';
-import { onPaste } from '../utils/helpers';
 import useFormHelpers from '../hooks/useFormHelpers';
-import { resolveValidation, updateValidity } from '../utils/validate';
-import inputModes from '../constants/inputmodes';
-import hidden from '../constants/hidden';
+import { resolveValidation } from '../utils/validate';
+import getValidationProps from '../utils/validationProps';
 
 const Input = ({
   type,
@@ -31,7 +27,6 @@ const Input = ({
     onValidate,
   } = useFormHelpers(rest.name);
 
-  const joinedPatterns = typeof type === 'object' ? type.patterns : [];
   const fieldId = rest.id || rest.name;
 
   let rootClasses = classes?.root
@@ -85,35 +80,21 @@ const Input = ({
               : undefined
           }
           data-testid="input"
-          data-mask={mask}
           className={inputClasses}
-          type={nativeTypes.includes(type) ? type : hidden[type] || 'text'}
-          data-pattern={JSON.stringify(joinedPatterns)}
-          data-operator={type?.operator}
-          pattern={
-            joinedPatterns?.length > 0
-              ? undefined
-              : rest.pattern ||
-                (nativeTypes.includes(type)
-                  ? undefined
-                  : inputTypes[type] || type)
-          }
-          onInput={
-            mask || validateOnChange
-              ? (e) => onValidate(e, validation)
-              : (e) => updateValidity(e.target, validation)
-          }
-          maxLength={mask ? mask.length : rest.maxLength}
+          {...getValidationProps(type, validation, {
+            mask,
+            pattern: rest.pattern,
+            maxLength: rest.maxLength,
+            inputMode: rest.inputMode,
+            onValidate,
+            validateOnChange,
+            validateOnBlur,
+          })}
           onChange={controlled ? onChange : undefined}
           onFocus={controlled ? onFocus : undefined}
-          onPaste={mask ? onPaste : undefined}
-          onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
-          onInvalid={(e) => onValidate(e, validation)}
-          data-type={inputTypes[type] && type}
           aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
           aria-invalid={error ? 'true' : 'false'}
           aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
-          inputMode={rest.inputMode || inputModes[type] || 'text'}
         />
         {isCheckbox && (
           <span className="FormFusion-Input__root__checkmark"></span>

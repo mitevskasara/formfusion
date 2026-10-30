@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import useForm from '../../hooks/useForm';
 import useConnect from '../../utils/useConnect';
 import patterns from '../../constants/regex';
+import combine from '../../utils/combine';
+import rules from '../../constants/patterns';
 
 const validation = { patternMismatch: 'Please enter a valid email.' };
 
@@ -127,6 +129,45 @@ describe('useConnect', () => {
     fireEvent.input(input, { target: { value: 'valid_user' } });
     expect(input).toHaveAttribute('aria-invalid', 'false');
     expect(input).not.toHaveAttribute('aria-errormessage');
+  });
+
+  test('supports combine() patterns and masks', () => {
+    const Harness = () => {
+      const form = useForm({ formRef: { current: null } });
+      const config = { ...form, validateOnBlur: true };
+      return (
+        <>
+          <input
+            data-testid="pin"
+            {...useConnect(
+              config,
+              combine.and(rules.numeric, rules.length(4)),
+              undefined,
+              { name: 'pin' }
+            )}
+          />
+          <input
+            data-testid="date"
+            {...useConnect(config, 'text', undefined, {
+              name: 'date',
+              mask: '##-##',
+            })}
+          />
+        </>
+      );
+    };
+
+    render(<Harness />);
+    const pin = screen.getByTestId('pin');
+    const date = screen.getByTestId('date');
+
+    fireEvent.change(pin, { target: { value: '12a' } });
+    fireEvent.blur(pin);
+    expect(pin).toHaveAttribute('aria-invalid', 'true');
+
+    fireEvent.input(date, { target: { value: '1234' } });
+    expect(date).toHaveValue('12-34');
+    expect(date).not.toHaveAttribute('mask');
   });
 
   test('requires a name', () => {

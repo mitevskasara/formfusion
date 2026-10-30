@@ -1,8 +1,6 @@
 import { useRef } from 'react';
-import inputTypes from '../constants/types';
-import nativeTypes from '../constants/nativeTypes';
-import hiddenTypes from '../constants/hidden';
-import { resolveValidation, updateValidity } from './validate';
+import { resolveValidation } from './validate';
+import getValidationProps from './validationProps';
 
 const useConnect = (config, type, validation, props = {}) => {
   if (!props.name) {
@@ -19,41 +17,27 @@ const useConnect = (config, type, validation, props = {}) => {
     onFocus,
   } = config;
   const inputRef = useRef(null);
-
-  const isStringType = typeof type === 'string';
-  const resolvedValidation = resolveValidation(type, validation);
-
-  const isNative = isStringType && nativeTypes.includes(type);
-  const inputType = isNative
-    ? type
-    : isStringType && hiddenTypes[type]
-      ? hiddenTypes[type]
-      : 'text';
-  const pattern = props.pattern
-    ? props.pattern
-    : isNative || !isStringType
-      ? undefined
-      : inputTypes[type] || type;
+  const { mask, ...inputProps } = props;
+  const error = errors?.[props.name];
 
   return {
-    ...props,
+    ...inputProps,
     ref: inputRef,
-    'aria-invalid': errors?.[props.name] ? 'true' : 'false',
-    'aria-errormessage': errors?.[props.name]
+    'aria-invalid': error ? 'true' : 'false',
+    'aria-errormessage': error
       ? `FormFusion-${props.id || props.name}-error`
       : undefined,
-    type: inputType,
-    pattern,
-    onInput: validateOnChange
-      ? (e) => onValidate(e, resolvedValidation)
-      : (e) => updateValidity(e.target, resolvedValidation),
+    ...getValidationProps(type, resolveValidation(type, validation), {
+      mask,
+      pattern: props.pattern,
+      maxLength: props.maxLength,
+      inputMode: props.inputMode,
+      onValidate,
+      validateOnChange,
+      validateOnBlur,
+    }),
     onChange: controlled ? onChange : undefined,
-    onFocus: onFocus,
-    onBlur: validateOnBlur
-      ? (e) => onValidate(e, resolvedValidation)
-      : undefined,
-    onInvalid: (e) => onValidate(e, resolvedValidation),
-    'data-type': inputTypes[type] && type,
+    onFocus,
   };
 };
 

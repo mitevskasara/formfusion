@@ -301,6 +301,12 @@ declare module 'formfusion' {
     onBlur?: React.FormEventHandler<T>;
     onInvalid: React.FormEventHandler<T>;
     'data-type'?: string;
+    'data-pattern': string;
+    'data-operator'?: string;
+    'data-mask'?: string;
+    maxLength?: number;
+    inputMode: React.HTMLAttributes<T>['inputMode'];
+    onPaste?: React.ClipboardEventHandler<T>;
     'aria-invalid': 'true' | 'false';
     'aria-errormessage'?: string;
   }
@@ -317,8 +323,8 @@ declare module 'formfusion' {
     config: ConnectConfig,
     type: Type | CombineResult,
     validation: CustomValidityValue | undefined,
-    props: P & { name: string; id?: string; pattern?: string }
-  ) => P & ConnectProps<T>;
+    props: P & { name: string; id?: string; pattern?: string; mask?: string }
+  ) => Omit<P, 'mask'> & ConnectProps<T>;
 
   export const rules: Rules;
 }

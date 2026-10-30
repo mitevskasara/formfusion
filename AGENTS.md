@@ -52,7 +52,8 @@ src/
   context/            FormContext
   constants/          regex.js (source of truth for patterns), types.js, patterns.js (`rules`),
                       validity.js, nativeTypes.js, inputmodes.js, hidden.js
-  utils/              validate (shared field validation), combine, useConnect, mask, helpers
+  utils/              validate (shared field validation), validationProps (input props from type/validation),
+                      combine, useConnect, mask, helpers
   style.css           Source styles (edit this file, not ./style.css)
   __tests__/          Jest + Testing Library suites, one folder per feature/pattern
 index.d.ts            Hand-maintained TypeScript types (edit by hand)
@@ -89,7 +90,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 
 - **Components:** function components with default exports, one per file in `src/components/`, named in PascalCase. Destructure props with defaults in the signature and pass the rest through with `...rest`. Use `forwardRef` where a ref is exposed (as `Form` does).
 - **Hooks:** anything that calls a React hook must be named `use*` (e.g. `useConnect`, not `connect`) and must call hooks unconditionally, at the top level. Never put a hook call behind a ternary or an `if`.
-- **Validation** lives in one place, `src/utils/validate.js`: `updateValidity` sets the browser validity and `validateField` also reports the error to state. Messages come from `resolveValidation(type, validation)`, which merges the user's `validation` over the type's defaults in `constants/validity.js`. Form fields (`Input`, `Textarea`, `Select` through `useFormHelpers`) and `useForm` / `useConnect` all use these two. Never copy validation logic into a hook or component. When you change them, test both the Form-field path and the `useConnect` path.
+- **Validation** lives in one place, `src/utils/validate.js`: `updateValidity` sets the browser validity and `validateField` also reports the error to state. Messages come from `resolveValidation(type, validation)`, which merges the user's `validation` over the type's defaults in `constants/validity.js`. Form fields (`Input`, `Textarea`, `Select` through `useFormHelpers`) and `useForm` / `useConnect` all use these two. Never copy validation logic into a hook or component. Input props that come from the type and validation (`type`, `pattern`, `data-*`, `maxLength`, `inputMode`, `onPaste`, `onInput` / `onBlur` / `onInvalid`) are built only by `getValidationProps` in `src/utils/validationProps.js`, which `Input` and `useConnect` both spread. When you change them, test both the Form-field path and the `useConnect` path.
 - **Shared logic** goes in `useFormHelpers`. State changes go through `dispatch` with `ACTIONS` from `src/state/actions`, never through ad-hoc local state. See [Goals](#goals) for how fields may read state.
 - **CSS class names** follow BEM with a `FormFusion-` prefix, e.g. `FormFusion-Input__root__field--checkbox`. User classes from `classes.*` / `className` are appended to the base class and never replace it.
 - **Validation patterns:**
