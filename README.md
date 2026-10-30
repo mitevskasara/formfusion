@@ -86,6 +86,21 @@ const MyForm = () => {
 export default MyForm;
 ```
 
+To replace the browser's error messages, pass a `validation` object keyed by [validity state](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). If several checks fail, the message of the first failing key in the object is shown:
+
+```jsx
+<Input
+  id="username"
+  name="username"
+  type="username"
+  required
+  validation={{
+    valueMissing: 'Please enter a username.',
+    patternMismatch: 'Use letters, numbers, @, - or _ only.',
+  }}
+/>
+```
+
 #### 2. Validating using Rules
 
 Alternatively, you can import the rules object and assign a specific rule to the <code>type</code> property.

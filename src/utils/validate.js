@@ -53,13 +53,10 @@ export function updateValidity(target, customValidity) {
   }
 
   if (customValidity && typeof customValidity === 'object') {
-    Object.keys(customValidity).map((key) => {
-      if (target.validity?.[key]) {
-        setCustomValidity(customValidity[key]);
-      } else {
-        setCustomValidity('');
-      }
-    });
+    const failingCheck = Object.keys(customValidity).find(
+      (key) => target.validity?.[key]
+    );
+    if (failingCheck) setCustomValidity(customValidity[failingCheck]);
   }
 }
 

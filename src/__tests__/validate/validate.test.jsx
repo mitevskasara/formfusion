@@ -1,3 +1,8 @@
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Form from '../../components/Form';
+import Input from '../../components/Input';
 import validateField from '../../utils/validate';
 
 describe('validateField', () => {
@@ -20,5 +25,32 @@ describe('validateField', () => {
       type: 'SET_ERRORS',
       payload: { code: 'Digits only' },
     });
+  });
+
+  test('shows the custom message of the check that fails', () => {
+    render(
+      <Form onSubmit={() => {}}>
+        <Input
+          id="user"
+          name="user"
+          type="username"
+          required
+          validation={{ valueMissing: 'Required', patternMismatch: 'Invalid' }}
+        />
+      </Form>
+    );
+    const input = screen.getByTestId('input');
+    const error = document.getElementById('FormFusion-user-error');
+
+    fireEvent.blur(input);
+    expect(error).toHaveTextContent('Required');
+
+    fireEvent.change(input, { target: { value: '!!!' } });
+    fireEvent.blur(input);
+    expect(error).toHaveTextContent('Invalid');
+
+    fireEvent.change(input, { target: { value: 'valid_user' } });
+    fireEvent.blur(input);
+    expect(error).toBeEmptyDOMElement();
   });
 });
