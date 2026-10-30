@@ -20,6 +20,7 @@ These five goals decide every design question. A change that works against one o
   - Reducers return the same state object when an update changes nothing, so subscribers aren't notified.
   - Update state only in event handlers or effects, never during render.
   - Event handlers read the current state at the moment of the event and don't subscribe, so `<Form>` doesn't re-render.
+  - Submitted values come only from `getFormValues` (`src/utils/helpers.js`): `FormData` entries unchanged (repeated names become arrays), overlaid in `config` mode by the store values. Never parse or convert what the user typed.
 - **Native validation:** the browser's validity must always match the current value. On every keystroke, fields call `updateValidity` (custom messages and combined patterns, no state update, no re-render). The error text and `aria-*` update on blur, change (`validateOnChange`), or the `invalid` event, through `validateField`. Don't block or replace native behaviour. Decide whether to submit with `form.checkValidity()`, not with JS `errors` state, which can be stale. Patterns must stay valid HTML `pattern` values.
 - **Accessibility:**
   - Render `aria-invalid`, `aria-errormessage` and `aria-describedby` in JSX from state. Don't set them directly on the DOM, so React and user props can't overwrite them.
@@ -98,7 +99,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
   - `types.js` derives kebab-case input types from them (`credit-card-number`), and `patterns.js` derives camelCase `rules` (`creditCardNumber`). Don't duplicate patterns by hand.
   - Escape user-supplied strings before interpolating them into regexes (see `equals` / `contains` in `patterns.js`).
   - Every pattern must compile with `new RegExp(`^(?:${pattern})$`)`.
-- **Security:** don't assign through user-controlled keys (`__proto__`). Use `Object.defineProperty`, as `parseEntries` does.
+- **Security:** don't assign through user-controlled keys (`__proto__`). Use `Object.defineProperty`, as `getFormValues` does.
 - **Peer dependency:** `react >= 16.8`. Don't use APIs newer than hooks without guarding them, for example by choosing `React.useSyncExternalStore` or a fallback once at module level and passing `getServerSnapshot` so server rendering works. No runtime dependencies; see [Goals](#goals).
 - **Public API changes** need matching updates in `src/index.js`, `index.d.ts` and the README. Don't remove or rename a public export in a non-major release. Keep the old name as a deprecated alias (marked `/** @deprecated */` in `index.d.ts`) until the next major release, then remove it.
 

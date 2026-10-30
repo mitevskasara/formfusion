@@ -63,6 +63,8 @@ import 'formfusion/style.css';
 
 ### Using the built-in validation
 
+`onSubmit` is called only when every field is valid. It receives the field values by name, exactly as entered: strings (and `File`s for file inputs), never parsed into numbers or booleans. Fields that share a name, such as a group of checkboxes, are submitted as an array. With `useForm`, values from the form state keep their type and take precedence over the field values.
+
 #### 1. Validating using the 'Type' property
 
 You can apply validation rules by passing the desired rule name to the <code>type</code> property. The full list of available rules can be found [here](https://formfusion-eta.vercel.app/docs/api/validation).

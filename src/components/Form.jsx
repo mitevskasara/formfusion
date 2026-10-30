@@ -4,7 +4,7 @@ import reducer, { initialState } from '../state/reducer';
 import createStore from '../state/store';
 import ACTIONS from '../state/actions';
 import { resetValidity } from '../utils/validate';
-import { parseEntries } from '../utils/helpers';
+import { getFormValues } from '../utils/helpers';
 
 const Form = forwardRef(
   (
@@ -57,30 +57,15 @@ const Form = forwardRef(
         return;
       }
 
-      const formData = new FormData(form);
-      const { values } = store.getState();
+      const values = getFormValues(
+        form,
+        config ? store.getState().values : undefined
+      );
+      const submit =
+        typeof config?.onSubmit === 'function' ? config.onSubmit : onSubmit;
 
-      if (config && Object.keys(values).length > 0) {
-        Object.keys(values).forEach((key) => {
-          switch (typeof values[key]) {
-            case 'string': {
-              formData.append(key, values[key]);
-              break;
-            }
-            case 'object': {
-              formData.append(key, JSON.stringify(values[key]));
-              break;
-            }
-            default:
-              formData.append(key, values[key]);
-          }
-        });
-      }
-
-      if (typeof config?.onSubmit === 'function') {
-        config.onSubmit(parseEntries(Object.fromEntries(formData.entries())));
-      } else if (typeof onSubmit === 'function') {
-        onSubmit(parseEntries(Object.fromEntries(formData.entries())));
+      if (typeof submit === 'function') {
+        submit(values);
       }
     }
 

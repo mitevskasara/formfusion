@@ -138,6 +138,46 @@ describe('Submit', () => {
     expect(onSubmit).toHaveBeenCalledWith({ user: 'valid_user' });
   });
 
+  test('submits values as entered and repeated names as arrays', () => {
+    const onSubmit = jest.fn();
+    render(
+      <Form onSubmit={onSubmit}>
+        <input name="zip" defaultValue="10115" />
+        <input name="flag" defaultValue="true" />
+        <input type="checkbox" name="tags" value="a" defaultChecked />
+        <input type="checkbox" name="tags" value="b" defaultChecked />
+      </Form>
+    );
+
+    act(() => screen.getByTestId('form').requestSubmit());
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      zip: '10115',
+      flag: 'true',
+      tags: ['a', 'b'],
+    });
+  });
+
+  test('config mode submits store values with their types', () => {
+    const onSubmit = jest.fn();
+    let form;
+    const Controlled = () => {
+      const formRef = useRef(null);
+      form = useForm({ formRef, initialValues: { zip: '10115' }, onSubmit });
+      return (
+        <Form config={form}>
+          <Input id="zip" name="zip" type="numeric" />
+        </Form>
+      );
+    };
+
+    render(<Controlled />);
+    act(() => form.setFieldValue('meta', { id: 1 }));
+    act(() => screen.getByTestId('form').requestSubmit());
+
+    expect(onSubmit).toHaveBeenCalledWith({ zip: '10115', meta: { id: 1 } });
+  });
+
   test('a noValidate form with an invalid field does not submit and shows the error', () => {
     const onSubmit = jest.fn();
     render(
