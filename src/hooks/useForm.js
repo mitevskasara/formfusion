@@ -2,7 +2,7 @@ import { useState } from 'react';
 import reducer, { initialState } from '../state/reducer';
 import createStore from '../state/store';
 import ACTIONS from '../state/actions';
-import validateField from '../utils/validate';
+import validateField, { resetValidity } from '../utils/validate';
 import useStoreSelector from './useStoreSelector';
 
 const selectState = (state) => state;
@@ -22,12 +22,10 @@ const useForm = (config) => {
   }
 
   function resetForm() {
-    config.formRef?.current?.reset();
-    if (Object.keys(store.getState().values).length > 0) {
-      dispatch({ type: ACTIONS.SET_VALUES, payload: {} });
-      dispatch({ type: ACTIONS.SET_ERRORS, payload: {} });
-      dispatch({ type: ACTIONS.SET_TOUCHED, payload: {} });
-    }
+    const form = config?.formRef?.current;
+    form?.reset();
+    resetValidity(form);
+    dispatch({ type: ACTIONS.RESET, payload: config?.initialValues });
   }
 
   function onValidate(e, customValidity) {

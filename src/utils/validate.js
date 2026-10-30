@@ -80,4 +80,10 @@ function validateField(e, customValidity, { errors, dispatch }) {
   }
 }
 
+export function resetValidity(form) {
+  Array.from(form?.elements ?? []).forEach((element) =>
+    element.setCustomValidity?.('')
+  );
+}
+
 export default validateField;

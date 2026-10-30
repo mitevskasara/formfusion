@@ -1,7 +1,9 @@
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import FormContext from '../context';
 import reducer, { initialState } from '../state/reducer';
 import createStore from '../state/store';
+import ACTIONS from '../state/actions';
+import { resetValidity } from '../utils/validate';
 import { parseEntries } from '../utils/helpers';
 
 const Form = forwardRef(
@@ -22,7 +24,6 @@ const Form = forwardRef(
       createStore(reducer, { ...initialState, values: initialValues })
     );
     const store = config?.store ?? ownStore;
-    const resetForm = config?.resetForm;
 
     const contextFormRef = config?.formRef ?? formRef;
     const contextValidateOnChange =
@@ -83,25 +84,14 @@ const Form = forwardRef(
       }
     }
 
-    useEffect(() => {
-      const form = ref?.current;
-
-      const handleFormReset = () => {
-        if (typeof resetForm === 'function') {
-          resetForm();
-        }
-      };
-
-      if (form) {
-        form.addEventListener('reset', handleFormReset);
-      }
-
-      return () => {
-        if (form) {
-          form.removeEventListener('reset', handleFormReset);
-        }
-      };
-    }, [ref?.current, resetForm]);
+    function handleReset(e) {
+      rest.onReset?.(e);
+      resetValidity(e.currentTarget);
+      store.dispatch({
+        type: ACTIONS.RESET,
+        payload: config ? config.initialValues : initialValues,
+      });
+    }
 
     return (
       <FormContext.Provider value={contextValue}>
@@ -109,6 +99,7 @@ const Form = forwardRef(
           {...rest}
           data-testid="form"
           onSubmit={rest.action ? undefined : handleSubmit}
+          onReset={handleReset}
           ref={config?.formRef ?? ref ?? formRef}
           className={`FormFusion ${rest?.className ?? ''}`}
         >

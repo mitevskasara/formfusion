@@ -2,6 +2,7 @@ const ACTIONS = {
   SET_VALUES: 'SET_VALUES',
   SET_ERRORS: 'SET_ERRORS',
   SET_TOUCHED: 'SET_TOUCHED',
+  RESET: 'RESET',
 };
 
 export default ACTIONS;

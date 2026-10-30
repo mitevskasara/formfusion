@@ -71,6 +71,20 @@ describe('Field-level re-renders', () => {
     expect(counter.counts.first).toBe(afterFirstError);
   });
 
+  test('a reset re-renders only the fields that had an error', () => {
+    const counter = createCounter();
+    renderForm(counter);
+
+    blurWith(document.getElementById('first'), '!!!');
+    const before = { ...counter.counts };
+    act(() => screen.getByTestId('form').reset());
+
+    expect(counter.counts.first).toBe(before.first + 1);
+    expect(counter.counts.second).toBe(before.second);
+    expect(counter.counts.notes).toBe(before.notes);
+    expect(counter.counts.context).toBe(before.context);
+  });
+
   test('config mode: a change re-renders only the changed field', () => {
     const counter = createCounter();
     let form;

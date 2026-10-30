@@ -25,7 +25,7 @@ These five goals decide every design question. A change that works against one o
   - Render `aria-invalid`, `aria-errormessage` and `aria-describedby` in JSX from state. Don't set them directly on the DOM, so React and user props can't overwrite them.
   - Error containers use `aria-live="polite"`. Labels use `htmlFor` / `id`, with the id falling back to `name`.
   - Keep visible focus styles and sufficient contrast.
-  - `setCustomValidity` / `checkValidity` are the only direct DOM calls allowed, from event handlers.
+  - `setCustomValidity` / `checkValidity` are the only direct DOM calls allowed, from event handlers. Reset clears custom validity with `resetValidity(form)` and resets state with the `RESET` action. Both `<Form onReset>` and `useForm().resetForm` do this, so a reset always leaves fields valid, error-free and back at `initialValues`.
   - `useConnect` requires `props.name` so it can render `aria-invalid` / `aria-errormessage` from state. Never read `ref.current` during render to find a field's name.
 - **Zero dependencies and bundle size:**
   - `package.json` must have no `dependencies`. Write small helpers in-house instead of adding a package, even a tiny one, e.g. the subscription store.
@@ -38,9 +38,8 @@ These five goals decide every design question. A change that works against one o
 
 **Known gaps (being fixed, don't copy them):**
 
-- Reset doesn't restore `initialValues` or clear errors.
 - After an error, `setCustomValidity` keeps the field invalid (`customError`) until it is validated again. A fixed field that is never blurred blocks the first submit.
-- `useForm` / `config` mode keeps state in the parent's `useReducer`, so every change re-renders the parent and all its fields.
+- `useForm` subscribes to the whole store to return `values` / `errors`, so in `config` mode every change re-renders the component that calls it, and all the fields it renders.
 
 ## Project layout
 
