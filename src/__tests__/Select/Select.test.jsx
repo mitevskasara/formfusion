@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Form from '../../components/Form';
 import Select from '../../components/Select';
@@ -44,11 +44,22 @@ describe('Testing Select component', () => {
       </Form>
     );
 
-    fireEvent.click(screen.getByRole('combobox'));
+    const combobox = screen.getByRole('combobox');
+    act(() => screen.getByTestId('form').requestSubmit());
+    const error = document.getElementById(
+      combobox.getAttribute('aria-errormessage')
+    );
+    expect(combobox).toHaveAttribute('aria-invalid', 'true');
+    expect(error).toHaveTextContent('Please fill in this field.');
+
+    fireEvent.click(combobox);
     fireEvent.click(screen.getByRole('option', { name: 'Option A' }));
 
     const hiddenInput = screen.getByDisplayValue('a');
     expect(hiddenInput.validity.valid).toBe(true);
+    expect(combobox).toHaveAttribute('aria-invalid', 'false');
+    expect(combobox).not.toHaveAttribute('aria-errormessage');
+    expect(error).toBeEmptyDOMElement();
   });
 
   test('combobox is labelled and lists id are unique per instance', () => {

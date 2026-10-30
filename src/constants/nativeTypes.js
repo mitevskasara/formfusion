@@ -13,7 +13,6 @@ export default [
   'range',
   'reset',
   'submit',
-  'tel',
   'text',
   'time',
   'week',
