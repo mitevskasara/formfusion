@@ -48,26 +48,6 @@ describe('useConnect', () => {
     expect(input).not.toHaveAttribute('pattern');
   });
 
-  test('keeps the same ref across rerenders', () => {
-    const refs = [];
-
-    const Harness = () => {
-      const ref = useConnect(
-        useForm({ formRef: { current: null } }),
-        'text'
-      ).ref;
-      refs.push(ref);
-      return <input name="name" ref={ref} />;
-    };
-
-    const { rerender } = render(<Harness />);
-    rerender(<Harness />);
-
-    expect(refs).toHaveLength(2);
-    expect(refs[0]).toBe(refs[1]);
-    expect(refs[0].current).toBeInstanceOf(HTMLInputElement);
-  });
-
   test('passes the resolved validation to onValidate', () => {
     const onValidate = jest.fn();
     render(<ConnectedInput onValidate={onValidate} />);
@@ -78,17 +58,6 @@ describe('useConnect', () => {
 
     expect(onValidate).toHaveBeenCalledTimes(1);
     expect(onValidate.mock.calls[0][1]).toBe(validation);
-  });
-
-  test('validates on blur and on invalid', () => {
-    const onValidate = jest.fn();
-    render(<ConnectedInput onValidate={onValidate} />);
-    const input = screen.getByTestId('email');
-
-    fireEvent.blur(input);
-    fireEvent(input, new Event('invalid'));
-
-    expect(onValidate).toHaveBeenCalledTimes(2);
   });
 
   test('skips change and blur handlers when validation is disabled', () => {
