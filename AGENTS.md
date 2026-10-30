@@ -26,6 +26,7 @@ These five goals decide every design question. A change that works against one o
   - Error containers use `aria-live="polite"`. Labels use `htmlFor` / `id`, with the id falling back to `name`.
   - Keep visible focus styles and sufficient contrast.
   - `setCustomValidity` / `checkValidity` are the only direct DOM calls allowed, from event handlers.
+  - `useConnect` requires `props.name` so it can render `aria-invalid` / `aria-errormessage` from state. Never read `ref.current` during render to find a field's name.
 - **Zero dependencies and bundle size:**
   - `package.json` must have no `dependencies`. Write small helpers in-house instead of adding a package, even a tiny one, e.g. the subscription store.
   - Country-specific or rarely used data goes in separate optional `@formfusion/*` packages (postcodes, licence plates), not in the core bundle.
@@ -39,7 +40,6 @@ These five goals decide every design question. A change that works against one o
 
 - Reset doesn't restore `initialValues` or clear errors.
 - After an error, `setCustomValidity` keeps the field invalid (`customError`) until it is validated again. A fixed field that is never blurred blocks the first submit.
-- `validateField` sets `aria-*` directly on the DOM.
 - `useForm` / `config` mode keeps state in the parent's `useReducer`, so every change re-renders the parent and all its fields.
 
 ## Project layout

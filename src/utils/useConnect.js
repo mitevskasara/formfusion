@@ -5,7 +5,12 @@ import hiddenTypes from '../constants/hidden';
 import validity from '../constants/validity';
 
 const useConnect = (config, type, validation, props = {}) => {
+  if (!props.name) {
+    throw new Error('useConnect requires props.name, e.g. { name: "email" }.');
+  }
+
   const {
+    errors,
     controlled,
     onValidate,
     onChange,
@@ -39,6 +44,10 @@ const useConnect = (config, type, validation, props = {}) => {
   return {
     ...props,
     ref: inputRef,
+    'aria-invalid': errors?.[props.name] ? 'true' : 'false',
+    'aria-errormessage': errors?.[props.name]
+      ? `FormFusion-${props.id || props.name}-error`
+      : undefined,
     type: inputType,
     pattern,
     onInput: validateOnChange

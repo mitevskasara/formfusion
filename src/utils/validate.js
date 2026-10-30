@@ -24,9 +24,8 @@ function matchesPatterns(patterns, operator, value) {
 
 function validateField(e, customValidity, { errors, dispatch }) {
   e.preventDefault();
-  const { id, name, value } = e.target;
+  const { name, value } = e.target;
   const dataset = e.target.dataset || {};
-  const fieldId = id || name;
   const setCustomValidity =
     typeof e.target.setCustomValidity === 'function'
       ? (message) => e.target.setCustomValidity(message)
@@ -68,16 +67,6 @@ function validateField(e, customValidity, { errors, dispatch }) {
   }
 
   const valid = Boolean(e.target.validity?.valid);
-
-  if (typeof e.target.setAttribute === 'function') {
-    e.target.setAttribute('aria-invalid', String(!valid));
-
-    if (!valid) {
-      e.target.setAttribute('aria-errormessage', `FormFusion-${fieldId}-error`);
-    } else {
-      e.target.removeAttribute('aria-errormessage');
-    }
-  }
 
   if (!valid || errors?.[name]) {
     dispatch({

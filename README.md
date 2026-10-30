@@ -202,7 +202,7 @@ export default MyForm;
 
 #### 6. Managing state with useForm and useConnect
 
-`useForm` returns the form state and validation helpers, and `useConnect` binds them to plain native inputs. `useConnect` keeps an input ref, so call it at the top level of a component like any other hook. The optional fourth argument holds extra input props: they are merged into the result, and its `pattern` overrides the pattern of the given type.
+`useForm` returns the form state and validation helpers, and `useConnect` binds them to plain native inputs. `useConnect` keeps an input ref, so call it at the top level of a component like any other hook. The fourth argument holds the input's props and must include its `name`. They are merged into the result, along with `aria-invalid` and `aria-errormessage` from the field's error state. Render the error in an element with the id `FormFusion-<id or name>-error`, so `aria-errormessage` points at it. A `pattern` there overrides the pattern of the given type.
 
 ```jsx
 import React, { useRef } from 'react';
@@ -225,13 +225,16 @@ const SignupForm = () => {
     },
     'username',
     { patternMismatch: 'Please enter a valid username.' },
-    { placeholder: 'Enter username' }
+    { name: 'username', placeholder: 'Enter username' }
   );
 
   return (
     <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
       <label htmlFor="username">Username</label>
-      <input id="username" name="username" {...inputProps} />
+      <input id="username" {...inputProps} />
+      <span id="FormFusion-username-error" aria-live="polite">
+        {formConfig.errors.username}
+      </span>
       <button type="submit">Submit</button>
     </form>
   );

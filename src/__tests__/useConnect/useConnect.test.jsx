@@ -20,12 +20,14 @@ const ConnectedInput = ({ onValidate, type = 'email', ...overrides }) => {
       ...overrides,
     },
     type,
-    validation
+    validation,
+    { name: 'email' }
   );
 
   return (
     <form ref={formRef}>
-      <input name="email" data-testid="email" {...inputProps} />
+      <input data-testid="email" {...inputProps} />
+      <span id="FormFusion-email-error">{form.errors.email}</span>
     </form>
   );
 };
@@ -101,9 +103,9 @@ describe('useConnect', () => {
         useForm({ formRef: { current: null } }),
         'username',
         undefined,
-        { placeholder: 'Enter username', pattern: '^[a-z]+$' }
+        { name: 'username', placeholder: 'Enter username', pattern: '^[a-z]+$' }
       );
-      return <input name="username" data-testid="username" {...inputProps} />;
+      return <input data-testid="username" {...inputProps} />;
     };
 
     render(<Harness />);
@@ -111,6 +113,29 @@ describe('useConnect', () => {
 
     expect(input).toHaveAttribute('placeholder', 'Enter username');
     expect(input).toHaveAttribute('pattern', '^[a-z]+$');
+  });
+
+  test('renders aria-invalid and aria-errormessage from the error state', () => {
+    render(<ConnectedInput type="username" />);
+    const input = screen.getByTestId('email');
+
+    fireEvent.input(input, { target: { value: '!!!' } });
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(
+      document.getElementById(input.getAttribute('aria-errormessage'))
+    ).toHaveTextContent('Please enter a valid email.');
+
+    fireEvent.input(input, { target: { value: 'valid_user' } });
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+    expect(input).not.toHaveAttribute('aria-errormessage');
+  });
+
+  test('requires a name', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const Unnamed = () => <input {...useConnect(useForm({}), 'email')} />;
+
+    expect(() => render(<Unnamed />)).toThrow('useConnect requires props.name');
+    console.error.mockRestore();
   });
 
   test('keeps connect as a deprecated alias', () => {

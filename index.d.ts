@@ -292,6 +292,7 @@ declare module 'formfusion' {
 
   export interface ConnectProps<T extends HTMLElement = HTMLInputElement> {
     ref: React.RefObject<T | null>;
+    name: string;
     type: string;
     pattern?: string;
     onInput?: React.FormEventHandler<T>;
@@ -300,6 +301,8 @@ declare module 'formfusion' {
     onBlur?: React.FormEventHandler<T>;
     onInvalid: React.FormEventHandler<T>;
     'data-type'?: string;
+    'aria-invalid': 'true' | 'false';
+    'aria-errormessage'?: string;
   }
 
   export interface ConnectConfig extends Partial<FormConfig> {
@@ -313,8 +316,8 @@ declare module 'formfusion' {
   >(
     config: ConnectConfig,
     type: Type | CombineResult,
-    validation?: CustomValidityValue,
-    props?: P & { pattern?: string }
+    validation: CustomValidityValue | undefined,
+    props: P & { name: string; id?: string; pattern?: string }
   ) => P & ConnectProps<T>;
 
   /** @deprecated Use `useConnect` instead. */

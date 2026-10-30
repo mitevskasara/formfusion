@@ -133,9 +133,11 @@ describe('Submit', () => {
 
     fireEvent.submit(screen.getByTestId('form'));
 
+    const input = screen.getByTestId('input');
     expect(onSubmit).not.toHaveBeenCalled();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(
-      document.getElementById('FormFusion-user-error')
+      document.getElementById(input.getAttribute('aria-errormessage'))
     ).not.toBeEmptyDOMElement();
   });
 });

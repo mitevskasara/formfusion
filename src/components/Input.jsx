@@ -108,6 +108,8 @@ const Input = ({
           onInvalid={(e) => onValidate(e, validation)}
           data-type={inputTypes[type] && type}
           aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
           inputMode={rest.inputMode || inputModes[type] || 'text'}
         />
         {type === 'checkbox' && (

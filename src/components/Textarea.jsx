@@ -60,6 +60,8 @@ const Textarea = ({
         onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
         onInvalid={(e) => onValidate(e, validation)}
         aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}
       />
       {helperText && (
         <span
