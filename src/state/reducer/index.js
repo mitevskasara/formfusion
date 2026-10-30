@@ -1,4 +1,4 @@
-import actions from "../actions";
+import actions from '../actions';
 
 export const initialState = {
   values: {},
@@ -45,7 +45,7 @@ function reducer(state, action) {
       };
     }
   }
-  throw Error("Unknown action: " + action.type);
+  throw Error('Unknown action: ' + action.type);
 }
 
 export default reducer;

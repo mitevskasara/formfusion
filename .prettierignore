@@ -1,8 +1,9 @@
 node_modules
 .history
-index.js
-index.mjs
-style.css
+coverage
+/index.js
+/index.mjs
+/style.css
 esbuild.js
 package.json
 package-lock.json

@@ -26,17 +26,21 @@ style.css             Generated, prefixed and minified CSS. Don't edit by hand.
 ```bash
 npm install
 npm test               # jest (jsdom)
+npm run lint           # eslint (flat config in eslint.config.mjs)
+npm run typecheck      # tsc --noEmit over index.d.ts
 npm run build          # prefix + minify CSS, then build index.js / index.mjs
 npm run format         # prettier --write .
 npm run check-format   # prettier --check .
 ```
 
-Before you finish any change, run `npm test` and `npm run check-format`. If you touched `src/`, also run `npm run build` and commit the regenerated `index.js`, `index.mjs` and `style.css` with it.
+Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run check-format` and `npm test`. CI (`.github/workflows/ci.yml`) runs all of them plus `npm run build` on every PR and on every push to `main`. Lint must have no errors, and new code shouldn't add warnings. If you touched `src/`, also run `npm run build` and commit the regenerated `index.js`, `index.mjs` and `style.css` with it.
 
 ## Code conventions
 
 - **Language:** plain JavaScript and JSX. No TypeScript in `src/`. Babel (`preset-env`, `preset-react`) handles tests, and esbuild bundles for `browser` / `es2018`.
-- **Formatting (Prettier):** single quotes, semicolons, 2-space indent, `es5` trailing commas. Don't fight the formatter.
+- **Formatting (Prettier):** single quotes, semicolons, 2-space indent, `es5` trailing commas. Don't fight the formatter. In `.prettierignore`, generated root files are anchored (`/index.js`), so `src/**/index.js` is still formatted. Keep it that way.
+- **Linting (ESLint 9):** `@eslint/js` recommended, `react` and `react-hooks` rules. Prefix intentionally unused args and caught errors with `_` (`catch (_error)`). Comment empty catch blocks. Don't use redundant `Boolean(...)` casts.
+- **Types:** `index.d.ts` is checked by `npm run typecheck` in strict mode, so keep it compiling.
 - **Components:** function components with default exports, one per file in `src/components/`, named in PascalCase. Destructure props with defaults in the signature and pass the rest through with `...rest`. Use `forwardRef` where a ref is exposed (as `Form` does).
 - **Hooks:** anything that calls a React hook must be named `use*` (e.g. `useConnect`, not `connect`) and must call hooks unconditionally, at the top level. Never put a hook call behind a ternary or an `if`.
 - **Shared logic** goes in `useFormHelpers`. State changes go through `dispatch` with `ACTIONS` from `src/state/actions`, never through ad-hoc local state.
@@ -60,33 +64,38 @@ Before you finish any change, run `npm test` and `npm run check-format`. If you 
 
 ## Commit conventions
 
-Format: `Type: short imperative description`, with a capitalized type and a lowercase description, no trailing period, and an optional body.
+Releases are generated from commit messages by Release Please, so commits **must** follow [Conventional Commits](https://www.conventionalcommits.org/) with **lowercase** types: `type: short imperative description`, with no trailing period and an optional body. Older history uses capitalized types (`Fix:`, `Feat:`). Don't copy that style.
 
-| Type     | Use for                                                    |
-| -------- | ---------------------------------------------------------- |
-| `Feat:`  | New feature or public API                                  |
-| `Fix:`   | Bug fix (including types/a11y fixes)                       |
-| `Chore:` | Deps, build output, version bumps, changelog, CI, lockfile |
-| `Docs:`  | README / documentation only                                |
-| `Style:` | CSS / visual-only changes                                  |
-| `Ref:`   | Refactor without behavior change                           |
-| `Perf:`  | Performance improvement                                    |
-| `Test:`  | Tests only                                                 |
+| Type        | Use for                                | Release effect |
+| ----------- | -------------------------------------- | -------------- |
+| `feat:`     | New feature or public API              | minor          |
+| `fix:`      | Bug fix (including types/a11y fixes)   | patch          |
+| `perf:`     | Performance improvement                | patch          |
+| `docs:`     | README / documentation only            | none           |
+| `style:`    | CSS / visual-only changes              | none           |
+| `refactor:` | Refactor without behavior change       | none           |
+| `test:`     | Tests only                             | none           |
+| `build:`    | Build output, bundling, dependencies   | none           |
+| `ci:`       | GitHub Actions / release configuration | none           |
+| `chore:`    | Other maintenance                      | none           |
 
-Examples from history:
+For a breaking change, use `feat!:` / `fix!:` or add a `BREAKING CHANGE:` footer. That triggers a major release, so prefer a deprecated alias over a break.
 
-- `Feat: allow combining multiple validation patterns`
-- `Fix: Select id fallback and packaging nits`
-- `Chore: regenerate style.css and library bundles`
+Examples:
 
-Keep commits focused. Put regenerated bundles in their own `Chore:` commit or in the commit that caused them. Never commit `node_modules`, `.history` or `AUDIT.md`.
+- `feat: allow combining multiple validation patterns`
+- `fix: Select id fallback and packaging nits`
+- `build: regenerate style.css and library bundles`
+
+Keep commits focused. Put regenerated bundles in the commit that caused them. Never commit `node_modules`, `.history`, `coverage` or `AUDIT.md`.
 
 ## Branches, versioning and releases
 
 - Work on a branch, never directly on `main`. Existing branches are named by version (`1.2.2`) or by type (`fix/<topic>`, e.g. `fix/audit-priority-fixes`). Merge through pull requests.
-- **Pushing to `main` publishes to npm automatically** (`.github/workflows/publish.yml`, OIDC trusted publishing: `npm ci`, then build, test and `npm publish --provenance`). So before anything lands on `main`:
-  - bump `version` in `package.json` (semver; npm rejects a version that's already published),
-  - add an entry at the top of `CHANGELOG.md` in the existing format: `### [x.y.z] - YYYY-MM-DD`, then `#### Features` / `#### Bug Fixes` / `#### Documentation` sections with bold item titles and commit links,
-  - make sure `npm run build` and `npm test` pass.
+- **Releases are automated by Release Please** (`.github/workflows/release-please.yml`, `release-please-config.json`, `.release-please-manifest.json`):
+  1. Every push to `main` updates an open release PR that bumps `package.json`, `.release-please-manifest.json` and `CHANGELOG.md` based on the commits.
+  2. Merging the release PR creates the `vX.Y.Z` tag and GitHub release, then calls `.github/workflows/publish.yml`. That workflow runs CI, checks that the tag matches `package.json`, builds, and runs `npm publish --provenance` through npm OIDC trusted publishing (no token) in the `npm` environment.
+  - **Don't bump `version` or edit `CHANGELOG.md` by hand.** Release Please owns both.
+  - Pushing a `v*` tag manually also triggers `publish.yml`. Only do that to recover a failed release.
 - Commit `package-lock.json` along with any dependency change, and keep it portable (CI runs `npm ci` on Linux).
 - Only the files listed in `package.json` → `files` ship to npm. Update that list and `exports` if you add a published artifact.
