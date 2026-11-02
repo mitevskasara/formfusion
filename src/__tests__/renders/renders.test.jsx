@@ -6,6 +6,7 @@ import Input from '../../components/Input';
 import Textarea from '../../components/Textarea';
 import FormContext from '../../context';
 import useForm from '../../hooks/useForm';
+import useFormState from '../../hooks/useFormState';
 
 const createCounter = () => {
   const counts = {};
@@ -140,6 +141,46 @@ describe('Field-level re-renders', () => {
     blurWith(document.getElementById('first'), '!!!');
 
     expect(screen.getByTestId('first-error')).not.toBeEmptyDOMElement();
+  });
+
+  test('useFormState re-renders only when the selected value changes', () => {
+    const counter = createCounter();
+    let form;
+
+    const Mirror = () => {
+      const first = useFormState(form, (state) => state.values.first);
+      return (
+        <Profiler id="mirror" onRender={counter.onRender}>
+          <output data-testid="mirror">{first}</output>
+        </Profiler>
+      );
+    };
+
+    const Controlled = () => {
+      const formRef = useRef(null);
+      form = useForm({ formRef, initialValues: { first: '', second: '' } });
+      return (
+        <Form config={form}>
+          <Input id="first" name="first" type="username" />
+          <Input id="second" name="second" type="username" />
+          <Mirror />
+        </Form>
+      );
+    };
+
+    render(<Controlled />);
+    const mounted = counter.counts.mirror;
+
+    fireEvent.change(document.getElementById('second'), {
+      target: { value: 'other' },
+    });
+    expect(counter.counts.mirror).toBe(mounted);
+
+    fireEvent.change(document.getElementById('first'), {
+      target: { value: 'abc' },
+    });
+    expect(counter.counts.mirror).toBe(mounted + 1);
+    expect(screen.getByTestId('mirror')).toHaveTextContent('abc');
   });
 });
 

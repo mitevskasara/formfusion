@@ -275,6 +275,17 @@ declare module 'formfusion' {
     config: UseFormParams<T>
   ) => FormConfig<T>;
 
+  export interface FormState<T extends FormValues = FormValues> {
+    values: T;
+    errors: FormErrors;
+    touched: Record<string, boolean>;
+  }
+
+  export const useFormState: <T extends FormValues, R>(
+    form: FormConfig<T>,
+    selector: (state: FormState<T>) => R
+  ) => R;
+
   export interface ConnectProps<T extends HTMLElement = HTMLInputElement> {
     ref: React.RefObject<T | null>;
     name: string;

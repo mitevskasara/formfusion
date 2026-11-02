@@ -15,7 +15,7 @@ These five goals decide every design question. A change that works against one o
 ### How the goals translate into rules
 
 - **State and rendering:**
-  - Form state lives in one store per form (`src/state/store`). `<Form>` creates it, or uses `config.store` from `useForm`. Fields read it only through `useFormHelpers(name)`, which subscribes with `useStoreSelector` to their own value and error. Selectors return plain values or stable references, never new objects. `useConnect` subscribes to its own field's error the same way. `useForm` returns `values`, `errors` and `touched` as non-enumerable tracked getters: the calling component re-renders only for the slices it read in its last render, and spreading the form object reads nothing. Library code never reads those getters; it uses `store.getState()` in handlers and `useStoreSelector` in render.
+  - Form state lives in one store per form (`src/state/store`). `<Form>` creates it, or uses `config.store` from `useForm`. Fields read it only through `useFormHelpers(name)`, which subscribes with `useStoreSelector` to their own value and error. Selectors return plain values or stable references, never new objects. `useConnect` subscribes to its own field's error the same way. `useForm` returns `values`, `errors` and `touched` as non-enumerable tracked getters: the calling component re-renders only for the slices it read in its last render, and spreading the form object reads nothing. Library code never reads those getters; it uses `store.getState()` in handlers and `useStoreSelector` in render. Public reads of part of the state go through `useFormState(form, selector)`.
   - The context value stays stable (`useMemo`), so changing state never re-renders every field that reads the context.
   - Reducers return the same state object when an update changes nothing, so subscribers aren't notified.
   - Update state only in event handlers or effects, never during render.
@@ -43,7 +43,7 @@ These five goals decide every design question. A change that works against one o
 src/
   index.js            Public entry point. Every public export goes through here.
   components/         Form, Input, Textarea, Select (.jsx)
-  hooks/              useForm (public), useFormHelpers(name) (per-field state + handlers),
+  hooks/              useForm, useFormState (public), useFormHelpers(name) (per-field state + handlers),
                       useStoreSelector (subscribe to one value of the store)
   state/              store (createStore: getState/dispatch/subscribe), reducer, actions
   context/            FormContext

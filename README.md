@@ -262,6 +262,25 @@ export default SignupForm;
 
 `useForm` doesn't re-render your component while people type. Each field subscribes to its own value and error, and the component that calls `useForm` re-renders only for the state it reads during render: reading `formConfig.errors` re-renders it when errors change, and reading nothing never re-renders it. In event handlers, read `formConfig.values` freely. It always returns the current values and doesn't subscribe.
 
+To show part of the form state elsewhere, use `useFormState` with a selector. The component re-renders only when the selected value changes:
+
+```jsx
+import { useFormState } from 'formfusion';
+
+const hasUsername = useFormState(
+  formConfig,
+  (state) => state.values.username !== ''
+);
+
+<button type="submit" disabled={!hasUsername}>
+  Submit
+</button>;
+```
+
+Here the component re-renders only when the username goes from empty to filled, or back, not on every letter.
+
+The selector receives `values`, `errors` and `touched`. Return a plain value or `state.values` itself, never a new object or array, since a new object counts as a change on every update. To show many values live, such as a summary of the whole form, put `useFormState(formConfig, (state) => state.values)` in a small component, so only that component re-renders.
+
 With TypeScript, pass your form's shape to `useForm` to type `values`, `initialValues`, `onSubmit` and `setFieldValue`. Without it, values are typed as `Record<string, any>`.
 
 ```tsx
