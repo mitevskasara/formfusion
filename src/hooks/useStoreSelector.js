@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const useIsomorphicLayoutEffect =
+export const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 function useStoreSelectorNative(store, selector) {

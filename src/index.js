@@ -4,6 +4,7 @@ export { default as Textarea } from './components/Textarea';
 export { default as Select } from './components/Select';
 
 export { default as useForm } from './hooks/useForm';
+export { default as useFormState } from './hooks/useFormState';
 
 export { default as rules } from './constants/patterns';
 
