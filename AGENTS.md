@@ -15,7 +15,7 @@ These five goals decide every design question. A change that works against one o
 ### How the goals translate into rules
 
 - **State and rendering:**
-  - Form state lives in one store per form (`src/state/store`). `<Form>` creates it, or uses `config.store` from `useForm`. Fields read it only through `useFormHelpers(name)`, which subscribes with `useStoreSelector` to their own value and error. Selectors return plain values or stable references, never new objects.
+  - Form state lives in one store per form (`src/state/store`). `<Form>` creates it, or uses `config.store` from `useForm`. Fields read it only through `useFormHelpers(name)`, which subscribes with `useStoreSelector` to their own value and error. Selectors return plain values or stable references, never new objects. `useConnect` subscribes to its own field's error the same way. `useForm` returns `values`, `errors` and `touched` as non-enumerable tracked getters: the calling component re-renders only for the slices it read in its last render, and spreading the form object reads nothing. Library code never reads those getters; it uses `store.getState()` in handlers and `useStoreSelector` in render.
   - The context value stays stable (`useMemo`), so changing state never re-renders every field that reads the context.
   - Reducers return the same state object when an update changes nothing, so subscribers aren't notified.
   - Update state only in event handlers or effects, never during render.
@@ -32,14 +32,10 @@ These five goals decide every design question. A change that works against one o
   - `package.json` must have no `dependencies`. Write small helpers in-house instead of adding a package, even a tiny one, e.g. the subscription store.
   - Country-specific or rarely used data goes in separate optional `@formfusion/*` packages (postcodes, licence plates), not in the core bundle.
   - Keep code tree-shakeable: named ESM exports, no import-time side effects (`sideEffects` lists only `*.css`).
-  - Current size: `index.mjs` is about 24.2 KB minified / 8.1 KB gzip, and `style.css` about 4.7 KB / 1.1 KB gzip. Check with `gzip -9c index.mjs | wc -c` after `npm run build`. State the size change in the PR, and justify any growth over ~0.5 KB gzip.
+  - Current size: `index.mjs` is about 25.5 KB minified / 8.5 KB gzip, and `style.css` about 4.7 KB / 1.1 KB gzip. Check with `gzip -9c index.mjs | wc -c` after `npm run build`. State the size change in the PR, and justify any growth over ~0.5 KB gzip.
 - **Tests guard the goals:**
   - The render-count tests in `src/__tests__/renders/` (`React.Profiler`) check that a change in one field doesn't re-render other fields or `<Form>`, and that repeating the same invalid value doesn't re-render. Changes to rendering or state must keep them passing. Extend them only when the behaviour they guard changes.
   - Field a11y (label association, `aria-invalid`, and `aria-errormessage` pointing at an existing error element) is asserted in the field's existing tests. Keep those assertions correct when a field changes.
-
-**Known gaps (being fixed, don't copy them):**
-
-- `useForm` subscribes to the whole store to return `values` / `errors`, so in `config` mode every change re-renders the component that calls it, and all the fields it renders.
 
 ## Project layout
 

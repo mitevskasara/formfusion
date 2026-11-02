@@ -93,6 +93,7 @@ describe('Field-level re-renders', () => {
     const Controlled = () => {
       const formRef = useRef(null);
       form = useForm({ formRef, initialValues: { first: '', second: '' } });
+      counter.onRender('form');
       return (
         <Form config={form}>
           <ContextChangeProbe onRender={counter.onRender} />
@@ -108,15 +109,37 @@ describe('Field-level re-renders', () => {
 
     render(<Controlled />);
     const input = document.getElementById('first');
+    const mounted = { ...counter.counts };
+
     fireEvent.change(input, { target: { value: 'abc' } });
+    blurWith(input, '!!!');
+    act(() => form.setFieldValue('first', `${form.values.first}d`));
 
-    expect(input).toHaveValue('abc');
-    expect(form.values.first).toBe('abc');
+    expect(input).toHaveValue('!!!d');
+    expect(counter.counts.form).toBe(mounted.form);
+    expect(counter.counts.first).toBe(mounted.first + 4);
+    expect(counter.counts.second).toBe(mounted.second);
+    expect(counter.counts.context).toBe(mounted.context);
+  });
 
-    const contextRenders = counter.counts.context;
-    act(() => form.setFieldValue('first', 'abcd'));
-    expect(counter.counts.context).toBe(contextRenders);
-    expect(input).toHaveValue('abcd');
+  test('config mode: reading form.errors in render keeps the error up to date', () => {
+    let form;
+
+    const Controlled = () => {
+      const formRef = useRef(null);
+      form = useForm({ formRef, initialValues: { first: '' } });
+      return (
+        <Form config={form}>
+          <Input id="first" name="first" type="username" />
+          <output data-testid="first-error">{form.errors.first}</output>
+        </Form>
+      );
+    };
+
+    render(<Controlled />);
+    blurWith(document.getElementById('first'), '!!!');
+
+    expect(screen.getByTestId('first-error')).not.toBeEmptyDOMElement();
   });
 });
 

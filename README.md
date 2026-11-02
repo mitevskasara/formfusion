@@ -260,6 +260,8 @@ const SignupForm = () => {
 export default SignupForm;
 ```
 
+`useForm` doesn't re-render your component while people type. Each field subscribes to its own value and error, and the component that calls `useForm` re-renders only for the state it reads during render: reading `formConfig.errors` re-renders it when errors change, and reading nothing never re-renders it. In event handlers, read `formConfig.values` freely. It always returns the current values and doesn't subscribe.
+
 With TypeScript, pass your form's shape to `useForm` to type `values`, `initialValues`, `onSubmit` and `setFieldValue`. Without it, values are typed as `Record<string, any>`.
 
 ```tsx
