@@ -7,3 +7,4 @@ coverage
 esbuild.js
 package.json
 package-lock.json
+/CHANGELOG.md
