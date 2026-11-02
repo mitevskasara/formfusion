@@ -1,5 +1,42 @@
 ## Changelog
 
+## [2.0.0](https://github.com/mitevskasara/formfusion/compare/v1.2.1...v2.0.0) (2026-10-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* onSubmit no longer JSON-parses field values. Text inputs are always submitted as strings, so numbers and booleans typed into fields are no longer converted. Fields that share a name are submitted as an array instead of only the last value.
+* connect has been removed. Use useConnect instead.
+* useConnect now requires a fourth argument with the input's name: useConnect(form, type, validation, { name: 'email' }).
+
+### Features
+
+* add useConnect hook and deprecate connect ([cdb8905](https://github.com/mitevskasara/formfusion/commit/cdb89058cce70d4325760d1eac7208d6f5c3a052))
+* remove the deprecated connect export ([7243475](https://github.com/mitevskasara/formfusion/commit/7243475fb3810f82f1ee647f47cecc73812b08b7))
+* render aria attributes from state and require name in useConnect ([b205f77](https://github.com/mitevskasara/formfusion/commit/b205f77d6dab520a2373df9c5dd90b33510194ea))
+* type form values with an optional useForm generic ([0f74ae3](https://github.com/mitevskasara/formfusion/commit/0f74ae362009b59afaef611272e7a79c096afe67))
+
+
+### Bug Fixes
+
+* align the type declarations with the runtime API ([5751243](https://github.com/mitevskasara/formfusion/commit/57512437e8e7938678fbb5df372e7feb9455bd3d))
+* avoid String.prototype.replaceAll so the bundle runs on es2018 browsers ([91e1f10](https://github.com/mitevskasara/formfusion/commit/91e1f10c3e9c2e7c204e9ea964fb6c6b5dfc6a86))
+* bind checkboxes through checked so they can be unchecked ([0ed7e8b](https://github.com/mitevskasara/formfusion/commit/0ed7e8b9a4e30f1d4037670f5236766282847766))
+* keep native validity current while typing so a fixed field submits on the first try ([624d47d](https://github.com/mitevskasara/formfusion/commit/624d47de056e81699049275b6bd3ccef4d410fc3))
+* merge custom validation messages with the type's default messages ([a1c03d7](https://github.com/mitevskasara/formfusion/commit/a1c03d790b50189f6a3b2c833150be6d97554fa7))
+* reset restores initial values and clears errors and custom validity ([7af4cbd](https://github.com/mitevskasara/formfusion/commit/7af4cbd976370a441e7b5806eedf2c0c4039d1ce))
+* restore [@emnapi](https://github.com/emnapi) lockfile entries and stop CI checks after a failed install ([e97b486](https://github.com/mitevskasara/formfusion/commit/e97b486048069b1d40f9338cf9e212c9a5bab03e))
+* share field validation between Form fields and useForm ([695cefc](https://github.com/mitevskasara/formfusion/commit/695cefcd5b5d135ae344932e397ca6e521cbf4a1))
+* show the custom message of the first failing validity check ([5e13e46](https://github.com/mitevskasara/formfusion/commit/5e13e464f88a461bd3ba693e5cbeda4b68816943))
+* submit field values as entered instead of parsing them as JSON ([3542ff5](https://github.com/mitevskasara/formfusion/commit/3542ff538140ea1fa764e9c2525a3662c135ad05))
+* support combine() patterns and masks in useConnect ([7a4fd1e](https://github.com/mitevskasara/formfusion/commit/7a4fd1ef50632caf00fb504a2e6ade2598cd32a4))
+* validate type="tel" with a generic phone pattern ([7dad86c](https://github.com/mitevskasara/formfusion/commit/7dad86cdefd87b8030963fc53e10e4da8fab1cc2))
+
+
+### Performance Improvements
+
+* share form state through a per-field subscription store ([5a75106](https://github.com/mitevskasara/formfusion/commit/5a75106dacba5cd5545d535c36e0fe7783630767))
+
 ### [1.2.0] - 2026-10-09
 
 #### Features
