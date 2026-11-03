@@ -47,6 +47,16 @@ describe.each([
     expect(field).toHaveAttribute('aria-invalid', 'true');
   });
 
+  test('initialValues fill the field in a normal form', () => {
+    render(
+      <Form onSubmit={() => {}} initialValues={{ bio: 'hello' }}>
+        <Field id="bio" name="bio" label="Bio" />
+      </Form>
+    );
+
+    expect(screen.getByLabelText('Bio')).toHaveValue('hello');
+  });
+
   test('config mode: shows a value of 0 from the state', () => {
     const Controlled = () => {
       const formRef = useRef(null);

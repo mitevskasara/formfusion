@@ -51,6 +51,7 @@ const Textarea = ({
       <textarea
         {...rest}
         ref={ref}
+        defaultValue={controlled ? undefined : value}
         value={controlled ? (value ?? '') : undefined}
         data-testid="textarea"
         className={textareaClasses}
