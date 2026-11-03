@@ -40,16 +40,17 @@ export function updateValidity(target, customValidity) {
     patterns = [];
   }
 
-  if (Array.isArray(patterns) && patterns.length > 0) {
-    const operator = dataset.operator || CombineOperators.AND;
-
-    if (!matchesPatterns(patterns, operator, value)) {
-      setCustomValidity(
-        customValidity?.patternMismatch ||
-          customValidity?.invalid ||
-          'Invalid field.'
-      );
-    }
+  if (
+    Array.isArray(patterns) &&
+    patterns.length > 0 &&
+    value !== '' &&
+    !matchesPatterns(patterns, dataset.operator || CombineOperators.AND, value)
+  ) {
+    setCustomValidity(
+      customValidity?.patternMismatch ||
+        customValidity?.invalid ||
+        'Invalid field.'
+    );
     return;
   }
 

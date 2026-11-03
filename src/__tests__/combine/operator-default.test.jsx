@@ -28,6 +28,12 @@ describe('Testing combined patterns without an operator', () => {
     expect(input.validity.valid).toBe(true);
   });
 
+  test('testing an empty optional field is valid', () => {
+    fireEvent.input(input, { target: { value: '123' } });
+    fireEvent.input(input, { target: { value: '' } });
+    expect(input.validity.valid).toBe(true);
+  });
+
   test('testing value that fails the pattern is invalid', () => {
     fireEvent.input(input, { target: { value: '123' } });
     fireEvent.blur(input);
