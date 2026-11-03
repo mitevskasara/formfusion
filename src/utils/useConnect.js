@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { resolveValidation } from './validate';
 import getValidationProps from './validationProps';
+import { callAll } from './helpers';
 
 const useConnect = (config, type, validation, props = {}) => {
   if (!props.name) {
@@ -27,17 +28,14 @@ const useConnect = (config, type, validation, props = {}) => {
     'aria-errormessage': error
       ? `FormFusion-${props.id || props.name}-error`
       : undefined,
-    ...getValidationProps(type, resolveValidation(type, validation), {
+    ...getValidationProps(type, resolveValidation(type, validation), props, {
       mask,
-      pattern: props.pattern,
-      maxLength: props.maxLength,
-      inputMode: props.inputMode,
       onValidate,
       validateOnChange,
       validateOnBlur,
     }),
-    onChange: controlled ? onChange : undefined,
-    onFocus,
+    onChange: callAll(controlled && onChange, props.onChange),
+    onFocus: callAll(onFocus, props.onFocus),
   };
 };
 

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import useFormHelpers from '../hooks/useFormHelpers';
 import { updateValidity } from '../utils/validate';
+import { callAll } from '../utils/helpers';
 
 const Textarea = ({
   validation,
@@ -53,15 +54,19 @@ const Textarea = ({
         value={controlled ? value || '' : undefined}
         data-testid="textarea"
         className={textareaClasses}
-        onInput={
+        onInput={callAll(
           validateOnChange
             ? (e) => onValidate(e, validation)
-            : (e) => updateValidity(e.target, validation)
-        }
-        onChange={controlled ? onChange : undefined}
-        onFocus={controlled ? onFocus : undefined}
-        onBlur={validateOnBlur ? (e) => onValidate(e, validation) : undefined}
-        onInvalid={(e) => onValidate(e, validation)}
+            : (e) => updateValidity(e.target, validation),
+          rest.onInput
+        )}
+        onChange={callAll(controlled && onChange, rest.onChange)}
+        onFocus={callAll(controlled && onFocus, rest.onFocus)}
+        onBlur={callAll(
+          validateOnBlur && ((e) => onValidate(e, validation)),
+          rest.onBlur
+        )}
+        onInvalid={callAll((e) => onValidate(e, validation), rest.onInvalid)}
         aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
         aria-invalid={error ? 'true' : 'false'}
         aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}

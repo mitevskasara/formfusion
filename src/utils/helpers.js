@@ -26,6 +26,13 @@ export function getFormValues(form, storeValues = {}) {
   return values;
 }
 
+export function callAll(...handlers) {
+  const defined = handlers.filter(Boolean);
+  return defined.length > 0
+    ? (e) => defined.forEach((handler) => handler(e))
+    : undefined;
+}
+
 export function onPaste(e) {
   const { dataset } = e.target;
   let paste = (e.clipboardData || window.clipboardData).getData('text');

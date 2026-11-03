@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import useFormHelpers from '../hooks/useFormHelpers';
 import { resolveValidation } from '../utils/validate';
 import getValidationProps from '../utils/validationProps';
+import { callAll } from '../utils/helpers';
 
 const Input = ({
   type,
@@ -87,17 +88,14 @@ const Input = ({
           }
           data-testid="input"
           className={inputClasses}
-          {...getValidationProps(type, validation, {
+          {...getValidationProps(type, validation, rest, {
             mask,
-            pattern: rest.pattern,
-            maxLength: rest.maxLength,
-            inputMode: rest.inputMode,
             onValidate,
             validateOnChange,
             validateOnBlur,
           })}
-          onChange={controlled ? onChange : undefined}
-          onFocus={controlled ? onFocus : undefined}
+          onChange={callAll(controlled && onChange, rest.onChange)}
+          onFocus={callAll(controlled && onFocus, rest.onFocus)}
           aria-describedby={helperText && `FormFusion-${fieldId}-helperText`}
           aria-invalid={error ? 'true' : 'false'}
           aria-errormessage={error ? `FormFusion-${fieldId}-error` : undefined}

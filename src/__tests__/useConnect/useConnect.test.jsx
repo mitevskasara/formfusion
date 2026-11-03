@@ -98,13 +98,21 @@ describe('useConnect', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 
-  test('merges extra props and lets them override the pattern', () => {
+  test('merges extra props, runs their handlers and lets them override the pattern', () => {
+    const onInput = jest.fn();
+    const onBlur = jest.fn();
     const Harness = () => {
       const inputProps = useConnect(
         useForm({ formRef: { current: null } }),
         'username',
-        undefined,
-        { name: 'username', placeholder: 'Enter username', pattern: '^[a-z]+$' }
+        { patternMismatch: 'Letters only' },
+        {
+          name: 'username',
+          placeholder: 'Enter username',
+          pattern: '^[a-z]+$',
+          onInput,
+          onBlur,
+        }
       );
       return <input data-testid="username" {...inputProps} />;
     };
@@ -114,6 +122,12 @@ describe('useConnect', () => {
 
     expect(input).toHaveAttribute('placeholder', 'Enter username');
     expect(input).toHaveAttribute('pattern', '^[a-z]+$');
+
+    fireEvent.input(input, { target: { value: '123' } });
+    fireEvent.blur(input);
+    expect(onInput).toHaveBeenCalledTimes(1);
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(input.validationMessage).toBe('Letters only');
   });
 
   test('renders aria-invalid and aria-errormessage from the error state', () => {
