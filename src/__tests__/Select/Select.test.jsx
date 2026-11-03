@@ -62,6 +62,22 @@ describe('Testing Select component', () => {
     expect(error).toBeEmptyDOMElement();
   });
 
+  test('keyboard navigation does nothing without options', () => {
+    render(
+      <Form onSubmit={() => {}}>
+        <Select name="empty" label="Empty" options={[]} />
+      </Form>
+    );
+    const combobox = screen.getByRole('combobox');
+
+    fireEvent.keyDown(combobox, { key: 'Enter' });
+    fireEvent.keyDown(combobox, { key: 'ArrowDown' });
+    fireEvent.keyDown(combobox, { key: 'Enter' });
+
+    expect(combobox).toHaveAttribute('aria-expanded', 'true');
+    expect(combobox).not.toHaveAttribute('aria-activedescendant');
+  });
+
   test('combobox is labelled and lists id are unique per instance', () => {
     render(
       <Form onSubmit={() => {}}>

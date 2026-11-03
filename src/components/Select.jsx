@@ -47,6 +47,7 @@ const Select = ({
   const helperId = `${fieldId}-helperText`;
 
   const getOptionId = (index) => `${fieldId}-option-${index}`;
+  const highlighted = options[highlightedIndex];
 
   const serializeValue = (value) =>
     Array.isArray(value) ? value.join(',') : (value ?? '');
@@ -125,15 +126,15 @@ const Select = ({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        if (isOpen) {
-          setHighlightedIndex((prevIndex) => (prevIndex + 1) % options.length);
-        } else {
+        if (!isOpen) {
           setIsOpen(true);
+        } else if (options.length > 0) {
+          setHighlightedIndex((prevIndex) => (prevIndex + 1) % options.length);
         }
         break;
       case 'ArrowUp':
         e.preventDefault();
-        if (isOpen) {
+        if (isOpen && options.length > 0) {
           setHighlightedIndex(
             (prevIndex) => (prevIndex - 1 + options.length) % options.length
           );
@@ -141,10 +142,10 @@ const Select = ({
         break;
       case 'Enter':
         e.preventDefault();
-        if (isOpen) {
-          handleSelect(options[highlightedIndex]);
-        } else {
+        if (!isOpen) {
           setIsOpen(true);
+        } else if (highlighted) {
+          handleSelect(highlighted);
         }
         break;
       case 'Escape':
@@ -183,7 +184,7 @@ const Select = ({
           role="combobox"
           aria-controls={listId}
           aria-activedescendant={
-            isOpen ? getOptionId(highlightedIndex) : undefined
+            isOpen && highlighted ? getOptionId(highlightedIndex) : undefined
           }
           aria-autocomplete="list"
           aria-required={rest.required ? 'true' : 'false'}
