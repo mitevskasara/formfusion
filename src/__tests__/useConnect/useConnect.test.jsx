@@ -44,11 +44,12 @@ describe('useConnect', () => {
   });
 
   test('uses the native type and no pattern for native inputs', () => {
-    render(<ConnectedInput />);
+    render(<ConnectedInput type="number" />);
     const input = screen.getByTestId('email');
 
-    expect(input).toHaveAttribute('type', 'email');
+    expect(input).toHaveAttribute('type', 'number');
     expect(input).not.toHaveAttribute('pattern');
+    expect(input).not.toHaveAttribute('inputmode');
   });
 
   test('passes the resolved validation to onValidate', () => {

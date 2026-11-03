@@ -23,7 +23,7 @@ function getValidationProps(type, validation, props, options) {
     'data-mask': mask,
     'data-type': inputTypes[type] && type,
     maxLength: mask ? mask.length : maxLength,
-    inputMode: inputMode || inputModes[type] || 'text',
+    inputMode: inputMode || inputModes[type],
     onPaste: callAll(mask && onPaste, props.onPaste),
     onInput: callAll(
       mask || validateOnChange
