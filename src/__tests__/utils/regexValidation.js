@@ -1,6 +1,6 @@
 const isRegexPatternValid = (pattern) => {
   try {
-    new RegExp(`^(?:${pattern})$`);
+    new RegExp(`^(?:${pattern})$`, 'v');
     return true;
   } catch (_error) {
     return false;
