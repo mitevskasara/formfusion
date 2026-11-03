@@ -23,6 +23,12 @@ describe('Testing validity of input pattern startsWith', () => {
     input = screen.getByTestId('input');
   });
 
+  test('Testing special characters are matched literally', () => {
+    const pattern = new RegExp(`^(?:${patterns.startsWith('a.b')})$`, 'v');
+    expect(pattern.test('a.bcd')).toBe(true);
+    expect(pattern.test('axbcd')).toBe(false);
+  });
+
   test('Validating regex pattern', () => {
     expect(isRegexPatternValid(patterns.startsWith('abc'))).toBe(true);
   });

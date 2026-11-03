@@ -8,6 +8,8 @@ Object.keys(patterns).map((key) =>
   })
 );
 
+const escape = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 export default {
   length: (length) => `^.{${length}}$`,
   minCharacters: (length) => `^.{${length},}$`,
@@ -18,17 +20,11 @@ export default {
   maxLetters: (length) => `^(?!(?:[^a-zA-Z]*[a-zA-Z]){${length + 1}}).*$`,
   lettersRange: (from, to) =>
     `^(?=(?:[^a-zA-Z]*[a-zA-Z]){${from}})(?!(?:[^a-zA-Z]*[a-zA-Z]){${to + 1}}).*$`,
-  contains: (str) => `.*${str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}.*`,
-  equals: (str) => `^${str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
-  startsWith: (str) => `^${str}.*`,
-  endsWith: (str) => `.*${str}$`,
-  existIn: (array) =>
-    `(${array
-      .map((str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-      .join('|')})`,
-  notExistIn: (array) =>
-    `^(?!.*(${array
-      .map((str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-      .join('|')})).*$`,
+  contains: (str) => `.*${escape(str)}.*`,
+  equals: (str) => `^${escape(str)}$`,
+  startsWith: (str) => `^${escape(str)}.*`,
+  endsWith: (str) => `.*${escape(str)}$`,
+  existIn: (array) => `(${array.map(escape).join('|')})`,
+  notExistIn: (array) => `^(?!.*(${array.map(escape).join('|')})).*$`,
   ...restTypes,
 };

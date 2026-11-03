@@ -99,7 +99,7 @@ Before you finish any change, run `npm run lint`, `npm run typecheck`, `npm run 
 - **Validation patterns:**
   - Add new regexes to `src/constants/regex.js` as `UPPER_SNAKE_CASE` string literals with escaped backslashes (`'\\d'`).
   - `types.js` derives kebab-case input types from them (`credit-card-number`), and `patterns.js` derives camelCase `rules` (`creditCardNumber`). Don't duplicate patterns by hand.
-  - Escape user-supplied strings before interpolating them into regexes (see `equals` / `contains` in `patterns.js`).
+  - Escape user-supplied strings before interpolating them into regexes with `escape` in `patterns.js`.
   - Every pattern must compile with `new RegExp(`^(?:${pattern})$`, 'v')`, the way browsers compile the `pattern` attribute. Browsers ignore a pattern that doesn't compile (with only a console warning), and jsdom doesn't use the `v` flag, so only `src/__tests__/patterns/regex.test.js` catches it. In `v` mode, escape `-`, `/`, `(`, `)`, `[`, `]`, `{`, `}` and `|` inside a character class (`[\\w\\-]`, not `[\\w-]`).
   - List a type in `nativeTypes.js` only if the browser validates its format itself (e.g. `email`), because native types get no FormFusion pattern. Types the browser renders but doesn't check (e.g. `tel`) go in `hidden.js`, which keeps the HTML `type` and applies the pattern.
   - Core patterns stay generic. Country-specific formats belong in the optional `@formfusion/*` packages.
