@@ -238,6 +238,7 @@ const Select = ({
         ref={hiddenInputRef}
         defaultValue={serializeValue(selectedOptions)}
         required={rest.required}
+        data-multiple={multiple || undefined}
         tabIndex={-1}
         style={{ position: 'absolute', left: '-9999px' }}
         aria-hidden="true"

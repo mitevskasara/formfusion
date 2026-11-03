@@ -62,6 +62,37 @@ describe('Testing Select component', () => {
     expect(error).toBeEmptyDOMElement();
   });
 
+  test('multiple submits the chosen values as an array', () => {
+    const onSubmit = jest.fn();
+    render(
+      <Form onSubmit={onSubmit}>
+        <Select
+          name="tags"
+          label="Tags"
+          multiple
+          options={[
+            { value: 'a', label: 'A' },
+            { value: 'b', label: 'B' },
+          ]}
+        />
+      </Form>
+    );
+    const submit = () => act(() => screen.getByTestId('form').requestSubmit());
+
+    submit();
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'A' }));
+    submit();
+    fireEvent.click(screen.getByRole('option', { name: 'B' }));
+    submit();
+
+    expect(onSubmit.mock.calls).toEqual([
+      [{ tags: [] }],
+      [{ tags: ['a'] }],
+      [{ tags: ['a', 'b'] }],
+    ]);
+  });
+
   test('keyboard navigation does nothing without options', () => {
     render(
       <Form onSubmit={() => {}}>

@@ -215,7 +215,7 @@ const MyForm = () => {
 export default MyForm;
 ```
 
-`Select` supports single and multiple selection (`multiple`) and works with the same `validation` prop as `Input`.
+`Select` supports single and multiple selection (`multiple`) and works with the same `validation` prop as `Input`. With `multiple`, the submitted value is always an array, even with one option or none chosen.
 
 #### 6. Managing state with useForm and useConnect
 

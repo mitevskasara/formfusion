@@ -57,10 +57,7 @@ const Form = forwardRef(
         return;
       }
 
-      const values = getFormValues(
-        form,
-        config ? store.getState().values : undefined
-      );
+      const values = getFormValues(form, store.getState().values, controlled);
       const submit =
         typeof config?.onSubmit === 'function' ? config.onSubmit : onSubmit;
 

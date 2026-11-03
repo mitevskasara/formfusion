@@ -11,7 +11,7 @@ function setValue(values, key, value) {
   });
 }
 
-export function getFormValues(form, storeValues = {}) {
+export function getFormValues(form, storeValues, controlled) {
   const values = {};
   for (const [key, value] of new FormData(form)) {
     setValue(
@@ -20,8 +20,15 @@ export function getFormValues(form, storeValues = {}) {
       hasOwn(values, key) ? [].concat(values[key], value) : value
     );
   }
-  for (const key of Object.keys(storeValues)) {
-    setValue(values, key, storeValues[key]);
+  if (controlled) {
+    for (const key of Object.keys(storeValues)) {
+      setValue(values, key, storeValues[key]);
+    }
+  }
+  for (const element of form.elements) {
+    if (element.dataset?.multiple) {
+      setValue(values, element.name, storeValues[element.name] ?? []);
+    }
   }
   return values;
 }
