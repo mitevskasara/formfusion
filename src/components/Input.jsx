@@ -46,6 +46,8 @@ const Input = ({
     : 'FormFusion-Input__root__field__helper-text';
 
   const isCheckbox = type === 'checkbox';
+  const isCheckable = isCheckbox || type === 'radio';
+  const isChecked = isCheckbox ? Boolean(value) : value === rest.value;
   const Component = isCheckbox ? 'label' : React.Fragment;
   const componentProps = isCheckbox
     ? {
@@ -71,12 +73,16 @@ const Input = ({
         <input
           {...rest}
           ref={ref}
-          defaultValue={controlled || isCheckbox ? undefined : value}
-          value={isCheckbox ? rest.value : controlled ? value || '' : undefined}
-          checked={controlled && isCheckbox ? Boolean(value) : undefined}
+          defaultValue={controlled || isCheckable ? undefined : value}
+          value={
+            isCheckable ? rest.value : controlled ? value || '' : undefined
+          }
+          checked={controlled && isCheckable ? isChecked : undefined}
           defaultChecked={
-            !controlled && isCheckbox
-              ? (value ?? rest.defaultChecked)
+            !controlled && isCheckable
+              ? value == null
+                ? rest.defaultChecked
+                : isChecked
               : undefined
           }
           data-testid="input"
