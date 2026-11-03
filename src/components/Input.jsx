@@ -76,7 +76,7 @@ const Input = ({
           ref={ref}
           defaultValue={controlled || isCheckable ? undefined : value}
           value={
-            isCheckable ? rest.value : controlled ? value || '' : undefined
+            isCheckable ? rest.value : controlled ? (value ?? '') : undefined
           }
           checked={controlled && isCheckable ? isChecked : undefined}
           defaultChecked={

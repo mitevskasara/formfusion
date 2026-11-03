@@ -51,7 +51,7 @@ const Textarea = ({
       <textarea
         {...rest}
         ref={ref}
-        value={controlled ? value || '' : undefined}
+        value={controlled ? (value ?? '') : undefined}
         data-testid="textarea"
         className={textareaClasses}
         onInput={callAll(

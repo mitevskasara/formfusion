@@ -9,7 +9,7 @@ import useForm from '../../hooks/useForm';
 describe.each([
   ['Input', Input],
   ['Textarea', Textarea],
-])('%s handlers', (_name, Field) => {
+])('%s', (_name, Field) => {
   test('runs the user handlers after the form handlers', () => {
     let form;
     const onChange = jest.fn(() => form.values.bio);
@@ -45,5 +45,20 @@ describe.each([
     expect(onChange).toHaveReturnedWith('hello');
     expect(onBlur).toHaveBeenCalledTimes(1);
     expect(field).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  test('config mode: shows a value of 0 from the state', () => {
+    const Controlled = () => {
+      const formRef = useRef(null);
+      const form = useForm({ formRef, initialValues: { count: 0 } });
+      return (
+        <Form config={form}>
+          <Field id="count" name="count" label="Count" />
+        </Form>
+      );
+    };
+
+    render(<Controlled />);
+    expect(screen.getByLabelText('Count').value).toBe('0');
   });
 });
